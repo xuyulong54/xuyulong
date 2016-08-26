@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="calCost" extends="base">
+	
+		<!-- 成本订单管理Action -->
+		<action name="calCostOrder_*" class="wusc.edu.pay.web.boss.action.cal.CalCostOrderAction" method="{1}">
+			<result name="costOrderList">page/calCostOrder/costOrderList.jsp</result>
+			<result name="costOrderInfo">page/calCostOrder/costOrderInfo.jsp</result>
+		</action>
+		
+		<action name="calDimension_*" class="wusc.edu.pay.web.boss.action.cal.CalDimensionAction" method="{1}">
+			<result name="CalDimensionList">page/calDimension/CalDimensionList.jsp</result>
+			<result name="CalDimensionAdd">page/calDimension/CalDimensionAdd.jsp</result>
+			<result name="CalDimensionEdit">page/calDimension/CalDimensionEdit.jsp</result>
+		</action>
+		
+		<action name="calFeeRateFormula_*" class="wusc.edu.pay.web.boss.action.cal.CalFeeRateFormulaAction" method="{1}">
+			<result name="calFeeRateFormulaList">page/calFeeRateFormula/CalFeeRateFormulaList.jsp</result>
+			<result name="calFeeRateFormulaAdd">page/calFeeRateFormula/CalFeeRateFormulaAdd.jsp</result>
+			<result name="calFeeRateFormulaEdit">page/calFeeRateFormula/CalFeeRateFormulaEdit.jsp</result>
+		</action>
+
+		<action name="calFeeWay_*" class="wusc.edu.pay.web.boss.action.cal.CalFeeWayAction" method="{1}">
+			<result name="CalFeeWayList">page/calFeeWay/CalFeeWayList.jsp</result>
+			<result name="CalFeeWayAdd">page/calFeeWay/CalFeeWayAdd.jsp</result>
+			<result name="CalFeeWayEdit">page/calFeeWay/CalFeeWayEdit.jsp</result>
+			<result name="CalFeeWayInfo">page/calFeeWay/CalFeeWayInfo.jsp</result>
+			<result name="CalFeeWayView">page/calFeeWay/CalFeeWayView.jsp</result>
+		</action>		
+		
+		<action name="calCostInterface_*" class="wusc.edu.pay.web.boss.action.cal.CalCostInterfaceAction" method="{1}">
+			<result name="calCostInterfaceList">page/calCostInterface/calCostInterfaceList.jsp</result>
+			<result name="calCostInterfaceAdd">page/calCostInterface/calCostInterfaceAdd.jsp</result>
+			<result name="calCostInterfaceEdit">page/calCostInterface/calCostInterfaceEdit.jsp</result>
+		</action>	
+	</package>
+</struts>

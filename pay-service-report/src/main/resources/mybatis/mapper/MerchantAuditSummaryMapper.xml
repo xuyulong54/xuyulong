@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.MerchantAuditSummaryDaoImpl">
+
+	<sql id="table"> TBL_REPORT_DAY</sql>
+
+	<resultMap id="beanMap" type="MerchantAuditSummary">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="STAT_DATE" property="statDate" />
+		<result column="REPORT_TYPE" property="reportType" />
+		<result column="TRX_DATE" property="trxDate" />
+		<result column="INT_1" property="trialPassNum" />
+		<result column="INT_2" property="trialNoPassNum" />
+		<result column="INT_3" property="finalPassNum" />
+		<result column="INT_4" property="finalNoPassNum" />
+		
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="reportType != null and reportType !=''"> AND REPORT_TYPE = #{reportType} </if>
+		<if test="startDate != null and startDate != '' and endDate != '' and endDate != null">
+			AND TRX_DATE between #{startDate} and #{endDate}
+		</if>
+	
+	</sql>
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+	select * from(
+		select 
+			sum(INT_1) AS INT_1,
+			sum(INT_2) AS INT_2,
+			sum(INT_3) AS INT_3,
+			sum(INT_4) AS INT_4,
+			TRX_DATE
+		 from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		group by TRX_DATE) AS  temp
+		<![CDATA[ order by TRX_DATE desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	<!--  
+		根据审核次数统计初审和终审情况
+	-->
+	<insert 
+		id="createAuditSummary" 
+		parameterType="java.util.Map">
+		insert into 
+			TBL_REPORT_DAY(
+				VERSION,CREATE_TIME,REPORT_TYPE,STAT_DATE,TRX_DATE,INT_1,INT_2,INT_3,INT_4) 
+		select 
+			0, #{dateTime}, #{reportType}, #{statDate}, #{transDate},
+			SUM(CASE WHEN currentStatus=102  and changeStatus=106 and  auditStatus=100 THEN 1 ELSE 0 END) AS FIRSTPASS , /**初审通过**/
+			SUM(CASE WHEN currentStatus=102  and changeStatus=106 and  auditStatus=101 THEN 1 ELSE 0 END) AS FIRSNOTPASS ,/**初审不通过**/
+			SUM(CASE WHEN currentStatus=106  and changeStatus=100 and  auditStatus=100 THEN 1 ELSE 0 END) AS PASS ,/**终审通过**/
+			SUM(CASE WHEN currentStatus=106  and changeStatus=100 and  auditStatus=101 THEN 1 ELSE 0 END) AS NOPASS /**终审不通过**/
+		from 
+		   TBL_USER_AUDIT_RECORD_STATUS
+		where
+			CREATETIME like CONCAT(#{fieldDate}, '%')
+		group by 
+			substr(CREATETIME,1,10)
+	</insert>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">       
+ 
+    <!-- 用户接口 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MemberInfoFacade" id="memberInfoFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantActionFacade" id="merchantActionFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantOnlineFacade" id="merchantOnlineFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantPermissionFacade" id="merchantPermissionFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantRoleActionFacade" id="merchantRoleActionFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantRoleFacade" id="merchantRoleFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantRoleOperatorFacade" id="merchantRoleOperatorFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantSecretFacade" id="merchantSecretFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.PortalCaFacade" id="portalCaFacade" check="false"  />
+
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.UserManagementFacade" id="userManagementFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.UserOperatorFacade" id="userOperatorFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.UserOperatorLogFacade" id="userOperatorLogFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.UserQueryFacade" id="userQueryFacade" check="false"  />
+    
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.UserBankAccountFacade" id="userBankAccountFacade" check="false"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.UserTradePwdFacade" id="userTradePwdFacade" check="false"  />
+    
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.UserAuditFacade" id="userAuditFacade" check="false"  />
+    
+</beans>  

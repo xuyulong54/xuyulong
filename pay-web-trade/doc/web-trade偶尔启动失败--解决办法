@@ -1,0 +1,115 @@
+错误信息：
+Jan 17, 2015 4:21:35 PM org.apache.catalina.startup.HostConfig deployWAR
+INFO: Deploying web application archive /home/wusc/edu/web/trade-web-tomcat/webapps/pay-web-trade.war
+Jan 17, 2015 4:21:46 PM org.apache.catalina.core.ContainerBase addChildInternal
+SEVERE: ContainerBase.addChild: start: 
+org.apache.catalina.LifecycleException: Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/pay-web-trade]]
+        at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:154)
+        at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+        at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+        at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:649)
+        at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:1081)
+        at org.apache.catalina.startup.HostConfig$DeployWar.run(HostConfig.java:1877)
+        at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+        at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+        at java.lang.Thread.run(Thread.java:744)
+Caused by: java.lang.IllegalStateException: Unable to complete the scan for annotations for web application [/pay-web-trade] due to a StackOverflowError. Possible root causes include a too low setting for -Xss and illegal cyclic inheritance dependencies. The class hierarchy being processed was [org.bouncycastle.asn1.ASN1EncodableVector->org.bouncycastle.asn1.DEREncodableVector->org.bouncycastle.asn1.ASN1EncodableVector]
+        at org.apache.catalina.startup.ContextConfig.checkHandlesTypes(ContextConfig.java:2126)
+        at org.apache.catalina.startup.ContextConfig.processAnnotationsStream(ContextConfig.java:2072)
+        at org.apache.catalina.startup.ContextConfig.processAnnotationsJar(ContextConfig.java:1947)
+        at org.apache.catalina.startup.ContextConfig.processAnnotationsUrl(ContextConfig.java:1913)
+        at org.apache.catalina.startup.ContextConfig.processAnnotations(ContextConfig.java:1898)
+        at org.apache.catalina.startup.ContextConfig.webConfig(ContextConfig.java:1330)
+        at org.apache.catalina.startup.ContextConfig.configureStart(ContextConfig.java:889)
+        at org.apache.catalina.startup.ContextConfig.lifecycleEvent(ContextConfig.java:386)
+        at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:117)
+        at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:90)
+        at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5380)
+        at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+        ... 10 more
+
+
+
+上面错误信息中的：org.bouncycastle.asn1.ASN1EncodableVector->org.bouncycastle.asn1.DEREncodableVector->org.bouncycastle.asn1.ASN1EncodableVector
+说明了bouncycastle包中的类存在着循环依赖。
+而Tomcat7.0.3X版本支持servlet3.0的特性，比如说支持@WebServlet、@WebListener，要支持这些特性，tomcat就得去扫描所有的jar包里面的每个类。这个异常表明在扫描jar包的时候，递归调用太深，导致栈溢出了。
+
+在web.xml中加入了metadata-complete="true"没起作用
+我们可以采用的方法是：
+在tomcat的catalina.properties配置文件中tomcat.util.scan.DefaultJarScanner.jarsToSkip的值后面加一个",*"，这样就不会扫描所有的jar包了
+
+
+
+
+
+
+
+
+
+
+
+参考文章：
+http://qingyuexiao.iteye.com/blog/1886059
+之前使用tomcat7时遇到启动报错问题，日志如下： 
+严重: ContainerBase.addChild: start: 
+org.apache.catalina.LifecycleException: Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[/mypro]] 
+at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:154) 
+at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901) 
+at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877) 
+at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:633) 
+at org.apache.catalina.startup.HostConfig.deployDirectory(HostConfig.java:1114) 
+at org.apache.catalina.startup.HostConfig$DeployDirectory.run(HostConfig.java:1673) 
+at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441) 
+at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303) 
+at java.util.concurrent.FutureTask.run(FutureTask.java:138) 
+at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886) 
+at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908) 
+at java.lang.Thread.run(Thread.java:619) 
+Caused by: java.lang.IllegalStateException: Unable to complete the scan for annotations for web application [/mypro]. Possible root causes include a too low setting for -Xss and illegal cyclic inheritance dependencies 
+at org.apache.catalina.startup.ContextConfig.processAnnotationsStream(ContextConfig.java:2109) 
+at org.apache.catalina.startup.ContextConfig.processAnnotationsJar(ContextConfig.java:1981) 
+at org.apache.catalina.startup.ContextConfig.processAnnotationsUrl(ContextConfig.java:1947) 
+at org.apache.catalina.startup.ContextConfig.processAnnotations(ContextConfig.java:1932) 
+at org.apache.catalina.startup.ContextConfig.webConfig(ContextConfig.java:1326) 
+at org.apache.catalina.startup.ContextConfig.configureStart(ContextConfig.java:878) 
+at org.apache.catalina.startup.ContextConfig.lifecycleEvent(ContextConfig.java:369) 
+at org.apache.catalina.util.LifecycleSupport.fireLifecycleEvent(LifecycleSupport.java:119) 
+at org.apache.catalina.util.LifecycleBase.fireLifecycleEvent(LifecycleBase.java:90) 
+at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5179) 
+at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150) 
+... 11 more 
+Caused by: java.lang.StackOverflowError 
+at java.util.HashMap.get(HashMap.java:300) 
+at org.apache.catalina.startup.ContextConfig.populateSCIsForCacheEntry(ContextConfig.java:2257) 
+at org.apache.catalina.startup.ContextConfig.populateSCIsForCacheEntry(ContextConfig.java:2269) 
+at org.apache.catalina.startup.ContextConfig.populateSCIsForCacheEntry(ContextConfig.java:2269) 
+at org.apache.catalina.startup.ContextConfig.populateSCIsForCacheEntry(ContextConfig.java:2269) 
+at org.apache.catalina.startup.ContextConfig.populateSCIsForCacheEntry(ContextConfig.java:2269) 
+at org.apache.catalina.startup.ContextConfig.populateSCIsForCacheEntry(ContextConfig.java:2269) 
+…… 
+
+在网上找了很久，最终解决问题，在这时MARK一下。以下是解决方法： 
+
+--------------------------------------------------以下文章为转载-------------------------------------------------- 
+
+使用tomcat 7.0.3x版本的同学可以发现tomcat启动慢了不少，而且还可能遇到如下启动时异常： 
+Unable to complete the scan for annotations for web application [] due to a StackOverflowError. Possible root causes include a too low setting for -Xss and illegal cyclic inheritance dependencies. 
+tomcat7.0.3X版本支持servlet3.0的特性，比如说支持@WebServlet、@WebListener，要支持这些特性，tomcat就得去扫描所有的jar包里面的每个类。
+这个异常表明在扫描jar包的时候，递归调用太深，导致栈溢出了，tomcat给了一个馊主意，让你增大xss，这个还是不好，xss加大了，可用线程数就少了。 
+分析tomcat源代码，发现它扫描的流程如下： 
+1.扫描所有jar包 
+2.通过查找jar包中META-INF/services/javax.servlet.ServletContainerInitializer文件内的定义，初始化ServletContainerInitializer实现 
+3.如果web.xml中配置了metadata-complete="true" 或者没有找到ServletContainerInitializer实现，都不会继续扫描jar包 
+网上大多数的答案的都是说在web.xml中加入了metadata-complete="true"就能避免这个异常。确实在很多场景下，这个异常是能够避免。但是使用spring-web-3.1.0.RELEASE的同学就杯具了，
+这个jar包中定义了一个ServletContainerInitializer，还是导致了扫描jar包。 
+我们可以用另外的办法来解决这个问题，我们让tomcat不扫描指定的jar包，tomcat就要轻松得多了，org.apache.tomcat.util.scan.StandardJarScanner中定义了defaultJarsToSkip，有了这个东东，我们就可以跳过某些jar包。 
+如果你不想使用servlet3.0 annotation支持，在tomcat的catalina.properties配置文件中tomcat.util.scan.DefaultJarScanner.jarsToSkip的值后面加一个",*"，这样就不会扫描所有的jar包了。启动更快，也不会出异常。 
+tomcat在处理扫描是还有个小bug，比如我遇到了 
+SEVERE: Unable to process Jar entry [__MACOSX/cn/****/._HandlerFactory.class] from... 
+这是tomcat在扫描到以.class为后缀的文件后，就分析类，很明显，此文件都不是java类文件。tomcat不应该只判断后缀为.class就是java类文件。 
+
+
+
+

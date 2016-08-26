@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="memberLoginPackage" extends="base">
+		<default-interceptor-ref name="memberLoginStack" />
+		<!-- 会员信息 -->
+		<action name="memberinfo_*" class="wusc.edu.pay.web.portal.action.member.MemberInfoAction"
+			method="{1}">
+			<result name="viewMember">page/member/memberInfo/MemberView.jsp</result>
+			<result name="editMemberUI">page/member/memberInfo/MemberEdit.jsp</result>
+			<result name="editMember">memberinfo_viewMember.action</result>
+		</action>
+		<!-- 修改预留信息 -->
+		<action name="memReservationInfo_*" class="wusc.edu.pay.web.portal.action.member.EditReservationInfoAction"
+			method="{1}">
+			<!--去修改会员信息(问候语/预留信息)页面 -->
+			<result name="editMemberGreetingUI">page/member/greeting/MemberGreetingEdit.jsp</result>
+			<!--修改会员信息(问候语/预留信息)-->
+			<result name="editMemberGreeting">page/member/greeting/MemberGreetingEditSuccess.jsp</result>
+		</action>
+		
+		<!-- 充值(收款) -->
+		<action name="memberReceiveRecharge_*" class="wusc.edu.pay.web.portal.action.member.ReceiveRechargeAction" method="{1}">
+			<!-- 充值交易查询 -->
+			<result name="listReceiveRechargeRecord">page/member/receiveRecharge/RechargeRecordList.jsp</result>
+			<!-- 充值 -->
+			<result name="rechargePage">page/member/receiveRecharge/Recharge.jsp</result>
+      <!-- 充值异常页面 -->
+      <result name="RechargeException">page/member/receiveRecharge/Recharge_exception.jsp</result>			
+			<!-- 验证充值金额 -->
+			<result name="checkAddAmount">memberReceiveRecharge_recharge.action</result>
+		</action>
+		<!-- 账务 -->
+		<action name="memberaccount_*" class="wusc.edu.pay.web.portal.action.member.AccountAction"
+			method="{1}">
+			<!-- 财务信息 -->
+			<result name="viewAccount">page/member/account/AccountView.jsp</result>
+			<!-- 财务明细列表 -->
+			<result name="listAccountHistory">page/member/account/AccountHistoryList.jsp</result>
+		</action>
+		<!--转帐（收款） -->
+		<action name="memberReceiveTransfer_*" class="wusc.edu.pay.web.portal.action.member.ReceiveTransferAction" method="{1}">
+			<!-- 转帐记录查询 -->
+			<result name="listRecieveTransfer">page/member/receiveTransfer/TransferList.jsp</result>
+			<!-- 会员转账 -->
+			<result name="ransferPage">page/member/receiveTransfer/TransferPage.jsp</result>
+			<result name="editTransferSuccess">page/member/receiveTransfer/TransferSuccess.jsp</result>
+			<!-- 转账失败 -->
+			<result name="editTransferFail">page/member/receiveTransfer/TransferFail.jsp</result>
+		</action>
+		
+		<!--商户的付款 _支付-->
+		<action name="memberPayPaymentOrder_*" class="wusc.edu.pay.web.portal.action.member.PayPaymentOrderAction" method="{1}">
+			<!-- 在线商户交易记录查询 -->
+			<result name="listPaymentOrder">page/member/payPayment/PaymentRecordList.jsp</result>
+			<!-- 交易记录详情 -->
+			<result name="viewPaymentOrder">page/member/payPayment/PaymentRecordDetail.jsp</result>
+		</action>
+		
+		<!--商户的付款_转账-->
+		<action name="memberPayTransfer_*" class="wusc.edu.pay.web.portal.action.member.PayTransferAction" method="{1}">
+			<!-- 在线商户转账记录查询 -->
+			<result name="listTransfer">page/member/payPayment/TransferList.jsp</result>
+		</action>
+		
+		
+		<!--提现 -->
+		<action name="withdraw_*" class="wusc.edu.pay.web.portal.action.member.WithdrawAction"
+			method="{1}">
+			<!-- 去提现页面 -->
+			<result name="withdrawUI">page/member/withdraw/Withdraw.jsp</result>
+			<!-- 提现 -->
+			<result name="withdraw">page/member/withdraw/WithdrawSuccess.jsp</result>
+			<!-- 打款记录查询 (提现记录查询) -->
+			<result name="listRemittanceRecord">page/member/withdraw/RemittanceRecordList.jsp</result>
+		</action>
+		<!--安全中心 -->
+		<action name="membersecuritycenter_*"
+			class="wusc.edu.pay.web.portal.action.member.SecurityCenterAction" method="{1}">
+			<result name="securityCenter">page/member/securityCenter/SecurityCenter.jsp</result>
+		</action>
+		<!--修改密码 -->
+		<action name="memberpwdedit_*" class="wusc.edu.pay.web.portal.action.member.PwdEditAction"
+			method="{1}">
+			<!-- 去修改登录密码 -->
+			<result name="firstEditLoginPwdUI">page/member/pwdEdit/LoginPwdEditFirst.jsp</result>
+			<!-- 去修改登录密码 -->
+			<result name="editLoginPwdUI">page/member/pwdEdit/LoginPwdEdit.jsp</result>
+			<!-- 修改登录密码 -->
+			<result name="editLoginPwd">page/member/pwdEdit/LoginPwdEditSuccess.jsp</result>
+			<!-- 去修改支付密码 -->
+			<result name="editTradePwdUI">page/member/pwdEdit/TradePwdEdit.jsp</result>
+			<!-- 去修改支付密码 -->
+			<result name="editTradePwd">page/member/pwdEdit/TradePwdEditSuccess.jsp</result>
+			<!-- 去修改登录,支付密码(首次) -->
+			<result name="firstEditLoginTradePwdUI">page/member/pwdEdit/LoginTradePwdEditFirst.jsp
+			</result>
+			<!-- 修改登录,支付密码(首次) -->
+			<result name="firstEditLoginTradePwd">page/member/pwdEdit/LoginTradePwdEditFirstSuccess.jsp
+			</result>
+		</action>
+		<!-- 安全问题 -->
+		<action name="membersecurityiquestion_*"
+			class="wusc.edu.pay.web.portal.action.member.SecurityiQuestionAction"
+			method="{1}">
+			<result name="editSecurityiQuestionUI">page/member/securityQuestion/SecurityiQuestionEdit.jsp</result>
+			<result name="editSecurityiQuestion">page/member/securityQuestion/SecurityiQuestionEditSuccess.jsp</result>
+		</action>
+		<!-- 实名认证 -->
+		<action name="realnameauth_*"
+			class="wusc.edu.pay.web.portal.action.member.RealNameAuthAction" method="{1}">
+			<interceptor-ref name="fileUploadStack"></interceptor-ref>
+			<!-- 去协议页面 -->
+			<result name="consentAgreementUI">page/member/realNameAuth/ConsentAgreement.jsp</result>
+			<!-- 同意协议 -->
+			<result name="consentAgreement">page/member/realNameAuth/RealNameAuth.jsp</result>
+			<!-- 进行实名认证 -->
+			<result name="realNameAuth">page/member/realNameAuth/RealNameAuthSuccess.jsp</result>
+		</action>
+		<!-- 手机绑定，解绑 -->
+		<action name="membermobilebind_*" class="wusc.edu.pay.web.portal.action.member.MobileBindAction"
+			method="{1}">
+			<result name="bindingMobileUI">page/member/mobileBind/BindingMobile.jsp</result>
+			<result name="bindingMobile">page/member/mobileBind/BindingMobileSuccess.jsp</result>
+			<result name="unbundlingMobileUI">page/member/mobileBind/UnbundlingMobileUI.jsp</result>
+			<result name="unbundlingMobile">page/member/mobileBind/UnbundlingMobileSuccess.jsp</result>
+		</action>
+		<!-- 邮箱绑定，解绑 -->
+		<action name="memberemailbind_*" class="wusc.edu.pay.web.portal.action.member.EmailBindAction"
+			method="{1}">
+			<!-- 绑定：去验证邮箱页面 -->
+			<result name="bindingEmailUI">page/member/emailBind/BindingEmail.jsp</result>
+			<!-- 绑定：验证邮箱，发送邮件 -->
+			<result name="bindingEmail">page/member/emailBind/BindingEmailSuccess.jsp</result>
+			<!-- 绑定：更新状态 -->
+			<result name="bindingActivationEmail">page/member/emailBind/BindingActivationEmail.jsp</result>
+			<!-- 绑定：错误页面 -->
+			<result name="bindingEmailError">page/member/emailBind/BindingEmailError.jsp</result>
+
+			<!-- 解绑：去验证邮箱页面 -->
+			<result name="unbundlingEmailUI">page/member/emailBind/UnbundlingEmail.jsp</result>
+			<!-- 解绑：验证邮箱，发送邮件 -->
+			<result name="unbundlingEmail">page/member/emailBind/UnbundlingEmailSuccess.jsp</result>
+			<!-- 解绑：更新状态 -->
+			<result name="unbundlingActivationEmail">page/member/emailBind/UnbundlingActivationEmail.jsp</result>
+			<!-- 解绑：错误页面 -->
+			<result name="unbundlingEmailError">page/member/emailBind/UnbundlingEmailError.jsp</result>
+		</action>
+		<!-- 找回支付密码 -->
+		<action name="memberlookfortradepwd_*"
+			class="wusc.edu.pay.web.portal.action.member.LookForTradePwdAction" method="{1}">
+			<!-- 选择方式 -->
+			<result name="tradePwdListWay">page/member/lookForTradePwd/TradePwdListWay.jsp</result>
+			<!-- 手机：去验证手机页面 -->
+			<result name="tradePwdSendPhoneCodeCheckUI">page/member/lookForTradePwd/TradePwdSendPhoneCodeCheck.jsp</result>
+			<!-- 手机：验证手机 ，修改支付密码 -->
+			<result name="tradePwdSendPhoneCodeCheck">page/member/lookForTradePwd/PhoneLookforSuccess.jsp</result>
+
+			<!-- 邮箱：去验证邮箱页面 -->
+			<result name="tradePwdSendMailCheckUI">page/member/lookForTradePwd/TradePwdSendMailCheck.jsp</result>
+			<!-- 邮箱：验证邮箱，发送邮件 -->
+			<result name="tradePwdSendMailCheck">page/member/lookForTradePwd/EmailSendSuccess.jsp</result>
+			<!-- 邮箱：去修改支付密码页面 -->
+			<result name="editTradePwdUI">page/member/lookForTradePwd/TradePwdEdit.jsp</result>
+			<!-- 邮箱：修改支付密码 -->
+			<result name="editTradePwd">page/member/lookForTradePwd/EmailLookforSuccess.jsp</result>
+			<!-- 邮箱：错误页面 -->
+			<result name="editTradePwdError">page/member/lookForTradePwd/EditTradePwdError.jsp</result>
+		</action>
+		<!-- 销户 -->
+		<action name="cancelaccount_*"
+			class="wusc.edu.pay.web.portal.action.member.CancelAccountAction" method="{1}">
+			<interceptor-ref name="fileUploadStack"></interceptor-ref>
+			<!-- 去注销协议页面 -->
+			<result name="cancelAgreementUI">page/member/cancelAccount/CancelAgreement.jsp</result>
+			<!--去验证身份信息页面 -->
+			<result name="cancelAgreement">page/member/cancelAccount/CancelDescription.jsp</result>
+			<!--去提示销户信息成功页面 -->
+			<result name="authenticate">page/member/cancelAccount/CancelSuccess.jsp</result>
+		</action>
+		<!-- 银行卡绑定 -->
+		<action name="bankCardBind_*" class="wusc.edu.pay.web.portal.action.member.BankCardAction"
+			method="{1}">
+			<result name="viewBankCard">page/member/bankCardBind/BankCardView.jsp</result>
+			<result name="addSettbankCardUI">page/member/bankCardBind/SettbankCardAdd.jsp</result>
+		</action>
+		
+		<!--会员积分管理 -->
+		<action name="memberscore_*" class="wusc.edu.pay.web.portal.action.member.ScoreAction"
+			method="{1}">
+			<result name="viewScore">page/member/score/ScoreView.jsp</result>
+		</action>
+		<!--数字证书管理 -->
+		<action name="memberca_*" class="wusc.edu.pay.web.portal.action.member.MemberCAAction" method="{1}">
+			<!-- 数字证书列表 -->
+			<result name="listCA">page/member/ca/CAList.jsp
+			</result>
+			<!-- 申请数字证书_数字证书简介 -->
+			<result name="addCAIntro">page/member/ca/CAAddIntro.jsp
+			</result>
+			<!-- 申请数字证书_去输入信息页面 -->
+			<result name="addCAImInfoUI">page/member/ca/CAAddImInfo.jsp
+			</result>
+			<!--申请数字证书_保存输入信息 -->
+			<result name="addCAImInfo">page/member/ca/CAAddImInfoSuccess.jsp
+			</result>
+			<!--ca控件下载-->
+			<result name="downloadCAControl">page/member/ca/CAControlDownload.jsp
+			</result>
+		</action>
+	</package>
+</struts>

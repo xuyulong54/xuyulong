@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.notify.dao.impl.NotifyRecordDaoIpml">
+
+	<sql id="table"> TBL_TRADE_NOTIFY_RECORD </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.notify.entity.NotifyRecord">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="LAST_NOTIFY_TIME" property="lastNotifyTime" jdbcType="TIMESTAMP" />
+		<result column="NOTIFY_TIMES" property="notifyTimes" jdbcType="SMALLINT" />
+		<result column="LIMIT_NOTIFY_TIMES" property="limitNotifyTimes" jdbcType="SMALLINT" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="MERCHANT_NO" property="merchantNo" jdbcType="VARCHAR" />
+		<result column="MERCHANT_ORDER_NO" property="merchantOrderNo" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="NOTIFY_TYPE" property="notifyType" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, LAST_NOTIFY_TIME, NOTIFY_TIMES, LIMIT_NOTIFY_TIMES, URL,
+		MERCHANT_NO, MERCHANT_ORDER_NO, STATUS, NOTIFY_TYPE
+	</sql>
+
+	<!-- 查询条件 -->
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate !=''">
+			and CREATETIME between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="lastNotifyTime != null and lastNotifyTime != ''"> and LAST_NOTIFY_TIME = #{lastNotifyTime,jdbcType=TIMESTAMP}</if>
+		<if test="notifyTimes != null and notifyTimes != ''"> and NOTIFY_TIMES = #{notifyTimes,jdbcType=SMALLINT}</if>
+		<if test="limitNotifyTimes != null and limitNotifyTimes != ''"> and LIMIT_NOTIFY_TIMES = #{limitNotifyTimes,jdbcType=SMALLINT}</if>
+		<if test="url != null and url != ''"> and URL = #{url,jdbcType=VARCHAR}</if>
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANT_NO = #{merchantNo}</if>
+		<if test="merchantOrderNo != null and merchantOrderNo != ''"> and MERCHANT_ORDER_NO = #{merchantOrderNo,jdbcType=VARCHAR}</if>
+		<if test="status != null and status !=''"> and STATUS = #{status,jdbcType=SMALLINT}</if>
+		<if test="notifyType != null and notifyType !=''"> and NOTIFY_TYPE = #{notifyType, jdbcType=SMALLINT}</if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="statusList != null">
+			and STATUS in
+			<foreach collection="statusList" index="index" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="notifyTimeList != null">
+			and NOTIFY_TIMES in
+			<foreach collection="notifyTimeList" index="index" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.notify.entity.NotifyRecord" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		LAST_NOTIFY_TIME, NOTIFY_TIMES, LIMIT_NOTIFY_TIMES,
+		URL, MERCHANT_NO, MERCHANT_ORDER_NO,
+		STATUS, NOTIFY_TYPE)
+		values (0, #{createTime},
+		#{lastNotifyTime,jdbcType=TIMESTAMP},
+		#{notifyTimes,jdbcType=SMALLINT}, #{limitNotifyTimes,jdbcType=SMALLINT},
+		#{url,jdbcType=VARCHAR}, #{merchantNo,jdbcType=VARCHAR}, #{merchantOrderNo,jdbcType=VARCHAR},
+		#{status,jdbcType=SMALLINT}, #{notifyType,jdbcType=SMALLINT})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.notify.entity.NotifyRecord">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=SMALLINT} + 1,
+		LAST_NOTIFY_TIME = FUN_NOW(),
+		NOTIFY_TIMES = #{notifyTimes,jdbcType=SMALLINT},
+		LIMIT_NOTIFY_TIMES = #{limitNotifyTimes,jdbcType=SMALLINT},
+		STATUS =
+		#{status,jdbcType=SMALLINT}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=SMALLINT}
+	</update>
+
+	<!-- 根据ID获取实体 -->
+	<select id="getById" parameterType="string" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

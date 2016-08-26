@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.CommonMerchanReportDaoImpl">
+
+	<sql id="table"> RP_MERCHANT </sql>
+
+	<resultMap id="beanMap" type="CommonMerchanReport">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="MERCHANTBUSTYPE" property="merchantBusType" />
+		<result column="MERCHANTTYPE" property="merchantType" />
+		<result column="PROVINCE" property="province" />
+		<result column="CITY" property="city" />
+		<result column="CREATENUM" property="createNum" />
+		<result column="CANCELNUM" property="cancelNum" />
+		<result column="STOCKNUM" property="stockNum" />
+		<result column="CHECKINGNUM" property="checkingNum" />
+		<result column="ACOUNTDATE" property="acountDate" />
+	</resultMap>
+
+	<insert id="insert" parameterType="CommonMerchanReport" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME,MERCHANTBUSTYPE,MERCHANTTYPE,PROVINCE,CITY,CREATENUM,CANCELNUM,STOCKNUM,CHECKINGNUM,ACOUNTDATE)
+		values (0, #{createTime}, #{MERCHANTBUSTYPE},#{MERCHANTTYPE},#{PROVINCE},#{CITY},#{CREATENUM},#{CANCELNUM},#{STOCKNUM},#{CHECKINGNUM},#{ACOUNTDATE})
+	</insert>
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and ACOUNTDATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+</mapper>

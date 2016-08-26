@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="fee" extends="loginPackage">
+		<!-- 计费节点管理Action -->
+		<action name="FeeNode_*" class="wusc.edu.pay.web.boss.action.fee.FeeNodeAction" method="{1}">
+			<result name="listNode">page/fee/FeeNodeList.jsp</result>
+			<result name="addNodeUI">page/fee/FeeNodeAdd.jsp</result>
+		</action>
+		<!-- 计费维度管理Action -->
+		<action name="FeeDimension_*" class="wusc.edu.pay.web.boss.action.fee.FeeDimensionAction" method="{1}">
+			<result name="bindPayProductList">page/fee/bindDimensionUI.jsp</result>
+			<result name="allListDimension">page/fee/FeeDimensionAllList.jsp</result>
+			<result name="dimensionLookupList">page/fee/DimensionLookupList.jsp</result>
+			<result name="bindOtherProduct">page/fee/BindOtherProduct.jsp</result>
+		</action>
+		<!-- 计费方式管理Action -->
+		<action name="FeeCalculateWay_*" class="wusc.edu.pay.web.boss.action.fee.FeeCalculateWayAction" method="{1}">
+			<result name="addFeeCalculateWayUI">page/fee/FeeCalculateWayAddUI.jsp</result>
+			<result name="feeCalculateWayAllList">page/fee/FeeCalculateWayAllList.jsp</result>
+			<result name="feeCalculateWayList">page/fee/FeeCalculateWayList.jsp</result>
+			<result name="feeCalculateWayAddByDimension">page/fee/FeeCalculateWayAddByDimension.jsp</result>
+			<result name="feeCalculateWayView">page/fee/feeCalculateWayView.jsp</result>
+		</action>
+		<!-- 阶梯周期信息Action -->
+		<action name="FeeLadder_*" class="wusc.edu.pay.web.boss.action.fee.FeeLadderAction" method="{1}">
+			<result name="showLadderInfo">page/fee/FeeLadderInfo.jsp</result>
+		</action>
+		<!-- 计费公式管理Action -->
+		<action name="FeeFormulae_*" class="wusc.edu.pay.web.boss.action.fee.FeeFormulaeAction" method="{1}">
+			<result name="feeFormulaeList">page/fee/FeeFormulaeList.jsp</result>
+			<result name="addFeeFormulaeUI">page/fee/FeeFormulaeAdd.jsp</result>
+		</action>
+		<!-- 计费订单Action -->
+		<action name="FeeOrder_*" class="wusc.edu.pay.web.boss.action.fee.FeeOrderAction" method="{1}">
+			<result name="feeOrderList">page/fee/FeeOrderList.jsp</result>
+			<result name="showOrderDetail">page/fee/showOrderDetail.jsp</result>
+		</action>
+	</package>
+</struts>

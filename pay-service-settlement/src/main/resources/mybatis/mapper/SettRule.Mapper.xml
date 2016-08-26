@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.settlement.dao.impl.SettRuleDaoImpl">
+
+	<sql id="table"> TBL_SETT_RULE </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.settlement.entity.SettRule">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+		<result column="USER_NO" property="userNo" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="SETT_TYPE" property="settType" jdbcType="SMALLINT" />
+		<result column="SETT_CYCLE_TYPE" property="settCycleType" jdbcType="SMALLINT" />
+		<result column="SETT_CYCLE_DATA" property="settCycleData" jdbcType="VARCHAR" />
+		<result column="RISK_DAY" property="riskDay" jdbcType="SMALLINT" />
+		<result column="IS_SETT" property="isSett" jdbcType="SMALLINT" />
+		<result column="CURRENT_SETT_STATUS" property="currentSettStatus" jdbcType="SMALLINT" />
+		<result column="LAST_SUM_DATE" property="lastSumDate" jdbcType="DATE" />
+		<result column="LAST_SETT_DATE" property="lastSettDate" jdbcType="DATE" />
+		<result column="LAST_PROCESS_DATE" property="lastProcessDate" jdbcType="DATE" />
+		<result column="NEXT_PROCESS_DATE" property="nextProcessDate" jdbcType="DATE" />
+		<result column="LAST_BATCH_NO" property="lastBatchNo" jdbcType="VARCHAR" />
+		<result column="LAST_MODIFY_TIME" property="lastModifyTime" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR_LOGINNAME" property="operatorLoginname" jdbcType="VARCHAR" />
+		<result column="OPERATOR_REALNAME" property="operatorRealname" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, ACCOUNT_NO, USER_NO, USER_NAME, SETT_TYPE,
+		SETT_CYCLE_TYPE, SETT_CYCLE_DATA, RISK_DAY, IS_SETT, CURRENT_SETT_STATUS, LAST_SUM_DATE,
+		LAST_SETT_DATE, LAST_PROCESS_DATE, NEXT_PROCESS_DATE, LAST_BATCH_NO, LAST_MODIFY_TIME,
+		OPERATOR_LOGINNAME, OPERATOR_REALNAME, REMARK
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="accountNo != null and accountNo != ''"> and ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR}</if>
+		<if test="userNo != null and userNo != ''"> and USER_NO = #{userNo,jdbcType=VARCHAR}</if>
+		<if test="userName != null and userName != ''"> and USER_NAME = #{userName,jdbcType=VARCHAR}</if>
+		<if test="settType != null and settType != ''"> and SETT_TYPE = #{settType,jdbcType=SMALLINT}</if>
+		<if test="settCycleType != null and settCycleType != ''"> and SETT_CYCLE_TYPE = #{settCycleType,jdbcType=SMALLINT}</if>
+		<if test="isSett != null and isSett != ''"> and IS_SETT = #{isSett,jdbcType=SMALLINT}</if>
+		<if test="currentSettStatus != null and currentSettStatus != ''"> and CURRENT_SETT_STATUS = #{currentSettStatus,jdbcType=SMALLINT}</if>
+		<if test="lastBatchNo != null and lastBatchNo != ''"> and LAST_BATCH_NO = #{lastBatchNo,jdbcType=VARCHAR}</if>
+		<if test="operatorLoginName != null and operatorLoginName != ''"> and OPERATOR_LOGIN_NAME = #{operatorLoginName,jdbcType=VARCHAR}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="wusc.edu.pay.facade.settlement.entity.SettRule">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		ACCOUNT_NO, USER_NO, USER_NAME,
+		SETT_TYPE, SETT_CYCLE_TYPE,
+		SETT_CYCLE_DATA, RISK_DAY, IS_SETT,
+		CURRENT_SETT_STATUS, LAST_SUM_DATE, LAST_SETT_DATE,
+		LAST_PROCESS_DATE, NEXT_PROCESS_DATE, LAST_BATCH_NO,
+		LAST_MODIFY_TIME, OPERATOR_LOGINNAME, OPERATOR_REALNAME,
+		REMARK)
+		values (0, #{createTime},
+		#{accountNo,jdbcType=VARCHAR}, #{userNo,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+		#{settType,jdbcType=SMALLINT}, #{settCycleType,jdbcType=SMALLINT},
+		#{settCycleData,jdbcType=VARCHAR}, #{riskDay,jdbcType=SMALLINT}, #{isSett,jdbcType=SMALLINT},
+		#{currentSettStatus,jdbcType=SMALLINT}, #{lastSumDate,jdbcType=DATE}, #{lastSettDate,jdbcType=DATE},
+		#{lastProcessDate,jdbcType=DATE}, #{nextProcessDate,jdbcType=DATE}, #{lastBatchNo,jdbcType=VARCHAR},
+		#{lastModifyTime,jdbcType=TIMESTAMP}, #{operatorLoginname,jdbcType=VARCHAR}, #{operatorRealname,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.settlement.entity.SettRule">
+		update
+		<include refid="table" />
+		set VERSION = #{version} + 1,
+		ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR},
+		USER_NO = #{userNo,jdbcType=VARCHAR},
+		USER_NAME = #{userName,jdbcType=VARCHAR},
+		SETT_TYPE = #{settType,jdbcType=SMALLINT},
+		SETT_CYCLE_TYPE = #{settCycleType,jdbcType=SMALLINT},
+		SETT_CYCLE_DATA = #{settCycleData,jdbcType=VARCHAR},
+		RISK_DAY = #{riskDay,jdbcType=SMALLINT},
+		IS_SETT = #{isSett,jdbcType=SMALLINT},
+		CURRENT_SETT_STATUS = #{currentSettStatus,jdbcType=SMALLINT},
+		LAST_SUM_DATE = #{lastSumDate,jdbcType=DATE},
+		LAST_SETT_DATE = #{lastSettDate,jdbcType=DATE},
+		LAST_PROCESS_DATE = #{lastProcessDate,jdbcType=DATE},
+		NEXT_PROCESS_DATE = #{nextProcessDate,jdbcType=DATE},
+		LAST_BATCH_NO = #{lastBatchNo,jdbcType=VARCHAR},
+		LAST_MODIFY_TIME = FUN_NOW(),
+		OPERATOR_LOGINNAME = #{operatorLoginname,jdbcType=VARCHAR},
+		OPERATOR_REALNAME = #{operatorRealname,jdbcType=VARCHAR},
+		REMARK = #{remark,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.pms.dao.impl.PmsRoleOperatorDaoImpl">
+
+	<!-- Pms权限管理：角色与操作员关联表 -->
+	<sql id="pms_role_operator"> TBL_AGENT_PMS_ROLE_OPERATOR </sql>
+	
+	<resultMap id="beanMap" type="PmsRoleOperator">
+	    <id column="ID" property="id" />
+		<result column="ROLEID" property="roleId" />
+		<result column="OPERATORID" property="operatorId" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="PmsRoleOperator" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_role_operator"/> 
+		(ROLEID, OPERATORID) values (#{roleId}, #{operatorId})
+	</insert>
+	
+	<select id="listByRoleId" parameterType="long" resultType="PmsRoleOperator">
+		select 
+			O.ID as "id",
+			O.ROLEID as "roleId",
+			O.OPERATORID as "operatorId"
+		from <include refid="pms_role_operator"/> O where O.ROLEID = #{roleId}
+	</select>
+	
+	<select id="listByOperatorId" parameterType="long" resultType="PmsRoleOperator">
+		select 
+			O.ID as "id",
+			O.ROLEID as "roleId",
+			O.OPERATORID as "operatorId"
+		from <include refid="pms_role_operator"/> O where O.OPERATORID = #{operatorId}
+	</select>
+	
+	<delete id="deleteByRoleId" parameterType="long">
+    	delete from <include refid="pms_role_operator"/> where ROLEID = #{roleId}
+  	</delete>
+  	
+  	<delete id="deleteByOperatorId" parameterType="long">
+    	delete from <include refid="pms_role_operator"/> where OPERATORID = #{operatorId}
+  	</delete>
+  	
+  	<delete id="deleteByRoleIdAndOperatorId" parameterType="java.util.Map">
+    	delete from <include refid="pms_role_operator"/> where ROLEID = #{roleId} and OPERATORID = #{operatorId}
+  	</delete>
+  	
+</mapper>

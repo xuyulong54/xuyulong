@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<package name="bankPackage" extends="loginPackage">
+
+		<!-- 银行Action -->
+		<action name="bank_*" class="wusc.edu.pay.web.boss.action.BankOperatorAction" method="{1}">
+			<result name="dictList">page/bank/DictList.jsp</result>
+			<result name="adddictUI">page/bank/DictInput.jsp</result>			
+			<result name="listBankChannel">page/bank/BankChannelList.jsp</result>
+			<result name="addBankChannelUI">page/bank/BankChannelInput.jsp</result>
+			<result name="editBankChannelUI">page/bank/BankChannelEdit.jsp</result>
+			<result name="listAccount">page/bank/AccountList.jsp</result>
+			<result name="addAccountUI">page/bank/AccountInput.jsp</result>
+			<result name="editAccountUI">page/bank/AccountInput.jsp</result>
+			<result name="listAccountHistory">page/bank/AccountHistoryList.jsp</result>
+			<result name="listBankAgreement">page/bank/BankAgreementList.jsp</result>
+			<result name="addBankAgreementUI">page/bank/BankAgreementInput.jsp</result>
+			<result name="editBankAgreementUI">page/bank/BankAgreementEdit.jsp</result>
+			<result name="viewBankAgreement">page/bank/BankAgreementView.jsp</result>
+			<result name="viewBankChannel">page/bank/BankChannelView.jsp</result>
+			<result name="editBankBusiSettingUI">page/bank/BankBusiSettingInput.jsp</result>
+			<!--银行的查找带回，用于在其他依赖于银行信息的模块中选择商户信息进行关联 -->
+			<result name="BankAgreementLookupList">page/bank/BankAgreementLookupList.jsp</result>
+			<result name="BankChannelLookuplist">page/bank/BankChannelLookuplist.jsp</result>
+		</action>
+		
+		<!-- 银行订单掉单补发 -->		
+		<action name="bankOrder_*" class="wusc.edu.pay.web.boss.action.BankOrderQueryAction" method="{1}">
+			<result name="queryBankOrder">page/bank/BankOrderQuery.jsp</result>
+		</action>
+		
+		<!-- 银行结算信息管理 -->		
+		<action name="banksettlement_*" class="wusc.edu.pay.web.boss.action.BanksettlementAction" method="{1}">
+			<result name="listBanksettlement">page/bank/BanksettlementList.jsp</result>
+			<result name="addBanksettlementUI">page/bank/BanksettlementInput.jsp</result>
+			<result name="editBanksettlementUI">page/bank/BanksettlementEdit.jsp</result>
+			<result name="viewBanksettlement">page/bank/BanksettlementView.jsp</result>
+		</action>
+		
+		<!-- 银行账户管理 -->
+		<action name="bankAccount_*" class="wusc.edu.pay.web.boss.action.BankAccountAction" method="{1}">
+			<result name="listBankAccount">page/bank/BankAccountList.jsp</result>
+			<result name="addBankAccountUI">page/bank/BankAccountInput.jsp</result>
+			<result name="editBankAccountUI">page/bank/BankAccountEdit.jsp</result>
+			<result name="viewBankAccount">page/bank/BankAccountView.jsp</result>
+			<result name="bankAccountLookupList">page/bank/BankAccountLookuplist.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>

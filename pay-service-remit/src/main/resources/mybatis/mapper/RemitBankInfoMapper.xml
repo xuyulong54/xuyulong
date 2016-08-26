@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitBankInfoDaoImpl">
+
+	<sql id="table"> TBL_REMIT_BANK_INFO </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitBankInfo">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="BANK_CHANNEL_NO" property="bankChannelNo" jdbcType="VARCHAR" />
+		<result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="BANK_TYPE" property="bankType" jdbcType="SMALLINT" />
+		<result column="CLEAR_BANK_CHANNEL_NO" jdbcType="VARCHAR" property="clearBankChannelNo" />
+		<result column="IS_IN_PROVINCE" jdbcType="SMALLINT" property="isInProvince" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, BANK_CHANNEL_NO, BANK_NAME, PROVINCE, CITY, BANK_TYPE, CLEAR_BANK_CHANNEL_NO, IS_IN_PROVINCE
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="bankChannelNo != null and bankChannelNo != ''"> and BANK_CHANNEL_NO = #{bankChannelNo}</if>
+		<if test="bankType != null and bankType != ''"> and BANK_TYPE = #{bankType}</if>
+		<if test="bankName != null and bankName != ''"> and BANK_NAME like CONCAT('%', CONCAT(#{bankName}, '%')) </if>
+		<if test="isInProvince != null and isInProvince != ''"> and IS_IN_PROVINCE = #{isInProvince}</if>
+		<if test="clearBankChannelNo != null and clearBankChannelNo != ''"> and CLEAR_BANK_CHANNEL_NO = #{clearBankChannelNo}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitBankInfo" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, BANK_CHANNEL_NO,
+		BANK_NAME, PROVINCE, CITY,
+		BANK_TYPE, CLEAR_BANK_CHANNEL_NO, IS_IN_PROVINCE)
+		values (0, #{bankChannelNo,jdbcType=VARCHAR},
+		#{bankName,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+		#{bankType,jdbcType=SMALLINT}, #{clearBankChannelNo,jdbcType=VARCHAR}, #{isInProvince,jdbcType=SMALLINT})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitBankInfo">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=SMALLINT}+1,
+		BANK_CHANNEL_NO = #{bankChannelNo,jdbcType=VARCHAR},
+		BANK_NAME = #{bankName,jdbcType=VARCHAR},
+		PROVINCE = #{province,jdbcType=VARCHAR},
+		CITY = #{city,jdbcType=VARCHAR},
+		BANK_TYPE = #{bankType,jdbcType=SMALLINT},
+		CLEAR_BANK_CHANNEL_NO = #{clearBankChannelNo,jdbcType=VARCHAR},
+		IS_IN_PROVINCE = #{isInProvince,jdbcType=SMALLINT}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listByBankTypeCodeAndArea" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where
+		SUBSTR(BANK_CHANNEL_NO,1,3)=#{bankTypeCode,jdbcType=VARCHAR}
+		AND SUBSTR(BANK_CHANNEL_NO,4,4) IN
+		(
+		SELECT
+		AREA_CODE
+		FROM
+		TBL_REMIT_BANK_AREA
+		<where>
+			<if test="province != null and province != ''"> and PROVINCE = #{province}</if>
+			<if test="city != null and city != ''"> and CITY = #{city}</if>
+		</where>
+		)
+
+	</select>
+
+	<select id="listByBankName" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<if test="bankName != null and bankName != ''"> and BANK_NAME like CONCAT('%', CONCAT(#{bankName}, '%')) </if>
+		</where>
+	</select>
+
+
+</mapper>

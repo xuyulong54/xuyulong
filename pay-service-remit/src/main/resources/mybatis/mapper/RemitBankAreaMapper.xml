@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitBankAreaDaoImpl">
+
+	<sql id="table"> TBL_REMIT_BANK_AREA </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitBankArea">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+		<result column="AREA_NAME" property="areaName" jdbcType="VARCHAR" />
+		<result column="LEVEL" property="level" jdbcType="SMALLINT" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, AREA_CODE, AREA_NAME, LEVEL, CITY, PROVINCE
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="areaCode != null and areaCode != ''"> and AREA_CODE = #{areaCode}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitBankArea" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, AREA_CODE,
+		AREA_NAME, LEVEL, CITY,
+		PROVINCE)
+		values (0, #{areaCode,jdbcType=VARCHAR},
+		#{areaName,jdbcType=VARCHAR}, #{level,jdbcType=SMALLINT}, #{city,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitBankArea">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=SMALLINT}+1,
+		AREA_CODE = #{areaCode,jdbcType=VARCHAR},
+		AREA_NAME = #{areaName,jdbcType=VARCHAR},
+		LEVEL = #{level,jdbcType=SMALLINT},
+		CITY = #{city,jdbcType=VARCHAR},
+		PROVINCE = #{province,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="getProvince" resultType="java.util.Map">
+		select PROVINCE as "province" from TBL_REMIT_BANK_AREA group by PROVINCE
+	</select>
+
+	<select id="getCityByProvince" parameterType="java.lang.String" resultType="java.util.Map">
+		select CITY as "city" from TBL_REMIT_BANK_AREA group by CITY,PROVINCE having PROVINCE=#{province}
+	</select>
+
+	<select id="listByAreaCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<if test="areaCode != null and areaCode != ''"> and AREA_CODE = #{areaCode}</if>
+		</where>
+	</select>
+
+</mapper>

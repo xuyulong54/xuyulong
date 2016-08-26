@@ -1,0 +1,130 @@
+﻿body{ color:#535353; background:#fbfbfb; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height:150%;margin:0 auto; _width:980px; min-width:980px; width: expression((documentElement.clientWidth < 1024) ? "980px" : "auto" );}
+a:link, a:visited{ color:#666666; text-decoration:none;}
+a:hover,a:active{ color:#ce484d; text-decoration:none;}
+ul,li,dl,dt,dd,from{ margin:0; padding:0; list-style:none}
+
+/*-------最顶部导航菜单-----------*/
+.bg
+{
+    height: 35px;
+    background-image: url('../images/testImages/nav.jpg');
+    background-repeat: repeat-x;
+    font-family: 微软雅黑;
+    font-size: 14px;
+    color: #B9BABE;
+}
+
+#Menu_hover
+{
+    list-style: none;
+    line-height: 50px;
+}
+
+
+#Menu_hover li
+{
+    width: 100px;
+    line-height: 35px;
+    text-align: center;
+    float: right;
+    border-left: 2px solid #4C5054;
+}
+#Menu_hover li:hover, #Menu_hover li.sfhover
+{
+    background-color: #4C5054;
+     color: #B9BABE;
+}
+#Menu_hover li a
+{
+    text-decoration: none;
+    color: #B9BABE;
+}
+.Menu
+{
+    width: 290px;
+    height: 70px;
+    float: left;
+    color: #4B4F52;
+    line-height: 35px;
+}
+/*-------最顶部导航菜单-----------*/
+
+/********** 菜单样式********************/
+.nav
+{
+    height: 70px;
+    background-color: #F6F6F6;
+}
+nav{width:980px; margin:auto; border-top:1px solid #fff; position:relative;font-size: 16px;} 
+nav img{ float:left; margin-top:10px;}
+nav a.WoDeZhangHu,nav a.JiaoYiZhongXin,nav a.AnQuanZhongXin,nav a.BangZhu{ float:left; display:block; line-height:70px; position:relative;}
+
+nav a.index{ float:none; display:block; width:auto; padding:0%; text-indent:0; position:relative}
+
+nav a span{ display:block; width:180px; height:70px; overflow:hidden; padding:10px 0 0 10px; cursor:pointer;font-family:微软雅黑;}
+
+
+nav a.WoDeZhangHu span,nav a.BangZhu span{ width:150px;}
+
+
+nav a.WoDeZhangHu span,nav a.JiaoYiZhongXin span,nav a.AnQuanZhongXin span,nav a.BangZhu span{background-position:-300px 0 ;}
+
+nav a.WoDeZhangHu:hover span,nav a.JiaoYiZhongXin span.now{background-position:-300px -30px ;}
+
+
+nav a.WoDeZhangHu span,nav a.JiaoYiZhongXin span,nav a.AnQuanZhongXin span,nav a.BangZhu span i{ left:100px}
+
+nav .navArr{  position:absolute; z-index:13; background:#f5f5f5; border:1px solid #cacaca;  top:65px;}
+nav .navArr ul{ width:150px; float:left;}
+nav .navArr li{ line-height:25px; margin:1px 0; border:1px solid #f5f5f5; font-size:12px;}
+nav .navArr a{ display:block; padding-left:15px;}
+nav .navArr strong{ display:block; padding-left:15px;background:#f1f1f1; color:#000}
+nav .navArr a:hover{ background:#ce484d; color:#fff;}
+
+
+nav .nav_WoDeZhangHu{left:70px; _left:-30px;width:150px; display:none;}
+nav .nav_JiaoYiZhongXin{left:240px; _left:140px;width:150px; display:none;}
+nav .nav_AnQuanZhongXin{left:430px; _left:320px;width:150px; display:none;}
+nav .nav_BangZhu{left:620px; _left:480px;width:150px; display:none;}
+
+nav .nav_WoDeZhangHu .nav_arr{ margin-top:-10px;left:60px; position:absolute; _position:relative;}
+nav .nav_JiaoYiZhongXin .nav_arr{ margin-top:-10px;left:60px; position:absolute; _position:relative;}
+nav .nav_AnQuanZhongXin .nav_arr{ margin-top:-10px;left:60px; position:absolute; _position:relative;}
+nav .nav_BangZhu .nav_arr{ margin-top:-10px;left:60px; position:absolute; _position:relative;}
+/********** 菜单样式 结束********************/
+
+/*产品信息*/
+.content{width:1000px; height:410px; border:1px solid  #cacaca; margin-left:150px; }
+
+.content div { float:left; width:300px; height:390px; border:1px solid  #cacaca;margin:8px 0 8px 25px; }
+
+/*产品信息*/
+   
+
+/*页脚*/   
+.footer{width:100%;height:70px; background-image:url('../images/testImages/ft.jpg'); background-repeat:repeat-x; text-align:center; padding-top:20px; padding-left:400px;} 
+.footer ul{ list-style:none;}
+.footer ul li{ float:left; width:80px; height:30px; line-height:30px; font-family:微软雅黑; font-size:14px; border-right:1px solid #A3A2A2; text-align:center;}
+/*页脚*/ 
+
+
+
+   /****浅蓝色按钮样式*****/  
+   
+ .blueBtn{ border-style: none; width: 98px;font-family: 微软雅黑; font-size: 16px; color: #4B4F52; height: 30px; background-image: url('../images/btn.jpg')}
+ 
+  /****浅蓝色按钮样式 结束*****/  
+  
+  /*错误信息提示*/
+  .wrongInfo,#wrongInfo{background-color:#FFF799;font-size:12px;color:#FF0000;height:auto; margin-top:5px; padding:5px 15px; font-weight:bold}
+   /*错误信息提示*/
+
+
+
+/****查询结果列表样式*****/  
+   .Form_Head{ border:1px solid #D5D6D9; background-color: #F6F6F6; height:40px; line-height:40px; text-align:center; font-weight:bold;font-size:14px;}
+    .Form_Content{border:1px solid #D5D6D9; height:40px; line-height:40px; text-align:center; font-size:14px;}
+    /****查询结果列表样式  结束*****/  
+    
+    
+.Download_btn{width:100px;height:25px; line-height:25px; border:none; background-image:url('../images/Download_btn.jpg'); color: #4B4F52; font-size:14px; text-indent:15px;}    

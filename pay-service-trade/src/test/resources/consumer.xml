@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供 -->
+	<bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<!-- ActiveMQ服务地址 -->
+		<property name="brokerURL" value="failover:(tcp://10.10.12.181:61616,tcp://10.10.12.182:61617)?randomize=false" />
+		<property name="userName" value="xunshipay"></property>
+		<property name="password" value="xunshipay.com"></property>
+	</bean>
+
+	<!-- ActiveMQ为我们提供了一个PooledConnectionFactory，通过往里面注入一个ActiveMQConnectionFactory 可以用来将Connection、Session和MessageProducer池化，这样可以大大的减少我们的资源消耗。 要依赖于 activemq-pool包 -->
+	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+		<property name="connectionFactory" ref="targetConnectionFactory" />
+		<property name="maxConnections" value="10" />
+	</bean>
+
+	<!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory -->
+	<bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+		<!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory -->
+		<property name="targetConnectionFactory" ref="pooledConnectionFactory" />
+	</bean>
+
+	<!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
+
+	<!-- 商户通知队列模板 -->
+	<bean id="notifyJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultDestinationName" value="xs.queue.notify.v1"></property>
+	</bean>
+
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="dubbo-consumer-order-test" />
+
+	<!-- 使用zookeeper注册中心暴露发现服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="10.10.12.61:2181,10.10.12.62:2181,10.10.12.71:2181" />
+
+	<!-- 账户子系统对外服务接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.trade.service.PaymentQueryFacade" id="paymentQueryFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.trade.service.PaymentFacade" id="paymentFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.trade.service.TransferFacade" id="transferFacade" />
+
+
+	<!-- 调用用商户计费服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.fee.service.CalculateFeeFacade" id="calculateFeeFacade" check="false" />
+
+</beans>  

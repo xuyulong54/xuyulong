@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="bankreceive" extends="base">
+
+		<!-- 银行通知 -->
+		<action name="netPay_*_*" class="wusc.edu.pay.web.bankreceive.action.NetBankReceiveAction" method="{1}">
+			<param name="payInterface">{2}</param>
+			<result name="success">page/basepage/bankPaySuccess.jsp</result>
+			<result name="error">page/basepage/bankPayFalse.jsp</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="pay-web-bank-receive" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<!-- 多注册中心配置，竖号分隔表示同时连接多个不同注册中心，同一注册中心的多个集群地址用逗号分隔 -->
+	<!-- 注册中心地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+
+	<!-- 生成远程服务代理，可以和本地bean一样使用accountFacade -->
+	<!-- 用户服务接口 -->
+	<dubbo:reference retries="0" interface="wusc.edu.pay.facade.user.service.UserBankAccountFacade" id="userBankAccountFacade" />
+	<dubbo:reference retries="0" interface="wusc.edu.pay.facade.user.service.MerchantOnlineFacade" id="merchantOnlineFacade" />
+	
+	<dubbo:reference retries="0" interface="wusc.edu.pay.facade.trade.service.PaymentFacade" id="paymentFacade" />
+	<dubbo:reference retries="0" interface="wusc.edu.pay.facade.trade.service.PaymentQueryFacade" id="paymentQueryFacade" />
+	
+	<dubbo:reference retries="0" interface="wusc.edu.pay.facade.banklink.netpay.service.BankFacade" id="bankFacade" />
+	
+	
+	
+</beans>  

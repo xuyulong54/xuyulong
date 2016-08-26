@@ -1,0 +1,22 @@
+
+
+div.zTreeDemo
+{
+    width: 250px;
+    height: 170px;
+    text-align: left;
+    float: left;
+}
+
+ul
+{
+    display: block;
+}
+
+ul.ztree
+{
+    margin-top: 10px;
+    width: 220px;
+    height: 170px;
+    overflow-x: auto;
+}

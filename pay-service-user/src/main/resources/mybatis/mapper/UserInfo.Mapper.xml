@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserInfoDaoImpl">
+
+	<sql id="table"> TBL_USER_INFO </sql>
+
+	<resultMap id="beanMap" type="UserInfo">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="ACCOUNTNO" property="accountNo" />
+		<result column="USERNO" property="userNo" />
+		<result column="LOGINNAME" property="loginName" />
+		<result column="USERTYPE" property="userType" />
+		<result column="GREETING" property="greeting" />
+		<result column="QUESTION" property="question" />
+		<result column="ANSWER" property="answer" />
+		<result column="BINDMOBILENO" property="bindMobileNo" />
+		<result column="BINDEMAIL" property="bindEmail" />
+		<result column="PROVINCE" property="province" />
+		<result column="CITY" property="city" />
+		<result column="AREA" property="area" />
+		<result column="CARDNO" property="cardNo" />
+		<result column="REALNAME" property="realName" />
+		<result column="STATUS" property="status" />
+		<result column="ISEMAILAUTH" property="isEmailAuth" />
+		<result column="ISMOBILEAUTH" property="isMobileAuth" />
+		<result column="ISREALNAMEAUTH" property="isRealNameAuth" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserInfo" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, ACCOUNTNO, USERNO, LOGINNAME, USERTYPE,
+		GREETING, QUESTION, ANSWER, BINDMOBILENO, BINDEMAIL, PROVINCE, CITY, AREA, CARDNO, REALNAME, STATUS, ISEMAILAUTH, ISMOBILEAUTH,ISREALNAMEAUTH)
+		values (0, #{createTime}, #{accountNo}, #{userNo}, #{loginName}, #{userType},
+		#{greeting}, #{question}, #{answer}, #{bindMobileNo}, #{bindEmail}, #{province}, #{city}, #{area},
+		#{cardNo}, #{realName}, #{status}, #{isEmailAuth}, #{isMobileAuth}, #{isRealNameAuth})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserInfo">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			ACCOUNTNO = #{accountNo},
+			USERNO = #{userNo},
+			LOGINNAME = #{loginName},
+			USERTYPE = #{userType},
+			GREETING = #{greeting},
+			QUESTION = #{question},
+			ANSWER = #{answer},
+			BINDMOBILENO = #{bindMobileNo},
+			BINDEMAIL = #{bindEmail},
+			PROVINCE = #{province},
+			CITY = #{city},
+			AREA = #{area},
+			CARDNO = #{cardNo},
+			REALNAME = #{realName},
+			STATUS = #{status},
+			ISEMAILAUTH = #{isEmailAuth},
+			ISMOBILEAUTH = #{isMobileAuth},
+			ISREALNAMEAUTH = #{isRealNameAuth}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="loginName != null and loginName !=''"> and LOGINNAME = #{loginName} </if>
+		<if test="accountNo != null and accountNo != ''"> and ACCOUNTNO = #{accountNo} </if>
+		<if test="userNo != null and userNo != ''"> and USERNO = #{userNo} </if>
+		<if test="cardNo != null and cardNo != ''"> and CARDNO = #{cardNo} </if>
+		<if test="isRealNameAuth != null and isRealNameAuth != ''"> and ISREALNAMEAUTH = #{isRealNameAuth} </if>
+		<if test="status != null and status != ''"> and STATUS = #{status} </if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="inStatus != null and inStatus != ''">
+			and STATUS in
+			<foreach item="item" index="index" collection="inStatus" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		<if test="userType != null and userType != ''"> and USERTYPE = #{userType} </if>
+		<if test="bindMobileNo != null and bindMobileNo != ''"> and BINDMOBILENO = #{bindMobileNo} </if>
+		<if test="bindEmail != null and bindEmail != ''"> and BINDEMAIL = #{bindEmail} </if>
+		<if test="startDate != null and startDate != '' and endDate != '' and endDate != null">
+			and CREATETIME between #{beginDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+		<if test="userNoKey != null and userNoKey != ''"> and USERNO LIKE CONCAT('%' ,CONCAT(#{userNoKey},'%')) </if>
+	</sql>
+
+	<!-- 根据多参数进行查询数据 -->
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<!-- 更新用户状态,并标记用户为已实名认证 -->
+	<update id="updateUserInfoStatusAndIsRealName" parameterType="java.util.Map">
+		update
+		<include refid="table" />
+		set STATUS = #{status}, ISREALNAMEAUTH = #{isRealNameAuth}
+		<where>
+			USERNO = #{userNo}
+		</where>
+	</update>
+	
+	<select id="likeBy" parameterType="java.util.Map" resultType="java.util.Map">
+		select USERNO as "code", USERNO as "name", REALNAME as "desc" from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

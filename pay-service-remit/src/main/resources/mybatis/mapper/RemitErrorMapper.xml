@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitErrorDaoImpl">
+
+	<sql id="table"> TBL_REMIT_ERROR </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitError">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="TYPE" property="type" jdbcType="SMALLINT" />
+		<result column="REQUEST_NO" property="requestNo" jdbcType="VARCHAR" />
+		<result column="BANK_ORDER_NO" property="bankOrderNo" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+		<result column="BANK_CHANNEL_NO" property="bankChannelNo" jdbcType="VARCHAR" />
+		<result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+		<result column="USER_NO" property="userNo" jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="BANK_REMARK" property="bankRemark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION,TYPE, REQUEST_NO, BANK_ORDER_NO, ACCOUNT_NAME, ACCOUNT_NO, BANK_CHANNEL_NO, BANK_NAME, STATUS, AMOUNT, USER_NO, CREATOR, CREATE_DATE, BANK_REMARK
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="requestNo != null and requestNo != ''"> and REQUEST_NO = #{requestNo}</if>
+		<if test="bankOrderNo != null and bankOrderNo != ''"> and BANK_ORDER_NO = #{bankOrderNo}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="accountName != null and accountName != ''"> and ACCOUNT_NAME like CONCAT(CONCAT('%', #{accountName}), '%')</if>
+		<if test="bankName != null and bankName != ''"> and BANK_NAME like CONCAT(CONCAT('%', #{bankName}), '%')</if>
+		<if test="accountNo != null and accountNo != ''"> and ACCOUNT_NO like CONCAT(CONCAT('%', #{accountNo}), '%')</if>
+		<if test="bankChannelNo != null and bankChannelNo != ''"> and BANK_CHANNEL_NO like CONCAT(CONCAT('%', #{bankChannelNo}), '%')</if>
+
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and CREATE_DATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="creator != null and creator != ''"> and CREATOR = #{creator}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitError" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION,TYPE, REQUEST_NO, BANK_ORDER_NO,
+		ACCOUNT_NAME, ACCOUNT_NO, BANK_CHANNEL_NO,
+		BANK_NAME, STATUS, AMOUNT, USER_NO, CREATOR,
+		CREATE_DATE, BANK_REMARK)
+		values (0, #{type},#{requestNo},#{bankOrderNo},
+		#{accountName}, #{accountNo},#{bankChannelNo},
+		#{bankName}, #{status}, #{amount},#{userNo} ,#{creator},
+		FUN_NOW(), #{bankRemark})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitError">
+		update
+		<include refid="table" />
+		set VERSION = #{version}+1,
+		STATUS = #{status},
+		where ID = #{id} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="getByRequestNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where REQUEST_NO = #{requestNo}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+</mapper>

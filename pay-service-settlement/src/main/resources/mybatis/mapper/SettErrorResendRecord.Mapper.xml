@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.settlement.dao.impl.SettErrorResendRecordDaoImpl">
+
+	<sql id="table"> TBL_SETT_ERROR_RESEND_RECORD </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.settlement.entity.SettErrorResendRecord">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+		<result column="REMIT_NO" property="remitNo" jdbcType="VARCHAR" />
+		<result column="CURRENCY_TYPE" property="currencyType" jdbcType="SMALLINT" />
+		<result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT_NAME" property="bankAccountName" jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT_NO" property="bankAccountNo" jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT_TYPE" property="bankAccountType" jdbcType="SMALLINT" />
+		<result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT_ADDRESS" property="bankAccountAddress" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="OPERATOR_LOGINNAME" property="operatorLoginname" jdbcType="VARCHAR" />
+		<result column="OPERATOR_REALNAME" property="operatorRealname" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, BATCH_NO, REMIT_NO, CURRENCY_TYPE, BANK_CODE, BANK_ACCOUNT_NAME,
+		BANK_ACCOUNT_NO, BANK_ACCOUNT_TYPE, COUNTRY, PROVINCE, CITY, BANK_ACCOUNT_ADDRESS,
+		REMARK, OPERATOR_LOGINNAME, OPERATOR_REALNAME
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="batchNo != null and batchNo != ''"> and BATCH_NO = #{batchNo,jdbcType=VARCHAR}</if>
+		<if test="remitNo != null and remitNo != ''"> and REMIT_NO = #{remitNo,jdbcType=VARCHAR}</if>
+		<if test="currencyType != null and currencyType != ''"> and CURRENCY_TYPE = #{currencyType,jdbcType=SMALLINT}</if>
+		<if test="bankCode != null and bankCode != ''"> and BANK_CODE = #{bankCode,jdbcType=VARCHAR}</if>
+		<if test="bankAccountType != null and bankAccountType != ''"> and BANK_ACCOUNT_TYPE = #{bankAccountType,jdbcType=SMALLINT}</if>
+		<if test="operatorLoginName != null and operatorLoginName != ''"> and OPERATOR_LOGIN_NAME = #{operatorLoginName,jdbcType=VARCHAR}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="wusc.edu.pay.facade.settlement.entity.SettErrorResendRecord">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		BATCH_NO, REMIT_NO, CURRENCY_TYPE,
+		BANK_CODE, BANK_ACCOUNT_NAME, BANK_ACCOUNT_NO,
+		BANK_ACCOUNT_TYPE, COUNTRY, PROVINCE,
+		CITY, BANK_ACCOUNT_ADDRESS, REMARK,
+		OPERATOR_LOGINNAME, OPERATOR_REALNAME)
+		values (0, #{createTime},
+		#{batchNo,jdbcType=VARCHAR}, #{remitNo,jdbcType=VARCHAR}, #{currencyType,jdbcType=SMALLINT},
+		#{bankCode,jdbcType=VARCHAR}, #{bankAccountName,jdbcType=VARCHAR}, #{bankAccountNo,jdbcType=VARCHAR},
+		#{bankAccountType,jdbcType=SMALLINT}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR}, #{bankAccountAddress,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+		#{operatorLoginname,jdbcType=VARCHAR}, #{operatorRealname,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.settlement.entity.SettErrorResendRecord">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		BATCH_NO = #{batchNo,jdbcType=VARCHAR},
+		REMIT_NO = #{remitNo,jdbcType=VARCHAR},
+		CURRENCY_TYPE = #{currencyType,jdbcType=SMALLINT},
+		BANK_CODE = #{bankCode,jdbcType=VARCHAR},
+		BANK_ACCOUNT_NAME = #{bankAccountName,jdbcType=VARCHAR},
+		BANK_ACCOUNT_NO = #{bankAccountNo,jdbcType=VARCHAR},
+		BANK_ACCOUNT_TYPE = #{bankAccountType,jdbcType=SMALLINT},
+		COUNTRY = #{country,jdbcType=VARCHAR},
+		PROVINCE = #{province,jdbcType=VARCHAR},
+		CITY = #{city,jdbcType=VARCHAR},
+		BANK_ACCOUNT_ADDRESS = #{bankAccountAddress,jdbcType=VARCHAR},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		OPERATOR_LOGINNAME = #{operatorLoginname,jdbcType=VARCHAR},
+		OPERATOR_REALNAME = #{operatorRealname,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

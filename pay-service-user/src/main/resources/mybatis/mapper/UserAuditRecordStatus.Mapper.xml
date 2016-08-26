@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserAuditRecordStatusDaoImpl">
+
+	<sql id="table"> TBL_USER_AUDIT_RECORD_STATUS </sql>
+
+	<resultMap id="beanMap" type="UserAuditRecordStatus">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="loginName" column="LOGINNAME" />
+		<result property="userNo" column="USERNO" />
+		<result property="fullName" column="FULLNAME" />
+		<result property="userType" column="USERTYPE" />
+		<result property="auditStatus" column="AUDITSTATUS" />
+		<result property="applyDesc" column="APPLYDESC" />
+		<result property="auditDesc" column="AUDITDESC" />
+		<result property="auditOperatorLoginName" column="AUDITOPERATORLOGINNAME" />
+		<result property="auditOperatorName" column="AUDITOPERATORNAME" />
+		<result property="dealTime" column="DEALTIME" />
+		<result property="changeStatus" column="CHANGESTATUS" />
+		<result property="currentStatus" column="CURRENTSTATUS" />
+		<result property="applyOperatorLoginName" column="APPLYOPERATORLOGINNAME" />
+		<result property="applyOperatorName" column="APPLYOPERATORNAME" />
+		<result property="actualChangeStatus" column="ACTUALCHANGESTATUS" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserAuditRecordStatus" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, LOGINNAME, USERNO, FULLNAME,
+		USERTYPE, AUDITSTATUS, APPLYDESC, AUDITDESC, AUDITOPERATORLOGINNAME,
+		AUDITOPERATORNAME, DEALTIME, CHANGESTATUS, CURRENTSTATUS,
+		APPLYOPERATORLOGINNAME,
+		APPLYOPERATORNAME, ACTUALCHANGESTATUS
+		)
+		values (0, #{createTime}, #{loginName}, #{userNo}, #{fullName},
+		#{userType}, #{auditStatus}, #{applyDesc}, #{auditDesc},
+		#{auditOperatorLoginName},
+		#{auditOperatorName}, #{dealTime}, #{changeStatus}, #{currentStatus}, #{applyOperatorLoginName},
+		#{applyOperatorName}, #{actualChangeStatus} )
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserAuditRecordStatus">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1,
+			AUDITSTATUS = #{auditStatus},
+			ACTUALCHANGESTATUS = #{actualChangeStatus},
+			APPLYDESC = #{applyDesc},
+			AUDITDESC = #{auditDesc},
+			AUDITOPERATORLOGINNAME = #{auditOperatorLoginName},
+			AUDITOPERATORNAME = #{auditOperatorName},
+			DEALTIME = FUN_NOW()
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+	
+	<!-- 批量更新商编 -->
+	<update id="updateMerchNo" parameterType="java.util.Map">
+		update 
+		<include refid="table" />
+		<set>
+			USERNO = #{newMerchNo}
+		</set>
+		<where>
+			USERNO = #{oldMerchNo} 
+		</where>
+	</update>
+
+	<delete id="deleteById" parameterType="long">
+		delete
+		<include refid="table" />
+		where ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="loginName != null and loginName !='' "> and LOGINNAME = #{loginName}</if>
+		<if test="changeStatus != null and changeStatus !='' "> and CHANGESTATUS = #{changeStatus}</if>
+		<if test="fullName != null and fullName !='' "> and FULLNAME = #{fullName}</if>
+		<if test="userType != null and userType !='' "> and USERTYPE = #{userType}</if>
+		<if test="userNo != null and userNo !='' "> AND USERNO = #{userNo}</if>
+		<if test="auditStatus != null and auditStatus !='' "> and AUDITSTATUS = #{auditStatus}</if>
+		<if test="auditOperatorName != null and auditOperatorName !='' "> and AUDITOPERATORNAME = #{auditOperatorName}</if>
+		<if test="applyOperatorLoginName != null and applyOperatorLoginName !='' "> and APPLYOPERATORLOGINNAME = #{applyOperatorLoginName}</if>
+		<if test="isStatusAut != null and isStatusAut !='' "> and ( (currentStatus = #{active} and changeStatus = #{inactive}) or (currentStatus = #{inactive} and changeStatus = #{active}) ) </if>
+		<if test="isInfoAut != null and isInfoAut !='' "> and ( (currentStatus != #{active} and changeStatus != #{inactive}) or (currentStatus != #{inactive} and changeStatus != #{active}) ) </if>
+		<if test="currentStatus =='102' and currentStatus !='' and currentStatus != null "> and CURRENTSTATUS = #{currentStatus}</if>
+		<if test="currentStatus !='102' and currentStatus !='' and currentStatus != null "> and CURRENTSTATUS != 102 </if>
+		
+		
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="sales" extends="base">
+		<!-- 销售人员管理Action -->
+		<action name="sales_*" class="wusc.edu.pay.web.boss.action.SalesAction" method="{1}">
+			<result name="salesList">page/sales/salesList.jsp</result>
+			<result name="salesAdd">page/sales/salesAdd.jsp</result>
+			<result name="salesListBy">/page/sales/salesListBy.jsp</result>
+			<result name="moveMerchant">/page/sales/moveMerchant.jsp</result>
+		</action>
+	</package>
+</struts>

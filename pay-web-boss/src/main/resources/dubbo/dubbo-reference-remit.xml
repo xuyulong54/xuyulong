@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">       
+    
+    
+    <!-- 结算打款服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitBankAreaFacade" id="remitBankAreaFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitBankTypeFacade" id="remitBankTypeFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitBankInfoFacade" id="remitBankInfoFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitBatchFacade" id="remitBatchFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitChannelFacade" id="remitChannelFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitChannelFlowRuleFacade" id="remitChannelFlowRuleFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitProcessFacade" id="remitProcessFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitRequestFacade" id="remitRequestFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitErrorFacade" id="remitErrorFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitFacade" id="remitFacade" check="false"/>
+</beans>  

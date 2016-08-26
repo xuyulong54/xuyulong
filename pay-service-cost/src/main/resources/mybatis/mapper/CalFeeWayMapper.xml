@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.cost.dao.impl.CalFeeWayDaoImpl">
+	<sql id="table"> TBL_CAL_FEE_WAY </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.cost.entity.CalFeeWay">
+		<result column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="DIMENSION_ID" property="dimensionId" jdbcType="BIGINT" />
+		<result column="WAY_NAME" property="wayName" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="FEE_FREE_AMOUNT" property="feeFreeAmount" jdbcType="DECIMAL" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="CYCLE_TYPE" property="cycleType" jdbcType="SMALLINT" />
+		<result column="CUS_CYCLE_TYPE" property="cusCycleType" jdbcType="SMALLINT" />
+		<result column="CUSTOMIZE_DAY" property="customizeDay" jdbcType="DATE" />
+		<result column="CAL_TYPE" property="calType" jdbcType="SMALLINT" />
+		<result column="CAL_PERIOD" property="calPeriod" jdbcType="SMALLINT" />
+		<result column="CAL_ROLE" property="calRole" jdbcType="SMALLINT" />
+		<result column="IS_ROUND" property="isRound" jdbcType="SMALLINT" />
+		<result column="BEGIN_DATE" property="beginDate" jdbcType="DATE" />
+		<result column="END_DATE" property="endDate" jdbcType="DATE" />
+		<result column="MCC" property="mcc" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="dimensionId != null and dimensionId != ''"> and DIMENSION_ID = #{dimensionId}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="calType != null and calType != ''"> and CAL_TYPE = #{calType}</if>
+		<if test="calPeriod != null and calPeriod != ''"> and CAL_PERIOD = #{calPeriod}</if>
+		<if test="calRole != null and calRole != ''"> and CAL_ROLE = #{calRole}</if>
+		<if test="wayName != null and wayName != ''"> and WAY_NAME like CONCAT('%', CONCAT(#{wayName}, '%')) </if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.cost.entity.CalFeeWay">
+		insert into TBL_CAL_FEE_WAY (VERSION, DIMENSION_ID,
+		WAY_NAME, CREATE_TIME, FEE_FREE_AMOUNT,
+		STATUS, CYCLE_TYPE, CUS_CYCLE_TYPE,
+		CUSTOMIZE_DAY, CAL_TYPE, CAL_PERIOD,
+		CAL_ROLE, IS_ROUND, BEGIN_DATE, END_DATE,
+		MCC)
+		values (0, #{dimensionId,jdbcType=BIGINT},
+		#{wayName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{feeFreeAmount,jdbcType=DECIMAL},
+		#{status,jdbcType=SMALLINT}, #{cycleType,jdbcType=SMALLINT}, #{cusCycleType,jdbcType=SMALLINT},
+		#{customizeDay,jdbcType=DATE}, #{calType,jdbcType=SMALLINT}, #{calPeriod,jdbcType=SMALLINT},
+		#{calRole,jdbcType=SMALLINT}, #{isRound,jdbcType=SMALLINT}, #{beginDate,jdbcType=DATE}, #{endDate,jdbcType=DATE},
+		#{mcc,jdbcType=VARCHAR})
+	</insert>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select *
+		from TBL_CAL_FEE_WAY
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from TBL_CAL_FEE_WAY
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.cost.entity.CalFeeWay">
+		update TBL_CAL_FEE_WAY
+		<set>
+			VERSION = #{version}+1 ,
+			<if test="dimensionId != null">
+				DIMENSION_ID = #{dimensionId,jdbcType=BIGINT},
+			</if>
+			<if test="wayName != null">
+				WAY_NAME = #{wayName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="feeFreeAmount != null">
+				FEE_FREE_AMOUNT = #{feeFreeAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=SMALLINT},
+			</if>
+			<if test="cycleType != null">
+				CYCLE_TYPE = #{cycleType,jdbcType=SMALLINT},
+			</if>
+			<if test="cusCycleType != null">
+				CUS_CYCLE_TYPE = #{cusCycleType,jdbcType=SMALLINT},
+			</if>
+			<if test="customizeDay != null">
+				CUSTOMIZE_DAY = #{customizeDay,jdbcType=DATE},
+			</if>
+			<if test="calType != null">
+				CAL_TYPE = #{calType,jdbcType=SMALLINT},
+			</if>
+			<if test="calPeriod != null">
+				CAL_PERIOD = #{calPeriod,jdbcType=SMALLINT},
+			</if>
+			<if test="calRole != null">
+				CAL_ROLE = #{calRole,jdbcType=SMALLINT},
+			</if>
+			<if test="isRound != null">
+				IS_ROUND = #{isRound,jdbcType=SMALLINT},
+			</if>
+			<if test="beginDate != null">
+				BEGIN_DATE = #{beginDate,jdbcType=DATE},
+			</if>
+			<if test="endDate != null">
+				END_DATE = #{endDate,jdbcType=DATE},
+			</if>
+			MCC = #{mcc,jdbcType=VARCHAR},
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		order by id desc
+	</select>
+
+</mapper>

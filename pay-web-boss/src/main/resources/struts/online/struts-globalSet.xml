@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="globalSetPackg" extends="loginPackage">
+		<action name="globalSet_*" class="wusc.edu.pay.web.boss.action.GlobalSetAction" method="{1}">
+			<result name="listGlobalSet">page/globalSet/GlobalSetList.jsp</result>
+			<result name="viewGlobalSet">page/globalSet/GlobalSetView.jsp</result>
+			<result name="editGlobalSet">page/globalSet/GlobalSetEdit.jsp</result>
+		</action>
+	</package>
+</struts>

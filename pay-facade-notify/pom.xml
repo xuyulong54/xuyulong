@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>wusc.edu.pay.common</groupId>
+		<artifactId>pay-common-parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../pay-common-parent</relativePath>
+	</parent>
+
+	<groupId>wusc.edu.pay.facade</groupId>
+	<artifactId>pay-facade-notify</artifactId>
+	<version>${pay-facade-notify.version}</version>
+	<packaging>jar</packaging>
+
+	<name>pay-facade-notify</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>wusc.edu.pay.common</groupId>
+			<artifactId>pay-common</artifactId>
+			<version>${pay-common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>wusc.edu.pay.facade</groupId>
+			<artifactId>pay-facade-cost</artifactId>
+			<version>${pay-facade-cost.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>wusc.edu.pay.facade</groupId>
+			<artifactId>pay-facade-fee</artifactId>
+			<version>${pay-facade-fee.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>wusc.edu.pay.facade</groupId>
+			<artifactId>pay-facade-remit</artifactId>
+			<version>${pay-facade-remit.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-all</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-pool</artifactId>
+		</dependency>
+
+	</dependencies>
+
+</project>

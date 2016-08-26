@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.settlement.dao.impl.SettHolidaySettingDaoImpl">
+
+	<sql id="table"> TBL_SETT_HOLIDAY_SETTING </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.settlement.entity.SettHolidaySetting">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="HOLIDAY" property="holiday" jdbcType="DATE" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, HOLIDAY, REMARK
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="holiday != null and holiday != ''"> and HOLIDAY = #{holiday,jdbcType=DATE}</if>
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and CREATE_TIME between #{beginDate} and CONCAT(#{endDate},'
+			23:59:59')
+		</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="wusc.edu.pay.facade.settlement.entity.SettHolidaySetting">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		HOLIDAY, REMARK)
+		values (0, #{createTime},
+		#{holiday,jdbcType=DATE}, #{remark,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.settlement.entity.SettHolidaySetting">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		HOLIDAY = #{holiday,jdbcType=DATE},
+		REMARK = #{remark,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from TBL_SETT_HOLIDAY_SETTING
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

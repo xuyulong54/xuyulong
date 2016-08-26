@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.agent.dao.impl.AgentRelationDaoImpl">
+
+	<sql id="table"> TBL_AGENT_RELATION </sql>
+	
+	<sql id="tbl_merchant"> TBL_USER_MERCHANT_ONLINE </sql>
+
+	<resultMap id="beanMap" type="AgentRelation">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="agentNo" column="AGENT_NO" />
+		<result property="parentAgentNo" column="PARENT_AGENT_NO" />
+		<result property="parentUpAgentNo" column="PARENT_UP_AGENT_NO" />
+		<result property="level" column="LEVEL" />
+		<result property="splitProfit" column="SPLIT_PROFIT" />
+		<result property="agentStatus" column="AGENT_STATUS" />
+		<result property="affiliateAmount" column="AFFILIATE_AMOUNT" />
+		<result property="agentName" column="AGENT_NAME" />
+		<result property="parentAgentName" column="PARENT_AGENT_NAME" />
+		<result property="parentUpAgentName" column="PARENT_UP_AGENT_NAME" />
+		
+		<!-- 商户表的字段 -->
+		<result property="parentSplitProfit"  column="PARENTSPLITPROFIT" />
+		<result property="parentUpSplitProfit"  column="PARENTUPSPLITPROFIT" />
+		
+		<result property="salesNo"  column="SALES_NO" />
+		<result property="salesName"  column="SALES_NAME" />
+	</resultMap>
+
+	<insert id="insert" parameterType="AgentRelation" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, AGENT_NO, PARENT_AGENT_NO , PARENT_UP_AGENT_NO, 
+		LEVEL, SPLIT_PROFIT, AGENT_STATUS, AFFILIATE_AMOUNT, 
+		AGENT_NAME, PARENT_AGENT_NAME, PARENT_UP_AGENT_NAME, SALES_NO, SALES_NAME)
+		values
+		(0, #{createTime}, #{agentNo}, #{parentAgentNo}, #{parentUpAgentNo}, 
+		#{level}, #{splitProfit}, #{agentStatus}, #{affiliateAmount},
+		#{agentName}, #{parentAgentName}, #{parentUpAgentName}, #{salesNo}, #{salesName})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+	
+	<!-- 看代理商的所属关系 -->
+	<select id="getByParentAgentNo" parameterType="java.util.Map" resultMap="beanMap">
+		select * from <include refid="table" /> 
+		<where>
+			AGENT_NO = #{agentNo}
+			and (PARENT_AGENT_NO=#{parentAgentNo} or PARENT_UP_AGENT_NO=#{parentAgentNo})
+		</where>
+	</select>
+	
+	
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="AgentRelation">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			AGENT_NO = #{agentNo},
+			PARENT_AGENT_NO = #{parentAgentNo},
+			PARENT_UP_AGENT_NO = #{parentUpAgentNo},
+			LEVEL = #{level},
+			SPLIT_PROFIT = #{splitProfit},
+			AGENT_STATUS = #{agentStatus},
+			AFFILIATE_AMOUNT=#{affiliateAmount},
+			AGENT_NAME = #{agentName},
+			PARENT_AGENT_NAME = #{parentAgentName},
+			PARENT_UP_AGENT_NAME = #{parentUpAgentName},
+			SALES_NO = #{salesNo},
+			SALES_NAME = #{salesName}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<if test="startDate != null and startDate != null and endDate != '' and endDate != ''">
+			and A.CREATE_TIME between #{startDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+		<if test="agentNo != null and agentNo != ''"> and A.AGENT_NO = #{agentNo}</if>
+		<if test="parentAgentNo != null and parentAgentNo != ''"> and A.PARENT_AGENT_NO = #{parentAgentNo}</if>
+		<if test="parentUpAgentNo != null and parentUpAgentNo != ''"> and ( A.PARENT_UP_AGENT_NO = #{parentUpAgentNo} or A.PARENT_AGENT_NO = #{parentUpAgentNo} )  </if>
+		<if test="level != null and level != ''"> and A.LEVEL = #{level} </if>
+		<if test="agentStatus != null and agentStatus != ''"> and A.AGENT_STATUS = #{agentStatus} </if>
+		<if test="agentName != null and agentName != ''"> and  A.AGENT_NAME like CONCAT(CONCAT('%', #{agentName}), '%')</if>
+		<if test="inStatus != null and inStatus != ''">
+			and A.AGENT_STATUS in
+			<foreach item="item" index="index" collection="inStatus" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		
+		<if test="salesNo != null and salesNo != ''"> and B.SALES_NO = #{salesNo} </if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select A.*, B.SPLIT_PROFIT as "PARENTSPLITPROFIT", C.SPLIT_PROFIT as "PARENTUPSPLITPROFIT"
+		from TBL_AGENT_RELATION as A
+		left join TBL_AGENT_RELATION as B on A.PARENT_AGENT_NO=B.AGENT_NO
+		left join TBL_AGENT_RELATION as C on A.PARENT_UP_AGENT_NO=C.AGENT_NO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by A.ID desc  ]]>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" /> as A
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by A.PARENT_AGENT_NO  ]]>
+	</select>
+	<select id="summaryAgentStatusByAgentNo" parameterType="java.util.Map" resultType="hashmap">
+		SELECT 
+			SUM(CASE WHEN (A.STATUS =102) THEN 1 ELSE 0 END) AS  CREATED,
+			SUM(CASE WHEN (A.STATUS =106) THEN 1 ELSE 0 END) AS  FIRSTPASS,
+			SUM(CASE WHEN (A.STATUS =103) THEN 1 ELSE 0 END) AS  NOPASS,
+			SUM(CASE WHEN (A.STATUS =100) THEN 1 ELSE 0 END) AS  ACTIVE,
+			SUM(CASE WHEN (A.STATUS =101) THEN 1 ELSE 0 END) AS  INACTIVE,
+			SUM(CASE WHEN (A.STATUS =105) THEN 1 ELSE 0 END) AS  CLOSE
+		FROM 
+			<include refid="tbl_merchant" /> A, <include refid="table" /> B
+		WHERE  
+			A.MERCHANTNO = B.AGENT_NO 
+	</select>
+</mapper>

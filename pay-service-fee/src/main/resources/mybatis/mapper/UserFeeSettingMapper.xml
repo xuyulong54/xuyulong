@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.fee.dao.impl.UserFeeSettingDaoImpl">
+
+	<sql id="table"> TBL_FEE_USER_FEE_SETTING </sql>
+
+	<resultMap id="beanMap" type="UserFeeSetting">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="feeNodeId" column="FEE_NODE_ID" />
+		<result property="userNo" column="USERNO" />
+		<result property="userName" column="USERNAME" />
+		<result property="userType" column="USERTYPE" />
+		<result property="calculateFeeItem" column="CALCULATE_FEE_ITEM" />
+		<result property="status" column="STATUS" />
+	</resultMap>
+
+	<resultMap id="UserFeeSettingAndNode" type="wusc.edu.pay.facade.fee.dto.FeeModelDTO">
+		<result property="createTime" column="CREATETIME" />
+		<result property="userSettingId" column="ID" />
+		<result property="nodeId" column="FEE_NODE_ID" />
+		<result property="userNo" column="USERNO" />
+		<result property="userName" column="USERNAME" />
+		<result property="userType" column="USERTYPE" />
+		<result property="calculateFeeItem" column="CALCULATE_FEE_ITEM" />
+		<result property="status" column="STATUS" />
+
+		<result property="nodeType" column="NODE_TYPE" />
+		<result property="nodeName" column="NODE_NAME" />
+
+	</resultMap>
+
+	<insert id="insert" parameterType="UserFeeSetting" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, FEE_NODE_ID, USERNO, USERNAME, USERTYPE, CALCULATE_FEE_ITEM, STATUS)
+		values (0, #{createTime}, #{feeNodeId}, #{userNo}, #{userName}, #{userType}, #{calculateFeeItem}, #{status})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserFeeSetting">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			FEE_NODE_ID = #{feeNodeId},
+			USERNO = #{userNo},
+			USERNAME = #{userName},
+			USERTYPE = #{userType},
+			CALCULATE_FEE_ITEM=#{calculateFeeItem},
+			STATUS = #{status}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="calculateFeeItem != null and calculateFeeItem !='' "> and CALCULATE_FEE_ITEM = #{calculateFeeItem}</if>
+		<if test="userNo != null and userNo !='' "> and USERNO = #{userNo}</if>
+		<if test="id != null and id !='' "> and ID = #{id}</if>
+		<if test="status != null and status !='' "> and STATUS = #{status}</if>
+		<if test="userSettingStatus != null and userSettingStatus !='' "> and TBL_FEE_USER_FEE_SETTING.STATUS = #{userSettingStatus}</if>
+		<if test="userType != null and userType !='' "> and USERTYPE = #{userType}</if>
+		<if test="feeNodeId != null and feeNodeId !='' "> and FEE_NODE_ID = #{feeNodeId}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="getUserFeeByUserTypeNode" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="queryAll" parameterType="java.util.Map" resultType="list" resultMap="beanMap">
+		SELECT * FROM
+		<include refid="table" />
+		WHERE
+		FEE_NODE_ID
+		IN(
+		SELECT
+		node.ID
+		FROM
+		TBL_FEE_CALCULATE_WAY way
+		LEFT JOIN
+		TBL_FEE_LADDER_INFO ladder
+		ON
+		way.ID = ladder.CALCULATE_WAY_ID
+		LEFT JOIN
+		TBL_FEE_DIMENSION dimension
+		ON
+		way.FEE_DIMENSION_ID =
+		dimension.ID
+		LEFT JOIN
+		TBL_FEE_NODE node
+		ON
+		dimension.FEE_NODE_ID = node.ID
+		WHERE
+                	<![CDATA[ way.EFFECTIVE_DATE_START <= #{target}]]>
+		and
+		( <![CDATA[ way.EFFECTIVE_DATE_END >= #{target} or way.EFFECTIVE_DATE_END is null ]]>)
+		group by node.ID
+		)
+	</select>
+
+	<select id="queryUserFeeSettingAndNodeListPage" parameterType="java.util.Map" resultMap="UserFeeSettingAndNode">
+		select
+		TBL_FEE_USER_FEE_SETTING.CREATETIME,TBL_FEE_USER_FEE_SETTING.ID,
+		TBL_FEE_USER_FEE_SETTING.FEE_NODE_ID, USERNO, USERNAME, USERTYPE,
+		TBL_FEE_USER_FEE_SETTING.CALCULATE_FEE_ITEM,
+		TBL_FEE_USER_FEE_SETTING.STATUS as STATUS,
+		NODE_TYPE, NODE_NAME
+		from TBL_FEE_NODE
+		JOIN TBL_FEE_USER_FEE_SETTING
+		ON TBL_FEE_USER_FEE_SETTING.FEE_NODE_ID=TBL_FEE_NODE.ID
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="queryUserFeeSettingAndNodePageCount" parameterType="java.util.Map" resultType="long">
+		select count(1)
+		from TBL_FEE_NODE
+		JOIN TBL_FEE_USER_FEE_SETTING
+		ON TBL_FEE_USER_FEE_SETTING.FEE_NODE_ID=TBL_FEE_NODE.ID
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

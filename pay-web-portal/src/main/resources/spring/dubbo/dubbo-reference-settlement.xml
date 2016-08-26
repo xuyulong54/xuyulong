@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">       
+
+    
+    <!-- 结算子系统对外服务接口-->      
+    <dubbo:reference interface="wusc.edu.pay.facade.settlement.service.SettQueryFacade" id="settQueryFacade" check="false"  />  
+    <dubbo:reference interface="wusc.edu.pay.facade.settlement.service.SettManagementFacade" id="settManagementFacade" check="false"  />  
+    <dubbo:reference interface="wusc.edu.pay.facade.settlement.service.SettBusinessFacade" id="settBusinessFacade" check="false"  />  
+</beans>  

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.payrule.dao.impl.PayWaySwitchDaoImpl">
+	<sql id="table"> TBL_RULE_PAY_WAY_SWITCH </sql>
+	<!-- 启用缓存 -->
+	<!-- <cache eviction="LRU" type="wusc.edu.pay.common.core.mybatis.cache.redis.MybatiesRedisCache" /> -->
+	<resultMap id="BaseResultMap" type="PayWaySwitch">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="PAY_WAY_CODE" property="payWayCode" jdbcType="VARCHAR" />
+		<result column="PAY_PRODUCT_CODE" property="payProductCode" jdbcType="VARCHAR" />
+		<result column="PAY_RULE_ID" property="payRuleId" jdbcType="BIGINT" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, MODIFY_TIME, PAY_WAY_CODE, PAY_PRODUCT_CODE, PAY_RULE_ID,
+		STATUS
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="payWayCode != null and payWayCode != ''"> and PAY_WAY_CODE = #{payWayCode}</if>
+		<if test="payProductCode != null and payProductCode != ''"> and PAY_PRODUCT_CODE = #{payProductCode}</if>
+		<if test="payRuleId != null and payRuleId != ''"> and PAY_RULE_ID = #{payRuleId}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="PayWaySwitch">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		MODIFY_TIME, PAY_WAY_CODE, PAY_PRODUCT_CODE,
+		PAY_RULE_ID, STATUS)
+		values (0, #{createTime},
+		#{modifyTime,jdbcType=TIMESTAMP}, #{payWayCode,jdbcType=VARCHAR}, #{payProductCode,jdbcType=VARCHAR},
+		#{payRuleId,jdbcType=BIGINT}, #{status,jdbcType=SMALLINT})
+	</insert>
+
+	<update id="update" parameterType="PayWaySwitch">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		MODIFY_TIME = FUN_NOW(),
+		PAY_WAY_CODE = #{payWayCode,jdbcType=VARCHAR},
+		PAY_PRODUCT_CODE = #{payProductCode,jdbcType=VARCHAR},
+		PAY_RULE_ID = #{payRuleId,jdbcType=BIGINT},
+		STATUS = #{status,jdbcType=SMALLINT}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		DELETE FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</delete>
+
+	<!-- 根据支付规则ID和支付产品编号批量删除 -->
+	<delete id="deleteByRuleIdAndPayProductCode" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		WHERE PAY_RULE_ID=#{ruleId} and PAY_PRODUCT_CODE = #{payProductCode}
+	</delete>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="findPayWayByUserNo" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.payrule.entity.vo.PayWayVo">
+		select
+		e.PAY_PRODUCT_CODE as "payProductCode",e.PAY_PRODUCT_NAME as "payProductName",d.PAY_WAY_NAME as "payWayName", d.PAY_WAY_CODE as "payWayCode", d.SORTS as "sorts",
+		f.BANK_CODE as "bankCode" , f.BUS_TYPE as "busType"
+		from TBL_RULE_USER_PAY_RULE_SETTING a
+		left join TBL_RULE_PAY_PRODUCT_SWITCH b on a.PAY_RULE_ID=b.PAY_RULE_ID
+		left join TBL_RULE_PAY_WAY_SWITCH c on b.PAY_PRODUCT_CODE =c.PAY_PRODUCT_CODE and
+		b.PAY_RULE_ID=c.PAY_RULE_ID
+		left join TBL_RULE_PAY_WAY d on c.PAY_PRODUCT_CODE=d.PAY_PRODUCT_CODE and c.PAY_WAY_CODE=d.PAY_WAY_CODE
+		left join TBL_RULE_PAY_PRODUCT e on
+		d.PAY_PRODUCT_CODE=e.PAY_PRODUCT_CODE
+		left join TBL_RULE_FRP f on f.FRP_CODE = d.pay_way_code
+		where b.STATUS=100
+		and c.STATUS=100
+		and d.STATUS=100
+		and e.STATUS=100
+		and a.USER_NO=#{userNo}
+		<if test="busType != null and busType != ''"> and f.BUS_TYPE = #{busType}</if>
+		order by d.PAY_WAY_NAME asc, d.SORTS asc ,e.MODIFY_TIME asc
+	</select>
+	
+	<select id="getPayWayByUserNoAndPayWayCode" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.payrule.entity.vo.PayWayVo">
+		select
+	    e.PAY_PRODUCT_CODE as "payProductCode",e.PAY_PRODUCT_NAME as "payProductName",d.PAY_WAY_NAME as "payWayName", d.PAY_WAY_CODE as "payWayCode", d.SORTS as "sorts",
+	    f.BANK_CODE as "bankCode" , f.BUS_TYPE as "busType" , d.DEFAULT_PAY_INTERFACE as "defaultPayInterface"
+	    from TBL_RULE_USER_PAY_RULE_SETTING a
+	    left join TBL_RULE_PAY_PRODUCT_SWITCH b on a.PAY_RULE_ID=b.PAY_RULE_ID
+	    left join TBL_RULE_PAY_WAY_SWITCH c on b.PAY_PRODUCT_CODE =c.PAY_PRODUCT_CODE and
+	    b.PAY_RULE_ID=c.PAY_RULE_ID
+	    left join TBL_RULE_PAY_WAY d on c.PAY_PRODUCT_CODE=d.PAY_PRODUCT_CODE and c.PAY_WAY_CODE=d.PAY_WAY_CODE
+	    left join TBL_RULE_PAY_PRODUCT e on
+	    d.PAY_PRODUCT_CODE=e.PAY_PRODUCT_CODE
+	    left join TBL_RULE_FRP f on f.FRP_CODE = d.pay_way_code
+	    where b.STATUS=100
+	    and c.STATUS=100
+	    and d.STATUS=100
+	    and e.STATUS=100
+	    and a.USER_NO=#{userNo}
+		<if test="busType != null and busType != ''"> and f.BUS_TYPE = #{busType}</if>
+	    and d.PAY_WAY_CODE=#{payWayCode}
+	    order by d.PAY_WAY_NAME asc, d.SORTS asc ,e.MODIFY_TIME asc
+	</select>
+</mapper>

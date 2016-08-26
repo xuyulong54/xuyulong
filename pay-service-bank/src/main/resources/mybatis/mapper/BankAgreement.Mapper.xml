@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.bank.dao.impl.BankAgreementDaoImpl">
+
+	<sql id="table"> TBL_BANK_BANKAGREEMENT </sql>
+
+	<resultMap id="beanMap" type="BankAgreement">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="bankCode" column="BANKCODE" />
+		<result property="merchantNo" column="MERCHANTNO" />
+		<result property="agreementNo" column="AGREEMENTNO" />
+		<result property="bankSequence" column="BANKSEQUENCE" />
+		<result property="interfaceName" column="INTERFACENAME" />
+		<result property="amountSystem" column="AMOUNTSYSTEM" />
+		<result property="linkType" column="LINKTYPE" />
+		<result property="communicationMode" column="COMMUNICATIONMODE" />
+		<result property="communicationAddress" column="COMMUNICATIONADDRESS" />
+		<result property="contractOANo" column="CONTRACTOANO" />
+		<result property="cardType" column="CARDTYPE" />
+		<result property="onlineTime" column="ONLINETIME" />
+		<result property="offlineTime" column="OFFLINETIME" />
+		<result property="merchantType" column="MERCHANTTYPE" />
+		<result property="province" column="PROVINCE" />
+		<result property="city" column="CITY" />
+		<result property="area" column="AREA" />
+		<result property="linkMan" column="LINKMAN" />
+		<result property="remark" column="REMARK" />
+
+	</resultMap>
+
+	<insert id="insert" parameterType="BankAgreement" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION , CREATETIME, BANKCODE,
+		MERCHANTNO, AGREEMENTNO, BANKSEQUENCE, INTERFACENAME,
+		AMOUNTSYSTEM, LINKTYPE, COMMUNICATIONMODE,
+		COMMUNICATIONADDRESS, CONTRACTOANO, CARDTYPE,
+		ONLINETIME,OFFLINETIME, MERCHANTTYPE, PROVINCE, CITY, AREA, LINKMAN, REMARK)
+		values (0, #{createTime}, #{bankCode},
+		#{merchantNo},
+		#{agreementNo}, #{bankSequence}, #{interfaceName}, #{amountSystem}, #{linkType},
+		#{communicationMode}, #{communicationAddress}, #{contractOANo},
+		#{cardType}, #{onlineTime} , #{offlineTime}, #{merchantType}, #{province}, #{city}, #{area}, #{linkMan}, #{remark} )
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<!-- 更新状态来实现删除:version+1 实现乐观锁 -->
+	<update id="update" parameterType="BankAgreement">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			BANKCODE = #{bankCode},
+			MERCHANTNO = #{merchantNo} ,
+			AGREEMENTNO = #{agreementNo},
+			BANKSEQUENCE = #{bankSequence},
+			INTERFACENAME = #{interfaceName},
+			AMOUNTSYSTEM = #{amountSystem},
+			LINKTYPE = #{linkType},
+			COMMUNICATIONMODE = #{communicationMode},
+			COMMUNICATIONADDRESS = #{communicationAddress},
+			CONTRACTOANO = #{contractOANo},
+			CARDTYPE = #{cardType},
+			ONLINETIME = #{onlineTime},
+			OFFLINETIME = #{offlineTime},
+			MERCHANTTYPE = #{merchantType},
+			PROVINCE = #{province},
+			CITY = #{city},
+			AREA = #{area},
+			LINKMAN = #{linkMan},
+			REMARK = #{remark}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="id != null and id != ''"> and ID = #{id}</if>
+		<if test="createTime != null and createTime != ''"> and CREATETIME = #{createTime}</if>
+		<if test="bankCode != null and bankCode != ''"> and BANKCODE = #{bankCode}</if>
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANTNO = #{merchantNo}</if>
+		<if test="agreementNo != null and agreementNo != ''"> and AGREEMENTNO = #{agreementNo}</if>
+		<if test="bankSequence != null and bankSequence != ''"> and BANKSEQUENCE = #{bankSequence}</if>
+		<if test="interfaceName != null and interfaceName != ''"> and INTERFACENAME = #{interfaceName}</if>
+		<if test="amountSystem != null and amountSystem != ''"> and AMOUNTSYSTEM = #{amountSystem}</if>
+		<if test="linkType != null and linkType != ''"> and LINKTYPE = #{linkType}</if>
+		<if test="communicationMode != null and communicationMode != ''"> and COMMUNICATIONMODE = #{communicationMode}</if>
+		<if test="communicationAddress != null and communicationAddress != ''"> and COMMUNICATIONADDRESS = #{communicationAddress}</if>
+		<if test="contractOANo != null and contractOANo != ''"> and CONTRACTOANO = #{contractOANo}</if>
+		<if test="cardType != null and cardType != ''"> and CARDTYPE = #{cardType}</if>
+		<if test="onlineTime != null and onlineTime != ''"> and ONLINETIME = #{onlineTime}</if>
+		<if test="offlineTime != null and offlineTime != ''"> and OFFLINETIME = #{offlineTime}</if>
+		<if test="merchantType != null and merchantType != ''"> and MERCHANTTYPE = #{merchantType}</if>
+		<if test="province != null and province != ''"> and PROVINCE = #{province}</if>
+		<if test="city != null and city != ''"> and CITY = #{city}</if>
+		<if test="area != null and area != ''"> and AREA = #{area}</if>
+		<if test="linkMan != null and linkMan != ''"> and LINKMAN = #{linkMan}</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+</mapper>

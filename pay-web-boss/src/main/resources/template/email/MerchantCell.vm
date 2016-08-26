@@ -1,0 +1,5 @@
+尊敬的商户：【${loginName}】您好！
+
+	由于【${auditDesc}】的原因，您在${COMPANY_FOR}平台注册的商户【${fullName}】注销${auditStatus}。
+
+如有疑问，请联系客服人员，电话:【${phone}】

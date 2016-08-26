@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="pay-web-trade"
+  id="myeclipse.1375692335180"
+  context-root="/pay-web-trade"
+  j2ee-spec="6.0"
+  archive="pay-web-trade.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

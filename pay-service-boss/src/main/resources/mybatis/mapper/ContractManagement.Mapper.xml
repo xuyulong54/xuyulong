@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.boss.dao.impl.ContractManagementDaoImpl">
+
+	<sql id="table"> TBL_BOSS_CONTRACT </sql>
+
+	<resultMap id="beanMap" type="ContractManagement">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="USERNO" property="userNo" />
+		<result column="USERNAME" property="userName" />
+		<result column="CONTRACTNO" property="contractNo" />
+		<result column="CONTRACTFILE" property="contractFile" />
+		<result column="CONTRACTTYPE" property="contractType" />
+		<result column="CREATER" property="creater" />
+		<result column="MODIFYTIME" property="modifyTime" />
+		<result column="FILENAME" property="fileName" />
+		<result column="FILEPROPERTIES" property="fileProperties" />
+		<result column="REMARK" property="remark" />
+		<result column="SIGNTIME" property="signTime" />
+		<result column="CONTRACTVALID" property="contractValid" />
+	</resultMap>
+
+	<insert id="insert" parameterType="ContractManagement" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, USERNO, USERNAME, CONTRACTNO, CONTRACTFILE,
+		CONTRACTTYPE, CREATER, MODIFYTIME, FILENAME, FILEPROPERTIES, REMARK, SIGNTIME, CONTRACTVALID)
+		values (0, #{createTime}, #{userNo}, #{userName},
+		#{contractNo}, #{contractFile}, #{contractType}, #{creater},
+		#{modifyTime}, #{fileName}, #{fileProperties}, #{remark}, #{signTime} , #{contractValid})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="ContractManagement">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1,
+			CONTRACTFILE = #{contractFile},
+			MODIFYTIME = #{modifyTime},
+			SIGNTIME=#{signTime},
+			CONTRACTVALID=#{contractValid}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<!-- -->
+	<update id="updateContract" parameterType="ContractManagement">
+		update
+		<include refid="table" />
+		<set>
+			MODIFYTIME = #{modifyTime},
+			SIGNTIME=#{signTime},
+			CONTRACTVALID=#{contractValid}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="getByrelationId" parameterType="string" resultMap="beanMap">
+		SELECT
+		ID AS "id",
+		CONTRACTNO AS "contractNo",
+		FILENAME AS "fileName",
+		CREATER AS "creater",
+		CONTRACTTYPE AS "contractType",
+		FILEPROPERTIES AS "fileProperties",
+		REMARK AS "remark",
+		CONTRACTFILE AS "contractFile"
+		FROM
+		<include refid="table" />
+		where userNo = #{userNo}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="userNo != null and userNo != ''"> and USERNO = #{userNo}</if>
+		<if test="userName != null and userName != ''"> and USERNAME like '%${userName}%'</if>
+		<if test="contractNo != null and contractNo != ''"> and CONTRACTNO like '%${contractNo}%'</if>
+		<if test="contractType != null and contractType != ''"> and CONTRACTTYPE = #{contractType}</if>
+		<if test="creater != null and creater != ''"> and CREATER like '%${creater}%'</if>
+		<if test="fileProperties != null and fileProperties != ''"> and FILEPROPERTIES = #{fileProperties}</if>
+		<if test="beginDate != null and beginDate != null and endDate != '' and endDate != ''">
+			and CREATETIME between #{beginDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+		<if test="beginTime != null and beginTime != null and endTime != '' and endTime != ''">
+			and MODIFYTIME between #{beginTime} and CONCAT(#{endTime}, ' 23:59:59')
+		</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+</mapper>

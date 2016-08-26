@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.trade.dao.impl.SplitRecordDaoImpl">
+
+	<sql id="table"> TBL_TRADE_SPLIT_RECORD </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.trade.entity.SplitRecord">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="MERCHANT_ORDER_NO" property="merchantOrderNo"
+			jdbcType="VARCHAR" />
+		<result column="ORDER_AMOUNT" property="orderAmount" jdbcType="DECIMAL" />
+		<result column="PAY_AMOUNT" property="payAmount" jdbcType="DECIMAL" />
+		<result column="MERCHANT_NO" property="merchantNo" jdbcType="VARCHAR" />
+		<result column="MERCHANT_NAME" property="merchantName"
+			jdbcType="VARCHAR" />
+		<result column="SPLIT_MERCHANT_NO" property="splitMerchantNo" jdbcType="VARCHAR" />
+		<result column="SPLIT_LOGIN_NAME" property="splitLoginName" jdbcType="VARCHAR" />
+		<result column="SPLIT_MERCHANT_NAME" property="splitMerchantName"
+			jdbcType="VARCHAR" />
+		<result column="SPLIT_AMOUNT" property="splitAmount" jdbcType="DECIMAL" />
+		<result column="SPLIT_SUCCESS_DATE" property="splitSuccessDate"
+			jdbcType="DATE" />
+		<result column="SPLIT_SUCCESS_TIME" property="splitSuccessTime"
+			jdbcType="TIMESTAMP" />
+		<result column="SPLIT_STATUS" property="splitStatus" jdbcType="SMALLINT" />
+		<result column="TRX_MODEL" property="trxModel" jdbcType="SMALLINT" />
+		
+		<result column="IS_REFUND" property="isRefund" jdbcType="SMALLINT" />
+		<result column="SUCCESS_REFUND_AMOUNT" property="successRefundAmount" jdbcType="DECIMAL" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_DATE, CREATE_TIME, MODIFY_TIME, MERCHANT_ORDER_NO,
+		ORDER_AMOUNT,
+		PAY_AMOUNT, MERCHANT_NO, MERCHANT_NAME, SPLIT_MERCHANT_NO, SPLIT_LOGIN_NAME, 
+		SPLIT_MERCHANT_NAME, SPLIT_AMOUNT,
+		SPLIT_SUCCESS_DATE, SPLIT_SUCCESS_TIME, SPLIT_STATUS, TRX_MODEL, IS_REFUND, SUCCESS_REFUND_AMOUNT
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANT_NO = #{merchantNo,jdbcType=VARCHAR}</if>
+		<if test="merchantOrderNo != null and merchantOrderNo != ''"> and MERCHANT_ORDER_NO =
+			#{merchantOrderNo,jdbcType=VARCHAR}</if>
+		<if test="splitMerchantNo != null and splitMerchantNo != ''"> and SPLIT_MERCHANT_NO = #{splitMerchantNo,jdbcType=VARCHAR}</if>
+		<if test="splitLoginName != null and splitLoginName != ''"> and SPLIT_LOGIN_NAME = #{splitLoginName,jdbcType=VARCHAR}</if>
+		<if test="splitStatus != null and splitStatus != ''"> and SPLIT_STATUS = #{splitStatus,jdbcType=SMALLINT}</if>
+		<if test="splitAmount != null and splitAmount != ''"> and SPLIT_AMOUNT = #{splitAmount,jdbcType=DECIMAL}</if>
+		<if test="trxModel != null and trxModel != ''"> and TRX_MODEL = #{trxModel,jdbcType=SMALLINT}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.trade.entity.SplitRecord">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_DATE,
+		CREATE_TIME, MODIFY_TIME, MERCHANT_ORDER_NO,
+		ORDER_AMOUNT, PAY_AMOUNT, MERCHANT_NO,
+		MERCHANT_NAME, SPLIT_MERCHANT_NO, SPLIT_LOGIN_NAME, SPLIT_MERCHANT_NAME,
+		SPLIT_AMOUNT, SPLIT_SUCCESS_DATE, SPLIT_SUCCESS_TIME,
+		SPLIT_STATUS, TRX_MODEL, IS_REFUND, SUCCESS_REFUND_AMOUNT)
+		values (0, FUN_NOW(),
+		FUN_NOW(), #{modifyTime,jdbcType=TIMESTAMP},
+		#{merchantOrderNo,jdbcType=VARCHAR},
+		#{orderAmount,jdbcType=DECIMAL}, #{payAmount,jdbcType=DECIMAL}, #{merchantNo,jdbcType=VARCHAR},
+		#{merchantName,jdbcType=VARCHAR}, #{splitMerchantNo,jdbcType=VARCHAR},
+		#{splitLoginName,jdbcType=VARCHAR}, #{splitMerchantName,jdbcType=VARCHAR},
+		#{splitAmount,jdbcType=DECIMAL}, #{splitSuccessDate,jdbcType=DATE},
+		#{splitSuccessTime,jdbcType=TIMESTAMP},
+		#{splitStatus,jdbcType=SMALLINT}, #{trxModel,jdbcType=SMALLINT}, #{isRefund,jdbcType=SMALLINT}, #{successRefundAmount,jdbcType=DECIMAL})
+	</insert>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_DATE, CREATE_TIME, MODIFY_TIME, MERCHANT_ORDER_NO,
+		ORDER_AMOUNT, PAY_AMOUNT, MERCHANT_NO,
+		MERCHANT_NAME, SPLIT_MERCHANT_NO, SPLIT_LOGIN_NAME, SPLIT_MERCHANT_NAME,
+		SPLIT_AMOUNT, SPLIT_SUCCESS_DATE, SPLIT_SUCCESS_TIME,
+		SPLIT_STATUS, TRX_MODEL, IS_REFUND, SUCCESS_REFUND_AMOUNT)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(0, FUN_NOW(), FUN_NOW(), #{item.modifyTime,jdbcType=TIMESTAMP},
+			#{item.merchantOrderNo,jdbcType=VARCHAR},
+			#{item.orderAmount,jdbcType=DECIMAL}, #{item.payAmount,jdbcType=DECIMAL}, #{item.merchantNo,jdbcType=VARCHAR},
+			#{item.merchantName,jdbcType=VARCHAR},
+			#{item.splitMerchantNo,jdbcType=VARCHAR},
+			#{item.splitLoginName,jdbcType=VARCHAR},
+			#{item.splitMerchantName,jdbcType=VARCHAR},
+			#{item.splitAmount,jdbcType=DECIMAL}, #{item.splitSuccessDate,jdbcType=DATE},
+			#{item.splitSuccessTime,jdbcType=TIMESTAMP},
+			#{item.splitStatus,jdbcType=SMALLINT}, #{item.trxModel,jdbcType=SMALLINT},
+			#{item.isRefund,jdbcType=SMALLINT}, #{item.successRefundAmount,jdbcType=DECIMAL})
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.trade.entity.SplitRecord">
+		update
+		<include refid="table" /> set 
+		VERSION = #{version,jdbcType=SMALLINT} + 1,
+		MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+		MERCHANT_ORDER_NO = #{merchantOrderNo,jdbcType=VARCHAR},
+		ORDER_AMOUNT = #{orderAmount,jdbcType=DECIMAL},
+		PAY_AMOUNT = #{payAmount,jdbcType=DECIMAL},
+		MERCHANT_NO = #{merchantNo,jdbcType=VARCHAR},
+		MERCHANT_NAME = #{merchantName,jdbcType=VARCHAR},
+		SPLIT_MERCHANT_NO = #{splitMerchantNo,jdbcType=VARCHAR},
+		SPLIT_LOGIN_NAME = #{splitLoginName,jdbcType=VARCHAR},
+		SPLIT_MERCHANT_NAME = #{splitMerchantName,jdbcType=VARCHAR},
+		SPLIT_AMOUNT = #{splitAmount,jdbcType=DECIMAL},
+		SPLIT_SUCCESS_DATE = #{splitSuccessDate,jdbcType=DATE},
+		SPLIT_SUCCESS_TIME = #{splitSuccessTime,jdbcType=TIMESTAMP},
+		SPLIT_STATUS = #{splitStatus,jdbcType=SMALLINT},
+		TRX_MODEL = #{trxModel,jdbcType=SMALLINT},
+		IS_REFUND = #{isRefund,jdbcType=SMALLINT},
+		SUCCESS_REFUND_AMOUNT = #{successRefundAmount,jdbcType=DECIMAL}
+		where
+		ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=SMALLINT}
+	</update>
+
+	<select id="getById" parameterType="string" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map"
+		resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.limit.dao.impl.TradeLimitRouterDaoImpl">
+	<!-- 表名 -->
+	<sql id="table"> TBL_LIMIT_TRADE_LIMIT_ROUTER </sql>
+	
+	<resultMap id="beanMap" type="wusc.edu.pay.facade.limit.entity.TradeLimitRouter">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="merchantNo" column="MERCHANT_NO" />
+		<result property="switchLimitPackId" column="SWITCH_LIMIT_PACK_ID" />
+		<result property="amountLimitPackId" column="AMOUNT_LIMIT_PACK_ID" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+		
+	</resultMap>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.limit.entity.TradeLimitRouter" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO
+		<include refid="table" />
+		(
+    VERSION,
+		SWITCH_LIMIT_PACK_ID,
+		MERCHANT_NO,
+		CREATE_TIME,
+		LAST_MODIFY_TIME,
+		AMOUNT_LIMIT_PACK_ID
+		) VALUES
+		(
+		0,
+		#{switchLimitPackId},
+		#{merchantNo},
+		FUN_NOW(),
+		FUN_NOW(),
+		#{amountLimitPackId}
+		)
+	</insert>
+	<update id="update" parameterType="wusc.edu.pay.facade.limit.entity.TradeLimitRouter">
+		UPDATE
+		<include refid="table" />
+		<set>
+			VERSION = #{version,jdbcType=INTEGER} + 1,
+			SWITCH_LIMIT_PACK_ID = #{switchLimitPackId},
+			MERCHANT_NO = #{merchantNo},
+			LAST_MODIFY_TIME = FUN_NOW(),
+			AMOUNT_LIMIT_PACK_ID = #{amountLimitPackId}
+		</set>
+		WHERE ID = #{id} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+	<delete id="deleteById" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</delete>
+	<select id="getById" parameterType="string" resultType="wusc.edu.pay.facade.limit.entity.TradeLimitRouter">
+		SELECT
+		ID as "id",
+    VERSION as "version",
+		SWITCH_LIMIT_PACK_ID as "switchLimitPackId",
+		MERCHANT_NO as "merchantNo",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime",
+		AMOUNT_LIMIT_PACK_ID as "amountLimitPackId"
+		FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<sql id="condition_sql">
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANT_NO = #{merchantNo} </if>
+		<if test="switchLimitPackId != null and switchLimitPackId != ''"> and SWITCH_LIMIT_PACK_ID = #{switchLimitPackId} </if>
+		<if test="amountLimitPackId != null and amountLimitPackId != ''"> and AMOUNT_LIMIT_PACK_ID = #{amountLimitPackId} </if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.limit.entity.TradeLimitRouter">
+		select
+		ID as "id",
+    VERSION as "version",
+		SWITCH_LIMIT_PACK_ID as "switchLimitPackId",
+		MERCHANT_NO as "merchantNo",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime",
+		AMOUNT_LIMIT_PACK_ID as "amountLimitPackId"
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+</mapper>

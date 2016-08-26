@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.fee.dao.impl.FeeOrderDaoImpl">
+
+	<sql id="table"> TBL_FEE_ORDER </sql>
+
+	<resultMap id="beanMap" type="FeeOrder">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="calculateWayId" column="CALCULATE_WAY_ID" />
+		<result property="trxFlowNo" column="TRX_FLOW_NO" />
+		<result property="parentFlowNo" column="PARENT_FLOW_NO" />
+		<result property="trxDate" column="TRX_DATE" />
+		<result property="merchantNo" column="MERCHANT_NO" />
+		<result property="merchantName" column="MERCHANT_NAME" />
+		<result property="merchantOrderNo" column="MERCHANT_ORDER_NO" />
+		<result property="userType" column="USERTYPE" />
+		<result property="trxType" column="TRXTYPE" />
+		<result property="calculateFeeItem" column="CALCULATE_FEE_ITEM" />
+		<result property="payProduct" column="PAY_PRODUCT" />
+		<result property="frpCode" column="FRPCODE" />
+		<result property="olPayProduct" column="OL_PAY_PRODUCT" />
+		<result property="olFrpCode" column="OL_FRPCODE" />
+		<result property="bankChannelCode" column="bankChannelCode" />
+		<result property="feeRole" column="FEE_ROLE" />
+		<result property="calculateType" column="CALCULATE_TYPE" />
+		<result property="feeBase" column="FEE_BASE" />
+		<result property="amount" column="AMOUNT" />
+		<result property="payAllFee" column="PAYALL_FEE" />
+		<result property="payeeFee" column="PAYEE_FEE" />
+		<result property="payeeUnBackFee" column="PAYEE_UN_BACK_FEE" />
+		<result property="payerFee" column="PAYER_FEE" />
+		<result property="payerUnBackFee" column="PAYER_UN_BACK_FEE" />
+		<result property="chargeType" column="CHARGE_TYPE" />
+		<result property="chargePeriodic" column="CHARGE_PERIODIC" />
+		<result property="status" column="STATUS" />
+		<result property="remark" column="REMARK" />
+		<result property="orderType" column="ORDER_TYPE" />
+		<result property="calculateDate" column="CALCULATE_DATE" />
+		<result property="confirmDate" column="CONFIRM_DATE" />
+	</resultMap>
+
+	<insert id="insert" parameterType="FeeOrder" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, CALCULATE_WAY_ID, TRX_FLOW_NO, PARENT_FLOW_NO,
+		TRX_DATE, MERCHANT_NO, MERCHANT_NAME, MERCHANT_ORDER_NO, USERTYPE,TRXTYPE,
+		CALCULATE_FEE_ITEM, PAY_PRODUCT,FRPCODE, OL_PAY_PRODUCT,
+		OL_FRPCODE,
+		BANKCHANNELCODE,FEE_ROLE, CALCULATE_TYPE, FEE_BASE, AMOUNT,PAYALL_FEE,PAYEE_FEE,
+		PAYEE_UN_BACK_FEE,PAYER_FEE, PAYER_UN_BACK_FEE,CHARGE_TYPE,CHARGE_PERIODIC,
+		STATUS,REMARK, ORDER_TYPE, CONFIRM_DATE, CALCULATE_DATE)
+		VALUES(0, #{createTime},#{calculateWayId},#{trxFlowNo},#{parentFlowNo},
+		#{trxDate},#{merchantNo},#{merchantName},#{merchantOrderNo},#{userType},#{trxType},
+		#{calculateFeeItem},#{payProduct},#{frpCode},#{olPayProduct},#{olFrpCode},
+		#{bankChannelCode},#{feeRole},#{calculateType},#{feeBase},#{amount},#{payAllFee},#{payeeFee},
+		#{payeeUnBackFee},#{payerFee},#{payerUnBackFee},#{chargeType},#{chargePeriodic},
+		#{status},#{remark},#{orderType},#{confirmDate},#{calculateDate}
+		)
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="FeeOrder">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			CALCULATE_WAY_ID = #{calculateWayId},
+			TRX_FLOW_NO = #{trxFlowNo},
+			PARENT_FLOW_NO = #{parentFlowNo},
+			TRX_DATE = #{trxDate},
+			MERCHANT_NO = #{merchantNo},
+			MERCHANT_NAME =
+			#{merchantName},
+			MERCHANT_ORDER_NO = #{merchantOrderNo},
+			USERTYPE = #{userType},
+			TRXTYPE = #{trxType},
+			CALCULATE_FEE_ITEM = #{calculateFeeItem},
+			PAY_PRODUCT = #{payProduct},
+			FRPCODE = #{frpCode},
+			OL_PAY_PRODUCT = #{olPayProduct},
+			OL_FRPCODE = #{olFrpCode},
+			bankChannelCode = #{bankChannelCode},
+			FEE_ROLE = #{feeRole},
+			CALCULATE_TYPE = #{calculateType},
+			FEE_BASE = #{feeBase},
+			AMOUNT = #{amount},
+			PAYALL_FEE = #{payAllFee},
+			PAYEE_FEE = #{payeeFee},
+			PAYEE_UN_BACK_FEE = #{payeeUnBackFee},
+			PAYER_FEE = #{payerFee},
+			PAYER_UN_BACK_FEE = #{payerUnBackFee},
+			CHARGE_TYPE = #{chargeType},
+			CHARGE_PERIODIC =
+			#{chargePeriodic},
+			STATUS = #{status},
+			REMARK = #{remark},
+			ORDER_TYPE = #{orderType},
+			CONFIRM_DATE = #{confirmDate},
+			CALCULATE_DATE = #{calculateDate}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="merchantName != null and merchantName!=''"> AND MERCHANT_NAME LIKE CONCAT(CONCAT('%',#{merchantName}),'%') </if>
+		<if test="merchantNo != null and merchantNo != ''"> AND MERCHANT_NO LIKE CONCAT(CONCAT('%',#{merchantNo}),'%') </if>
+		<if test="userType != null and userType!=''"> AND USERTYPE = #{userType} </if>
+		<if test="trxType!=null and trxType!=''"> AND TRXTYPE = #{trxType} </if>
+		<if test="calculateFeeItem!=null and calculateFeeItem!=''"> AND CALCULATE_FEE_ITEM = #{calculateFeeItem} </if>
+		<if test="status!=null and status!=''"> AND STATUS = #{status} </if>
+		<if test="orderType!=null and orderType!=''"> AND ORDER_TYPE = #{orderType} </if>
+		<if test="trxFlowNo!=null and trxFlowNo!=''"> AND TRX_FLOW_NO = #{trxFlowNo} </if>
+		<if test="merchantOrderNo!=null and merchantOrderNo!=''"> AND MERCHANT_ORDER_NO = #{merchantOrderNo} </if>
+		<if test="beginDate != null and beginDate != null and endDate != '' and endDate != ''">
+			and CALCULATE_DATE between #{beginDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<delete id="deleteByTrxFlowNoLike" parameterType="string">
+		DELETE FROM 
+		<include refid="table" />
+		WHERE TRX_FLOW_NO LIKE CONCAT(#{trxFlowNo},'%')
+	</delete>
+</mapper>

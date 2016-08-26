@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.MerchantRoleDaoImpl">
+
+	<sql id="table">TBL_PORTAL_MERCHANT_ROLE</sql>
+
+	<resultMap id="beanMap" type="MerchantRole">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="ROLENAME" property="roleName" />
+		<result column="REMARK" property="remark" />
+		<result column="USERNO" property="userNo" />
+	</resultMap>
+
+	<insert id="insert" parameterType="MerchantRole" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, ROLENAME, REMARK, USERNO)
+		values (0, #{createTime}, #{roleName}, #{remark}, #{userNo})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="MerchantRole">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			ROLENAME = #{roleName},
+			REMARK = #{remark},
+			USERNO = #{userNo}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="findByMerchantId" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where USERNO = #{userNo}
+	</select>
+
+	<select id="findRoleByUserNo" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where USERNO = #{userNo} or id=0
+	</select>
+
+	<select id="deleteById" parameterType="long" resultType="int">
+		delete from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="listAll" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		order by ID
+	</select>
+
+	<sql id="condition_sql">
+		<if test="userNo != null and userNo != ''"> and (USERNO = #{userNo} or id=0)</if>
+		<if test="roleName != null and roleName != ''"> and ROLENAME like CONCAT(#{roleName}, '%')</if>
+	</sql>
+
+	<select id="listPage" parameterType="MerchantRole" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listBy" parameterType="MerchantRole" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

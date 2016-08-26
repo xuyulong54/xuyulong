@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.cost.dao.impl.CalDimensionDaoImpl">
+	<sql id="table"> TBL_CAL_DIMENSION </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.cost.entity.CalDimension">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="CAL_PRODUCT" property="calProduct" jdbcType="VARCHAR" />
+		<result column="CAL_COST_INTERFACE_CODE" property="calCostInterfaceCode" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="calProduct != null and calProduct != ''"> and CAL_PRODUCT = #{calProduct}</if>
+		<if test="calCostInterfaceCode != null and calCostInterfaceCode != ''"> and CAL_COST_INTERFACE_CODE = #{calCostInterfaceCode}</if>
+	</sql>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CAL_PRODUCT, CAL_COST_INTERFACE_CODE, CREATE_TIME
+	</sql>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from TBL_CAL_DIMENSION
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from TBL_CAL_DIMENSION
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.cost.entity.CalDimension">
+		insert into TBL_CAL_DIMENSION (VERSION, CAL_PRODUCT,
+		CAL_COST_INTERFACE_CODE, CREATE_TIME)
+		values (0, #{calProduct,jdbcType=VARCHAR},
+		#{calCostInterfaceCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+	</insert>
+
+
+	<update id="update" parameterType="wusc.edu.pay.facade.cost.entity.CalDimension">
+		update TBL_CAL_DIMENSION
+		<set>
+			VERSION = #{version}+1 ,
+			<if test="calProduct != null">
+				CAL_PRODUCT = #{calProduct,jdbcType=VARCHAR},
+			</if>
+			<if test="calCostInterfaceCode != null">
+				CAL_COST_INTERFACE_CODE = #{calCostInterfaceCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by CAL_PRODUCT asc,CAL_COST_INTERFACE_CODE asc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

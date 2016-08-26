@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.payrule.dao.impl.PayWayDaoImpl">
+	<!-- 启用缓存 -->
+	<!-- <cache eviction="LRU" type="wusc.edu.pay.common.core.mybatis.cache.redis.MybatiesRedisCache" /> -->
+	<sql id="table"> TBL_RULE_PAY_WAY </sql>
+	<resultMap id="BaseResultMap" type="PayWay">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="PAY_WAY_CODE" property="payWayCode" jdbcType="VARCHAR" />
+		<result column="PAY_WAY_NAME" property="payWayName" jdbcType="VARCHAR" />
+		<result column="PAY_PRODUCT_CODE" property="payProductCode" jdbcType="VARCHAR" />
+		<result column="DEFAULT_PAY_INTERFACE" property="defaultPayInterface" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="SORTS" property="sorts" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, MODIFY_TIME, PAY_WAY_CODE, PAY_WAY_NAME, PAY_PRODUCT_CODE,
+		DEFAULT_PAY_INTERFACE, STATUS, SORTS
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="payWayCode != null and payWayCode != ''"> and PAY_WAY_CODE = #{payWayCode}</if>
+		<if test="payWayName != null and payWayName != ''"> and PAY_WAY_NAME = #{payWayName}</if>
+		<if test="payProductCode != null and payProductCode != ''"> and PAY_PRODUCT_CODE = #{payProductCode}</if>
+		<if test="defaultPayInterface != null and defaultPayInterface != ''"> and DEFAULT_PAY_INTERFACE = #{defaultPayInterface}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="PayWay">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		MODIFY_TIME, PAY_WAY_CODE, PAY_WAY_NAME,
+		PAY_PRODUCT_CODE, DEFAULT_PAY_INTERFACE, STATUS,
+		SORTS
+		)
+		values (0, #{createTime},
+		#{modifyTime,jdbcType=TIMESTAMP},
+		#{payWayCode,jdbcType=VARCHAR}, #{payWayName,jdbcType=VARCHAR},
+		#{payProductCode,jdbcType=VARCHAR}, #{defaultPayInterface,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT},
+		#{sorts,jdbcType=INTEGER}
+		)
+	</insert>
+
+	<update id="update" parameterType="PayWay">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		MODIFY_TIME = FUN_NOW(),
+		PAY_WAY_CODE = #{payWayCode,jdbcType=VARCHAR},
+		PAY_WAY_NAME = #{payWayName,jdbcType=VARCHAR},
+		PAY_PRODUCT_CODE =
+		#{payProductCode,jdbcType=VARCHAR},
+		DEFAULT_PAY_INTERFACE = #{defaultPayInterface,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=SMALLINT},
+		SORTS = #{sorts,jdbcType=INTEGER}
+		where ID =
+		#{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+
+	<delete id="deleteById" parameterType="long">
+		DELETE FROM
+		<include refid="table" />
+		where ID = #{id}
+	</delete>
+
+	<select id="findBindPayWayByPayProductCode" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.payrule.entity.vo.FrpSelectVo">
+		SELECT
+		a.FRP_CODE as "frpCode", a.BANK_NAME as "bankName",a.BANK_CODE as "bankCode",a.status as "status",
+		a.PAY_TYPE as "payType",
+		c.PAY_WAY_CODE as "payWayCode", c.ID as "payWayId",c.SORTS as "sorts"
+		FROM TBL_RULE_FRP a
+		inner join TBL_RULE_BANK_BRANCH b on a.frp_code=b.frp_code
+		LEFT JOIN TBL_RULE_PAY_WAY c
+		ON b.frp_code = c.PAY_WAY_CODE AND c.PAY_PRODUCT_CODE= #{payProductCode}
+		ORDER BY a.BUS_TYPE
+		asc, a.BANK_NAME asc
+		<!-- SELECT c.PAY_WAY_NAME as "bankName", c.status as "status",c.PAY_WAY_CODE as 'frpCode', c.PAY_WAY_CODE as "payWayCode", c.ID as "payWayId",c.SORTS as "sorts" FROM TBL_RULE_PAY_WAY c where c.PAY_PRODUCT_CODE= 
+			'SINA_001' AND c.PAY_PRODUCT_CODE is not null ORDER BY c.PAY_WAY_NAME asc -->
+	</select>
+
+</mapper>

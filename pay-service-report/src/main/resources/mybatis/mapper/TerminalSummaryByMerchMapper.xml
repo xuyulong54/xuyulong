@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.TerminalSummaryByMerchDaoImpl">
+
+	<sql id="table"> TBL_REPORT_DAY </sql>
+
+	<resultMap id="beanMap" type="TerminalSummaryByMerch">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="STAT_DATE" property="statDate" />
+		<result column="REPORT_TYPE" property="reportType" />
+		<result column="TRX_DATE" property="trxDate" />
+		<result column="VAR_1" property="merchantNo" />
+		<result column="VAR_2" property="merchantName" />
+		<result column="INT_1" property="newMachineNum" />
+		<result column="INT_2" property="ownedMachineNum" />
+		<result column="INT_3" property="machineNum" />
+		
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="reportType != null and reportType !=''"> AND REPORT_TYPE = #{reportType} </if>
+		<if test="startDate != null and startDate != '' and endDate != '' and endDate != null">
+			AND TRX_DATE between #{startDate} and #{endDate}
+		</if>
+	
+	</sql>
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+	select * from(
+		select 
+			VAR_1,
+			VAR_2,
+			sum(INT_1) AS INT_1,
+			sum(INT_2) AS INT_2,
+			sum(INT_3) AS INT_3,
+			TRX_DATE
+		 from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		group by VAR_1) AS  temp
+		<![CDATA[ order by TRX_DATE desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	<!--  
+		根据商户来统计机具库存情况
+	-->
+	<insert 
+		id="createTermSummaryByMerch" 
+		parameterType="java.util.Map">
+		insert into 
+			<include refid="table" /> (
+				VERSION,CREATE_TIME,REPORT_TYPE,STAT_DATE,TRX_DATE,VAR_1,VAR_2,INT_1,INT_2,INT_3) 
+		select 
+			0,#{dateTime},#{reportType},#{statDate},#{transDate},
+			b.merchant_no,
+			b.merchant_name,
+			sum(2 - t.source_type),
+			sum(t.source_type - 1),
+			count(t.source_type)
+		from
+			POS_PP_TERMINAL_BINDING b,POS_PB_TERMINAL t
+		where
+			b.terminal_no = t.terminalno
+			and b.create_time like CONCAT(#{fieldDate}, '%')
+		group by 
+			substr(b.create_time,1,10),b.merchant_no
+	</insert>
+</mapper>

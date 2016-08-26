@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<package name="paymentRecordStatPackage" extends="loginPackage">
+
+		<!-- 交易成功Action -->
+		<action name="paymentRecordStat_*" class="wusc.edu.pay.web.boss.action.PaymentRecordStatAction" method="{1}">
+			<result name="listPaymentRecordStat">page/paymentRecordStat/PaymentRecordStatList.jsp</result>
+		</action>
+
+
+
+
+	</package>
+
+</struts>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="remit" extends="base">
+		<!-- 打款通道 -->
+		<action name="remitChannel_*" class="wusc.edu.pay.web.boss.action.remit.RemitChannelAction" method="{1}">
+			<result name="remitChannelList">page/remit/baseInfo/remitChannel/remitChannelList.jsp</result>
+			<result name="remitChannelAdd">page/remit/baseInfo/remitChannel/remitChannelAdd.jsp</result>
+			<result name="remitChannelEdit">page/remit/baseInfo/remitChannel/remitChannelEdit.jsp</result>
+			<result name="remitSrcAccountInfo">page/remit/baseInfo/remitChannel/remitSrcAccountInfo.jsp</result>
+			<result name="remitChannelFLowRuleLookUp">page/remit/baseInfo/remitChannel/remitChannelLookUpList.jsp</result>
+		</action>
+		<!-- 打款分流规则 -->
+		<action name="remitChannelFlowRule_*" class="wusc.edu.pay.web.boss.action.remit.RemitChannelFlowRuleAction" method="{1}">
+			<result name="remitChannelFlowRuleList">page/remit/baseInfo/remitChannelFlowRule/remitChannelFlowRuleList.jsp</result>
+			<result name="remitChannelFlowRuleAdd">page/remit/baseInfo/remitChannelFlowRule/remitChannelFlowRuleAdd.jsp</result>
+			<result name="remitChannelFlowRuleEdit">page/remit/baseInfo/remitChannelFlowRule/remitChannelFlowRuleEdit.jsp</result>
+			<result name="remitChannelFlowRuleView">page/remit/baseInfo/remitChannelFlowRule/remitChannelFlowRuleView.jsp</result>
+			<result name="remitBankChannelSelectList">page/remit/baseInfo/remitChannelFlowRule/remitBankChannelSelectList.jsp</result>
+		</action>		
+		<!-- 银行信息 -->
+		<action name="remitBankInfo_*" class="wusc.edu.pay.web.boss.action.remit.RemitBankInfoAction" method="{1}">
+			<result name="remitBankInfoList">page/remit/baseInfo/remitBankInfo/remitBankInfoList.jsp</result>
+			<result name="remitBankInfoAdd">page/remit/baseInfo/remitBankInfo/remitBankInfoAdd.jsp</result>
+			<result name="remitBankInfoEdit">page/remit/baseInfo/remitBankInfo/remitBankInfoEdit.jsp</result>
+			<result name="remitBankInfoUpload">page/remit/baseInfo/remitBankInfo/remitBankInfoUpload.jsp</result>
+		</action>	
+		<!-- 制单管理-->
+		<action name="remitOrder_*" class="wusc.edu.pay.web.boss.action.remit.RemitOrderAction" method="{1}">
+			<result name="remitOrderList">page/remit/order/remitOrderManage/remitOrderList.jsp</result>
+			<result name="remitOrderAdd">page/remit/order/remitOrderManage/remitOrderAdd.jsp</result>
+			<result name="remitOrderEdit">page/remit/order/remitOrderManage/remitOrderEdit.jsp</result>
+			<result name="remitOrderAccountInfo">page/remit/order/remitOrderManage/remitOrderAccountInfo.jsp</result>
+			<result name="importRemitOrderUI">page/remit/order/remitOrderManage/importRemitOrder.jsp</result>
+			 <!-- 配置fileUpload的拦截器 -->
+			<interceptor-ref name="fileUpload">
+			 <!-- 配置允许上传的文件类型
+			<param name="allowedTypes">application/msexcel</param> -->
+			<!-- 允许后缀名为png,bmp,jpg,doc,xls的文件上传 -->     
+			<param name="allowedExtensions">  
+   			 xls  
+			</param> 
+			 <!-- 配置允许上传的文件大小 单位字节-->
+			<param name="maximumSize">5242880</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		<!-- 打款人管理 -->
+		<action name="remitPayeeInfo_*" class="wusc.edu.pay.web.boss.action.remit.RemitPayeeInfoAction" method="{1}">
+			<result name="listPageRemitPayeeInfo">page/remit/baseInfo/remitPayeeInfo/remitPayeeInfoList.jsp</result>
+			<result name="addRemitPayeeInfoUI">page/remit/baseInfo/remitPayeeInfo/remitPayeeInfoAdd.jsp</result>
+			<result name="editRemitPayeeInfo">page/remit/baseInfo/remitPayeeInfo/remitPayeeInfoEdit.jsp</result>
+		</action>	
+		
+		<!-- 制单审核 -->
+		<action name="remitOrderCheck_*" class="wusc.edu.pay.web.boss.action.remit.RemitOrderCheckAction" method="{1}">
+			<result name="remitOrderCheckList">page/remit/check/remitOrderCheck/remitOrderCheckList.jsp</result>
+			<result name="remitDetailView">page/remit/check/remitOrderCheck/remitDetailView.jsp</result>
+		</action>
+		
+		<!-- 制单记录 -->
+		<action name="remitRequest_*" class="wusc.edu.pay.web.boss.action.remit.RemitRequestAction" method="{1}">
+			<result name="remitRequestList">page/remit/check/remitRequestQuery/remitRequestList.jsp</result>
+			<result name="remitRequestView">page/remit/check/remitRequestQuery/remitRequestView.jsp</result>
+			<!-- 重新制单 -->
+			<result name="reRemitRequestList">page/remit/recheck/remitRequestQuery/remitRequestList.jsp</result>
+			<result name="reRemitRequestView">page/remit/recheck/remitRequestQuery/remitRequestView.jsp</result>
+			<result name="remitRequestSingleEdit">page/remit/recheck/remitRequestQuery/remitRequestSingleEdit.jsp</result>
+		</action>
+		<!-- 打款记录 -->
+		<action name="remitProcess_*" class="wusc.edu.pay.web.boss.action.remit.RemitProcessAction" method="{1}">
+			<result name="remitProcessList">page/remit/recheck/remitProcessQuery/remitProcessList.jsp</result>
+			<result name="remitProcessView">page/remit/recheck/remitProcessQuery/remitProcessView.jsp</result>
+		</action>	
+		<!-- 网银打款（未打款记录） -->
+		<action name="remitProcessUnremit_*" class="wusc.edu.pay.web.boss.action.remit.RemitProcessUnremitAction" method="{1}">
+			<result name="remitProcessUnremitList">page/remit/recheck/remitProcessUnremitQurey/remitProcessUnremitList.jsp</result>
+		</action>
+		
+		<!-- 打款复核 -->
+		<action name="remitRecheck_*" class="wusc.edu.pay.web.boss.action.remit.RemitRecheckAction" method="{1}">
+			<result name="remitRecheckList">page/remit/recheck/remitRecheck/remitRecheckList.jsp</result>
+			<result name="remitRecheckDetail">page/remit/recheck/remitRecheck/remitRecheckDetail.jsp</result>
+		</action>	
+		
+		<!-- 打款导出批次 -->
+		<action name="remitExportBatch_*" class="wusc.edu.pay.web.boss.action.remit.RemitExportBatchAction" method="{1}">
+			<result name="remitExportBatchList">page/remit/recheck/remitExportBatch/remitExportBatchList.jsp</result>
+			<result name="remitExportBatchDetail">page/remit/recheck/remitExportBatch/remitExportBatchDetail.jsp</result>
+		</action>	
+	</package>
+</struts>

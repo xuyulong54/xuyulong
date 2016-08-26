@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.OnlineMerchantReportDaoImpl">
+
+	<sql id="table"> RP_ONLINE_MERCHANT </sql>
+
+	<resultMap id="beanMap" type="OnlineMerchantReport">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="FULLNAME" property="fullName" />
+		<result column="MERCHANTNO" property="merchantNo" />
+		<result column="MERCHANTTYPE" property="merchantType" />
+		<result column="TRXTYPE" property="trxType" />
+		<result column="FRPCODE" property="frpCode" />
+		<result column="BANKCHANNELCODE" property="bankChannelCode" />
+		<result column="TRANSACTIONAMOUNT" property="transactionAmount" />
+		<result column="TRANSACTIONNUMBER" property="transactionNumber" />
+		<result column="REFUNDAMOUNT" property="refundAmount" />
+		<result column="REFUNDNUMBER" property="refundNumber" />
+		<result column="INCOME" property="income" />
+		<result column="BANKNAME" property="bankName" />
+		<result column="BANKCODENAME" property="bankCodeName" />
+		<result column="ACOUNTDATE" property="acountDate" />
+	</resultMap>
+
+	<insert id="insert" parameterType="OnlineMerchantReport" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, FULLNAME, MERCHANTNO, MERCHANTTYPE, TRXTYPE, FRPCODE, BANKCHANNELCODE, TRANSACTIONAMOUNT,
+		TRANSACTIONNUMBER, REFUNDAMOUNT, REFUNDNUMBER, INCOME, BANKNAME, BANKCODENAME, ACOUNTDATE)
+		values (0, #{createTime}, #{fullName}, #{merchantNo}, #{merchantType}, #{trxType}, #{frpCode}, #{bankChannelCode},
+		#{transactionAmount}, #{transactionNumber}, #{refundAmount}, #{refundNumber}, #{income}, #{bankName}, #{bankCodeName}, #{acountDate})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and ACOUNTDATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="fullName != null and fullName != ''"> and FULLNAME LIKE CONCAT(CONCAT('%',#{fullName}), '%')</if>
+		<if test="merchantType != null and merchantType != ''"> and MERCHANTTYPE = #{merchantType}</if>
+		<if test="trxType != null and trxType != ''"> and TRXTYPE = #{trxType} </if>
+		<if test="frpCode != null and frpCode != ''"> and FRPCODE = #{frpCode} </if>
+		<if test="bankChannelCode != null and bankChannelCode != ''"> and BANKCHANNELCODE = #{bankChannelCode} </if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

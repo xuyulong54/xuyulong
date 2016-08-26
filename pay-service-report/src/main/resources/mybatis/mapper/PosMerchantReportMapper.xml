@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.PosMerchantReportDaoImpl">
+
+	<sql id="table"> RP_POS_MERCHANT </sql>
+
+	<resultMap id="beanMap" type="PosMerchantReport">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="FULLNAME" property="fullName" />
+		<result column="MERCHANTNO" property="merchantNo" />
+		<result column="MERCHANTTYPE" property="merchantType" />
+		<result column="TRXTYPE" property="trxType" />
+		<result column="CHANNELNO" property="channelNo" />
+		<result column="CHANNELNAME" property="channelName" />
+		<result column="TRANSACTIONAMOUNT" property="transactionAmount" />
+		<result column="TRANSACTIONNUMBER" property="transactionNumber" />
+		<result column="INCOME" property="income" />
+		<result column="COST" property="cost" />
+		<result column="GROSSPROFIT" property="grossProfit" />
+		<result column="ACOUNTDATE" property="acountDate" />
+	</resultMap>
+
+	<insert id="insert" parameterType="PosMerchantReport" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, FULLNAME, MERCHANTNO, MERCHANTTYPE, TRXTYPE, CHANNELNO, CHANNELNAME, TRANSACTIONAMOUNT,
+		TRANSACTIONNUMBER, INCOME, COST, GROSSPROFIT, ACOUNTDATE)
+		values (0, #{createTime}, #{fullName}, #{merchantNo}, #{merchantType}, #{trxType}, #{channelNo}, #{channelName},
+		#{transactionAmount}, #{transactionNumber}, #{income}, #{cost}, #{grossProfit}, #{acountDate})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and ACOUNTDATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="fullName != null and fullName != ''"> and fullName LIKE CONCAT(CONCAT('%',#{fullName}), '%')</if>
+		<if test="merchantNo != null and merchantNo != ''"> and merchantNo = #{merchantNo} </if>
+		<if test="merchantType != null and merchantType != ''"> and merchantType = #{merchantType}</if>
+		<if test="channelName != null and channelName != ''"> and channelName LIKE CONCAT(CONCAT('%',#{channelName}), '%')</if>
+		<if test="frpCode != null and frpCode != ''"> and frpCode = #{frpCode} </if>
+		<if test="trxType != null and trxType != ''"> and trxType = #{trxType}</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select 
+			trxType, 
+			sum(transactionAmount) as transactionAmount,
+			sum(transactionNumber) as transactionNumber, 
+			sum(income) as income, 
+			sum(cost) as cost, 
+			sum(grossProfit) as grossProfit 
+		from <include refid="table" /> 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		group by trxType
+	</select>
+
+</mapper>

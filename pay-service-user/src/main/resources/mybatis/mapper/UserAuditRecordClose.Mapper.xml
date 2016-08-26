@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserAuditRecordCloseDaoImpl">
+
+	<sql id="table"> TBL_USER_AUDIT_RECORD_COLSE </sql>
+
+	<resultMap id="beanMap" type="UserAuditRecordClose">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="loginName" column="LOGINNAME" />
+		<result property="userNo" column="USERNO" />
+		<result property="fullName" column="FULLNAME" />
+		<result property="userType" column="userType" />
+		<result property="auditStatus" column="AUDITSTATUS" />
+		<result property="applyDesc" column="APPLYDESC" />
+		<result property="auditDesc" column="AUDITDESC" />
+		<result property="auditOperatorLoginName" column="AUDITOPERATORLOGINNAME" />
+		<result property="auditOperatorName" column="AUDITOPERATORNAME" />
+		<result property="dealTime" column="DEALTIME" />
+		<result property="applyOperatorLoginName" column="APPLYOPERATORLOGINNAME" />
+		<result property="applyOperatorName" column="APPLYOPERATORNAME" />
+		<result property="isLogin" column="ISLOGIN" />
+		<!-- 做显示字段,不持久化 -->
+		<result property="timeInterval" column="TIMEINTERVAL" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserAuditRecordClose" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME,LOGINNAME, USERNO,fullName,
+		userType,AUDITSTATUS, APPLYDESC,AUDITDESC,AUDITOPERATORLOGINNAME,
+		AUDITOPERATORNAME,DEALTIME,APPLYOPERATORLOGINNAME,APPLYOPERATORNAME, ISLOGIN
+		)
+		values
+		(0, #{createTime},#{loginName},#{userNo},#{fullName},
+		#{userType}, #{auditStatus},#{applyDesc},#{auditDesc},#{auditOperatorLoginName},
+		#{auditOperatorName},#{dealTime},#{applyOperatorLoginName},#{applyOperatorName}, #{isLogin})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserAuditRecordClose">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1,
+			AUDITSTATUS = #{auditStatus},
+			APPLYDESC = #{applyDesc},
+			AUDITDESC = #{auditDesc},
+			AUDITOPERATORLOGINNAME = #{auditOperatorLoginName},
+			AUDITOPERATORNAME =
+			#{auditOperatorName},
+			DEALTIME = FUN_NOW(),
+			ISLOGIN = #{isLogin}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<delete id="deleteById" parameterType="long">
+		delete
+		<include refid="table" />
+		where ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="loginName != null and loginName !='' "> and LOGINNAME = #{loginName}</if>
+		<if test="fullName != null and fullName !='' "> and FULLNAME = #{fullName}</if>
+		<if test="userType != null and userType !='' "> and USERTYPE = #{userType}</if>
+		<if test="userNo != null and userNo !='' "> AND USERNO = #{userNo}</if>
+		<if test="auditStatus != null and auditStatus !='' "> and AUDITSTATUS = #{auditStatus}</if>
+		<if test="auditOperatorName != null and auditOperatorName !='' "> and AUDITOPERATORNAME = #{auditOperatorName}</if>
+		<if test="applyOperatorLoginName != null and applyOperatorLoginName !='' "> and APPLYOPERATORLOGINNAME = #{applyOperatorLoginName}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+
+</mapper>

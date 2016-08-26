@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="pay-service-user"
+  id="myeclipse.1374461123925"
+  context-root="/pay-service-user"
+  j2ee-spec="6.0"
+  archive="pay-service-user.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

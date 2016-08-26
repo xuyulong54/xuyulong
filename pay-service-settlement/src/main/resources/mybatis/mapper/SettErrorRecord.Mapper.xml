@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.settlement.dao.impl.SettErrorRecordDaoImpl">
+
+	<sql id="table"> TBL_SETT_ERROR_RECORD </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.settlement.entity.SettErrorRecord">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="USER_NO" property="userNo" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+		<result column="SETT_DATE" property="settDate" jdbcType="DATE" />
+		<result column="SETT_MODE" property="settMode" jdbcType="SMALLINT" />
+		<result column="ERR_DESC" property="errDesc" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="BEGIN_DATE" property="beginDate" jdbcType="DATE" />
+		<result column="END_DATE" property="endDate" jdbcType="DATE" />
+		<result column="OPERATOR_LOGIN_NAME" property="operatorLoginName" jdbcType="VARCHAR" />
+		<result column="OPERATOR_REAL_NAME" property="operatorRealName" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, USER_NO, USER_NAME, ACCOUNT_NO, SETT_DATE, SETT_MODE, ERR_DESC,
+		STATUS, BEGIN_DATE, END_DATE, OPERATOR_LOGIN_NAME, OPERATOR_REAL_NAME, REMARK
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="accountNo != null and accountNo != ''"> and ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR}</if>
+		<if test="userNo != null and userNo != ''"> and USER_NO = #{userNo,jdbcType=VARCHAR}</if>
+		<if test="settMode != null and settMode != ''"> and SETT_MODE = #{settMode,jdbcType=SMALLINT}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status,jdbcType=SMALLINT}</if>
+		<if test="operatorLoginName != null and operatorLoginName != ''"> and OPERATOR_LOGIN_NAME = #{operatorLoginName,jdbcType=VARCHAR}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="wusc.edu.pay.facade.settlement.entity.SettErrorRecord">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		USER_NO, USER_NAME, ACCOUNT_NO,
+		SETT_DATE, SETT_MODE, ERR_DESC,
+		STATUS, BEGIN_DATE, END_DATE,
+		OPERATOR_LOGIN_NAME, OPERATOR_REAL_NAME, REMARK
+		)
+		values (0, #{createTime},
+		#{userNo,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{accountNo,jdbcType=VARCHAR},
+		#{settDate,jdbcType=DATE}, #{settMode,jdbcType=SMALLINT}, #{errDesc,jdbcType=VARCHAR},
+		#{status,jdbcType=SMALLINT}, #{beginDate,jdbcType=DATE}, #{endDate,jdbcType=DATE},
+		#{operatorLoginName,jdbcType=VARCHAR}, #{operatorRealName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.settlement.entity.SettErrorRecord">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		USER_NO = #{userNo,jdbcType=VARCHAR},
+		USER_NAME = #{userName,jdbcType=VARCHAR},
+		ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR},
+		SETT_DATE = #{settDate,jdbcType=DATE},
+		SETT_MODE = #{settMode,jdbcType=SMALLINT},
+		ERR_DESC = #{errDesc,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=SMALLINT},
+		BEGIN_DATE = #{beginDate,jdbcType=DATE},
+		END_DATE = #{endDate,jdbcType=DATE},
+		OPERATOR_LOGIN_NAME = #{operatorLoginName,jdbcType=VARCHAR},
+		OPERATOR_REAL_NAME = #{operatorRealName,jdbcType=VARCHAR},
+		REMARK = #{remark,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

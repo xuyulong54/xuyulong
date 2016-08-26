@@ -1,0 +1,98 @@
+/*标签初始化*/
+
+body {
+	font-size:12px;
+	color:#666;
+	font-family:Microsoft YaHei, arial; font-size: 14px;
+	word-break:break-all;
+	background-color:#fff;
+
+}
+html, body, div, header, footer, nav, section, article, aside, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, form, p, fieldset, input, button, select, textarea, iframe {
+	margin:0px;
+	padding:0px
+}
+button {
+	border:none
+}
+input, select, textarea {
+	outline:none
+}
+p, ol, ul, li, dl, dt, dd {
+	list-style:none;
+}
+img {
+	border:0px;
+	vertical-align:top
+}
+h1, h2, h3, h4, caption, em, strong, th {
+	font-weight:bold;
+	font-style:normal;
+}
+h2 {
+	font-size: 16px;
+}
+h3 {
+	font-size: 14px;
+}
+h4 {
+	font-size: 12px;
+}
+a, a:visited {
+	text-decoration:none;
+}
+a:hover {
+	color:#C70606!important;
+	text-decoration:none;
+}
+/*标签初始化结束*/
+
+/*常用的内边距和外边距*/
+.mAuto{margin: 0 auto;}
+.ml5{margin-left: 5px;}
+.pl5{padding-left: 5px;}
+.mr5{ margin-right: 5px;}
+.pr5{padding-right: 5px;}
+.pt10{padding-top: 10px;}
+.pb10{padding-bottom: 10px;}
+.pt5{padding-top: 5px;}
+.pb5{padding-bottom: 5px;}
+/*常用的内边距和外边距 结束*/
+
+/*浮动 表格 高度 字体 边距 填充*/
+.clear {
+	clear:both;
+	display:block;
+	width:0px;
+	height:0px;
+	overflow:hidden;
+}
+
+/*块状元素水平居中*/
+.auto {
+	margin:0px auto;
+}
+.containerGagteway {
+	width:900px
+}
+
+.topGateway{width:900px; margin:0 auto;  height:35px; line-height: 35px; font-family: 微软雅黑; font-size: 20px; }
+.reg_top100{  margin-top:10px; width:100%; height:75px; background-image:url('../images/reg_topbg100.png'); background-repeat:repeat-x;background-position: 0px 30px;}
+.topGateway li{ float:left;}
+.topGateway  span{color:#C70606; float:left; display:block; width:30px; text-align: center;}
+.topGateway .title{ color:#C70606 ;}
+
+/*页脚*/
+.footer {
+	width:100%;
+	padding:20px 0px 50px;
+
+	background-color:#EAEAEA;
+	border-top:#DDDDDD solid 1px;
+	text-align:center
+}
+.footer a {
+	margin:8px;
+	color:#333
+}
+/*页脚 end*/

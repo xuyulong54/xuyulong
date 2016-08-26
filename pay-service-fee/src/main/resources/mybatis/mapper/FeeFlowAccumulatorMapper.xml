@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.fee.dao.impl.FeeFlowAccumulatorDaoImpl">
+
+	<sql id="table"> TBL_FEE_FLOW_ACCUMULATOR </sql>
+
+	<resultMap id="beanMap" type="FeeFlowAccumulator">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="merchantNo" column="MERCHANTNO" />
+		<result property="calculateWayId" column="CALCULATE_WAY_ID" />
+		<result property="accIntervalStart" column="ACC_INTERVAL_START" />
+		<result property="accIntervalEnd" column="ACC_INTERVAL_END" />
+		<result property="totalAmount" column="TOTAL_AMOUNT" />
+		<result property="thisAmount" column="THIS_AMOUNT" />
+		<result property="modifyDate" column="MODIFY_DATE" />
+	</resultMap>
+
+	<insert id="insert" parameterType="FeeFlowAccumulator" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, MERCHANTNO, CALCULATE_WAY_ID, ACC_INTERVAL_START, ACC_INTERVAL_END, TOTAL_AMOUNT,
+		THIS_AMOUNT,MODIFY_DATE)
+		values (0, FUN_NOW(), #{merchantNo}, #{calculateWayId},
+		#{accIntervalStart}, #{accIntervalEnd}, #{totalAmount}, #{thisAmount},
+		#{modifyDate})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="FeeFlowAccumulator">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			MERCHANTNO = #{merchantNo},
+			CALCULATE_WAY_ID = #{calculateWayId},
+			ACC_INTERVAL_START = #{accIntervalStart},
+			ACC_INTERVAL_END = #{accIntervalEnd},
+			TOTAL_AMOUNT =
+			#{totalAmount},
+			THIS_AMOUNT = #{thisAmount},
+			MODIFY_DATE = #{modifyDate}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="calculateWayId != null and calculateWayId !='' "> and CALCULATE_WAY_ID = #{calculateWayId}</if>
+		<if test="userNo != null and userNo !='' "> and MERCHANTNO = #{userNo}</if>
+		<if test="intervalTime != null and intervalTime !='' "> and #{intervalTime} between ACC_INTERVAL_START AND ACC_INTERVAL_END</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

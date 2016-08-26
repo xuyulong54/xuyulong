@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.account.dao.impl.AccountFrozenHistoryDaoImpl">
+
+	<sql id="table"> TBL_ACCOUNT_FROZEN_HISTORY </sql>
+
+	<resultMap id="beanMap" type="AccountFrozenHistory">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="requestNo" column="REQUEST_NO" />
+		<result property="accountNo" column="ACCOUNT_NO" />
+		<result property="amount" column="AMOUNT" />
+		<result property="currentAmount" column="CURRENT_AMOUNT" />
+		<result property="remark" column="REMARK" />
+		<result property="accountFrozenHistoryType" column="ACCOUNT_FROZEN_HISTORY_TYPE" />
+		<result property="trxType" column="TRX_TYPE" />
+	</resultMap>
+
+	<insert id="insert" parameterType="AccountFrozenHistory" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, REQUEST_NO, ACCOUNT_NO,
+		AMOUNT, CURRENT_AMOUNT, REMARK, ACCOUNT_FROZEN_HISTORY_TYPE,
+		TRX_TYPE)
+		values (0, #{createTime}, #{requestNo}, #{accountNo},
+		#{amount}, #{currentAmount},
+		#{remark}, #{accountFrozenHistoryType},
+		#{trxType})
+	</insert>
+
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate !=''">
+			and CREATE_TIME between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="requestNo != null and requestNo !='' "> and REQUEST_NO = #{requestNo}</if>
+		<if test="accountNo != null and accountNo !='' "> and ACCOUNT_NO = #{accountNo}</if>
+		<if test="trxType != null and trxType !=''"> and TRX_TYPE =#{trxType} </if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="trxTypes != null and  trxTypes !=''">
+			and TRX_TYPE in
+			<foreach collection="trxTypes" index="index" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		<if test="accountFrozenHistoryType != null and  accountFrozenHistoryType !=''"> and ACCOUNT_FROZEN_HISTORY_TYPE = #{accountFrozenHistoryType}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

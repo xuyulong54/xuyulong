@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.PosBankReportDaoImpl">
+
+	<sql id="table"> RP_POS_BANK </sql>
+
+	<resultMap id="beanMap" type="PosBankReport">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="BANKNAME" property="bankName" />
+		<result column="BANKCHANNELCODE" property="bankChannelCode" />
+		<result column="BANKCHANNELNAME" property="bankChannelName" />
+		<result column="TRANSACTIONAMOUNT" property="transactionAmount" />
+		<result column="TRANSACTIONNUMBER" property="transactionNumber" />
+		<result column="COST" property="cost" />
+		<result column="TOTALFEE" property="totalFee" />
+		<result column="GROSSPROFIT" property="grossProfit" />
+		<result column="ACOUNTDATE" property="acountDate" />
+		<result column="TRXTYPE" property="trxType" />
+
+	</resultMap>
+
+	<insert id="insert" parameterType="PosBankReport" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, BANKNAME, BANKCHANNELCODE, BANKCHANNELNAME, TRANSACTIONAMOUNT, TRANSACTIONNUMBER, COST,
+		TOTALFEE, GROSSPROFIT, ACOUNTDATE, TRXTYPE)
+		values (0, #{createTime}, #{bankName}, #{bankChannelCode}, #{bankChannelName}, #{transactionAmount}, #{transactionNumber},
+		#{cost}, #{totalFee}, #{grossProfit}, FUN_NOW(),#{trxType})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and ACOUNTDATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="bankName != null and bankName != ''"> and BANKNAME LIKE CONCAT(CONCAT('%',#{bankName}), '%')</if>
+		<if test="bankChannelCode != null and bankChannelCode != ''"> and BANKCHANNELCODE = #{bankChannelCode} </if>
+		<if test="bankChannelName != null and bankChannelName != ''"> and BANKCHANNELNAME LIKE CONCAT(CONCAT('%',#{bankChannelName}), '%')</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select 
+			bankChannelName, 
+			sum(transactionAmount) as transactionAmount,
+			sum(transactionNumber) as transactionNumber, 
+			sum(totalFee) as totalFee,
+			sum(cost) as cost, 
+			sum(grossProfit) as grossProfit 
+		from <include refid="table" /> 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		group by bankChannelName
+	</select>
+
+</mapper>

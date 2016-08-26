@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.pms.dao.impl.PmsOperatorDaoImpl">
+
+	<!-- Pms权限管理：操作员表 -->
+	<sql id="pms_operator"> TBL_AGENT_PMS_OPERATOR </sql>
+	<sql id="pms_role_operator"> TBL_AGENT_PMS_ROLE_OPERATOR </sql>
+
+	<resultMap id="beanMap" type="PmsOperator">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="LOGINNAME" property="loginName" />
+		<result column="LOGINPWD" property="loginPwd" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="REMARK" property="remark" />
+		<result column="REALNAME" property="realName" />
+		<result column="MOBILENO" property="mobileNo" />
+		<result column="STATUS" property="status" />
+		<result column="TYPE" property="type" />
+		<result column="LASTLOGINTIME" property="lastLoginTime" />
+		<result column="ISCHANGEDPWD" property="isChangedPwd" javaType="Boolean" jdbcType="SMALLINT"/>
+		<result column="PWDERRORCOUNT" property="pwdErrorCount" />
+		<result column="PWDERRORTIME" property="pwdErrorTime" />
+		<result column="USERNO" property="userNo" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="PmsOperator" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_operator"/> (VERSION, LOGINNAME, LOGINPWD, CREATETIME, REMARK, 
+		REALNAME, MOBILENO, STATUS, TYPE, LASTLOGINTIME, ISCHANGEDPWD, PWDERRORCOUNT, PWDERRORTIME, USERNO) 
+		values (0, #{loginName}, #{loginPwd}, FUN_NOW(), #{remark}, #{realName}, #{mobileNo}, #{status}, #{type}, 
+		#{lastLoginTime}, #{isChangedPwd,javaType=Boolean,jdbcType=SMALLINT}, #{pwdErrorCount}, #{pwdErrorTime}, #{userNo})
+	</insert>
+	
+	<update id="update" parameterType="PmsOperator">
+		update <include refid="pms_operator"/>
+		<set>			
+			VERSION = #{version}+1,
+			LOGINNAME = #{loginName},
+			LOGINPWD = #{loginPwd},
+			REMARK = #{remark},
+			REALNAME = #{realName},
+			MOBILENO = #{mobileNo},
+			STATUS = #{status},
+			TYPE = #{type},
+			LASTLOGINTIME = #{lastLoginTime},
+			ISCHANGEDPWD = #{isChangedPwd,javaType=Boolean,jdbcType=SMALLINT},
+			PWDERRORCOUNT = #{pwdErrorCount},
+			PWDERRORTIME = #{pwdErrorTime},
+			USERNO = #{userNo}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+	
+  	<select id="getById" parameterType="long" resultType="PmsOperator">
+    	select 
+    		O.ID as "id",
+    		O.VERSION as "version",
+    		O.LOGINNAME as "loginName",
+    		O.LOGINPWD as "loginPwd",
+    		O.CREATETIME as "createTime",
+    		O.REMARK as "remark",
+    		O.REALNAME as "realName",
+    		O.MOBILENO as "mobileNo",
+    		O.STATUS as "status",
+    		O.TYPE as "type",
+    		O.LASTLOGINTIME as "lastLoginTime",
+    		O.ISCHANGEDPWD as "isChangedPwd",
+    		O.PWDERRORCOUNT as "pwdErrorCount",
+    		O.PWDERRORTIME as "pwdErrorTime",
+    		O.USERNO as "userNo" 
+    	from <include refid="pms_operator"/> O where O.ID = #{id}
+  	</select>
+  	
+  	<select id="getByLoginName" parameterType="string" resultType="PmsOperator">
+    	select 
+    		O.ID as "id",
+    		O.VERSION as "version",
+    		O.LOGINNAME as "loginName",
+    		O.LOGINPWD as "loginPwd",
+    		O.CREATETIME as "createTime",
+    		O.REMARK as "remark",
+    		O.REALNAME as "realName",
+    		O.MOBILENO as "mobileNo",
+    		O.STATUS as "status",
+    		O.TYPE as "type",
+    		O.LASTLOGINTIME as "lastLoginTime",
+    		O.ISCHANGEDPWD as "isChangedPwd",
+    		O.PWDERRORCOUNT as "pwdErrorCount",
+    		O.PWDERRORTIME as "pwdErrorTime",
+    		O.USERNO as "userNo" 
+    	from <include refid="pms_operator"/> O where O.LOGINNAME = #{loginName}
+  	</select>
+  	
+  	<delete id="deleteById" parameterType="long">
+    	delete from <include refid="pms_operator"/> where ID = #{id}
+  	</delete>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="loginName != null and loginName != ''"> and O.LOGINNAME = #{loginName}</if>
+		<if test="status != null and status != ''"> and O.STATUS = #{status}</if>
+		<if test="userNo != null and userNo != ''"> and O.USERNO = #{userNo}</if>
+		<!-- 分页中的foreach中${item}要用美元符，不能用#{item}，这是项目自定过SQL过滤器的原因 -->
+		<if test="operatorTypeList != null and operatorTypeList != ''"> 
+			and O.TYPE in
+			<foreach item="item" index="index" collection="operatorTypeList" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		<!-- Like query -->
+		<if test="realName != null and realName != ''"> and O.REALNAME like CONCAT(CONCAT('%', #{realName}), '%')</if>
+	</sql>
+	
+	<select id="listPage" parameterType="java.util.Map" resultType="PmsOperator">
+		select 
+			O.ID as "id",
+    		O.VERSION as "version",
+    		O.LOGINNAME as "loginName",
+    		O.LOGINPWD as "loginPwd",
+    		O.CREATETIME as "createTime",
+    		O.REMARK as "remark",
+    		O.REALNAME as "realName",
+    		O.MOBILENO as "mobileNo",
+    		O.STATUS as "status",
+    		O.TYPE as "type",
+    		O.LASTLOGINTIME as "lastLoginTime",
+    		O.ISCHANGEDPWD as "isChangedPwd",
+    		O.PWDERRORCOUNT as "pwdErrorCount",
+    		O.PWDERRORTIME as "pwdErrorTime",
+    		O.USERNO as "userNo"  
+    	from  <include refid="pms_operator"/> O 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		order by O.USERNO,O.TYPE
+	</select>
+
+	<select id="listByRoleId" parameterType="long" resultType="PmsOperator">
+		select 
+			O.ID as "id",
+    		O.VERSION as "version",
+    		O.LOGINNAME as "loginName",
+    		O.LOGINPWD as "loginPwd",
+    		O.CREATETIME as "createTime",
+    		O.REMARK as "remark",
+    		O.REALNAME as "realName",
+    		O.MOBILENO as "mobileNo",
+    		O.STATUS as "status",
+    		O.TYPE as "type",
+    		O.LASTLOGINTIME as "lastLoginTime",
+    		O.ISCHANGEDPWD as "isChangedPwd",
+    		O.PWDERRORCOUNT as "pwdErrorCount",
+    		O.PWDERRORTIME as "pwdErrorTime",
+    		O.USERNO as "userNo"
+    	from <include refid="pms_operator"/> O 
+    	left join <include refid="pms_role_operator"/> RO on O.ID = RO.OPERATORID 
+    	where RO.ROLEID = #{roleId}
+	</select>
+	
+		<!-- 批量修改用户操作员的状态 -->
+	<update id="updateAgentOperatorStatusByUserNo" parameterType="java.util.Map">
+		update
+		<include refid="pms_operator" />
+		set STATUS = #{status} where USERNO = #{userNo}
+	</update>
+</mapper>

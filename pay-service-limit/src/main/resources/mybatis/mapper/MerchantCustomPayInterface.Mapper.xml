@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.limit.dao.impl.MerchantCustomPayInterfaceDaoImpl">
+	<!-- 表名 -->
+	<sql id="table"> TBL_LIMIT_MERCHANT_CUSTOM_PAY_INTERFACE </sql>
+
+	<resultMap id="beanMap" type="wusc.edu.pay.facade.limit.entity.MerchantCustomPayInterface">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="merchantNo" column="MERCHANT_NO" />
+		<result property="payWay" column="PAY_WAY" />
+		<result property="payInterface" column="PAY_INTERFACE" />
+		<result property="status" column="STATUS" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+
+	</resultMap>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.limit.entity.MerchantCustomPayInterface" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO
+		<include refid="table" />
+		(
+    VERSION,
+		MERCHANT_NO,
+		PAY_WAY,
+		CREATE_TIME,
+		LAST_MODIFY_TIME,
+		PAY_INTERFACE,
+		STATUS
+		) VALUES
+		(
+		0,
+		#{merchantNo},
+		#{payWay},
+		FUN_NOW(),
+		FUN_NOW(),
+		#{payInterface},
+		#{status}
+		)
+	</insert>
+	<update id="update" parameterType="wusc.edu.pay.facade.limit.entity.MerchantCustomPayInterface">
+		UPDATE
+		<include refid="table" />
+		<set>
+			VERSION = #{version,jdbcType=INTEGER} + 1,
+			MERCHANT_NO = #{merchantNo},
+			PAY_WAY = #{payWay},
+			LAST_MODIFY_TIME = FUN_NOW(),
+			PAY_INTERFACE = #{payInterface},
+			STATUS = #{status}
+		</set>
+		WHERE ID = #{id} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+	<delete id="deleteById" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</delete>
+	<select id="getById" parameterType="string" resultType="wusc.edu.pay.facade.limit.entity.MerchantCustomPayInterface">
+		SELECT
+		ID as "id",
+    VERSION as "version",
+		MERCHANT_NO as "merchantNo",
+		PAY_WAY as "payWay",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime",
+		PAY_INTERFACE as "payInterface",
+		STATUS
+		as "status"
+		FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<sql id="condition_sql">
+		<if test="delStatus != null and delStatus != ''"> and STATUS != #{delStatus}</if>
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANT_NO = #{merchantNo}</if>
+		<if test="payWay != null and payWay != ''"> and PAY_WAY = #{payWay}</if>
+		<if test="payInterface != null and payInterface != ''"> and PAY_INTERFACE = #{payInterface}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.limit.entity.MerchantCustomPayInterface">
+		select
+		ID as "id",
+    VERSION as "version",
+		MERCHANT_NO as "merchantNo",
+		PAY_WAY as "payWay",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime",
+		PAY_INTERFACE as "payInterface",
+		STATUS
+		as "status"
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="getByMerchantNo" parameterType="string" resultType="wusc.edu.pay.facade.limit.entity.MerchantCustomPayInterface">
+		SELECT
+		ID as "id",
+    VERSION as "version",
+		MERCHANT_NO as "merchantNo",
+		PAY_WAY as "payWay",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime",
+		PAY_INTERFACE as "payInterface",
+		STATUS
+		as "status"
+		FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+
+	<select id="getByMerchantNoAndWayAndInterface" parameterType="string" resultType="wusc.edu.pay.facade.limit.entity.MerchantCustomPayInterface">
+		SELECT
+		ID as "id",
+    VERSION as "version",
+		MERCHANT_NO as "merchantNo",
+		PAY_WAY as "payWay",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime",
+		PAY_INTERFACE as "payInterface",
+		STATUS
+		as "status"
+		FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,6 @@
+尊敬的商户：【${loginName}】您好！
+
+	您的资料已经审核通过。
+	用户名【${loginName}】登录密码【${loginPwd}】支付密码【${tradePwd}】
+	您可以登录门户系统，链接：【${system_url}】
+如有疑问，请联系客服人员，电话:【${phone}】

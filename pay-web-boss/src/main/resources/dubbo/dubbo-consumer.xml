@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="pay-web-boss" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<!-- 多注册中心配置，竖号分隔表示同时连接多个不同注册中心，同一注册中心的多个集群地址用逗号分隔 -->
+	<!-- 注册中心地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+
+	<!-- 账户子系统服务接口引用 -->
+	<import resource="dubbo-reference-account.xml" />
+	<!-- 银行系统服务接口引用 -->
+	<import resource="dubbo-reference-bank.xml" />
+	<!-- 运营子系统服务接口引用 -->
+	<import resource="dubbo-reference-boss.xml" />
+	<!-- 订单子系统服务接口引用 -->
+	<import resource="dubbo-reference-trade.xml" />
+	<!-- 结算服务接口引用 -->
+	<import resource="dubbo-reference-sett.xml" />
+	<!-- 用户信息引用 -->
+	<import resource="dubbo-reference-user.xml" />
+	<!-- 银行成本计费 -->
+	<import resource="dubbo-reference-cost.xml" />
+	<!-- 商户手续费计费 -->
+	<import resource="dubbo-reference-fee.xml" />
+	<!-- 开关限制接口引用 -->
+	<import resource="dubbo-reference-limit.xml" />
+	<!-- 支付规则接口引用 -->
+	<import resource="dubbo-reference-payrule.xml" />
+
+	<!-- 结算打款接口引用 -->
+	<import resource="dubbo-reference-remit.xml"/>
+	<!-- 银行打款接口引用 -->
+	<import resource="dubbo-reference-bankremit.xml"/>
+	<!-- 报表接口引用 -->
+	<import resource="dubbo-reference-report.xml"/>
+</beans>  

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="pay-service-user" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+
+	<!-- 用dubbo协议在20900端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="20818" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+
+	<!-- 当ProtocolConfig和ServiceConfig某属性没有配置时,采用此缺省值 -->
+	<dubbo:provider timeout="10000" threadpool="fixed" threads="100" accepts="1000" />
+	
+	<!-- 权限服务接口 -->
+	<dubbo:service retries="0" interface="wusc.edu.pay.facade.pms.service.PmsFacade" ref="pmsFacade" />
+	
+	<!-- 声明需要暴露的服务接口 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MerchantActionFacade" ref="merchantActionFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MerchantPermissionFacade" ref="merchantPermissionFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MerchantRoleActionFacade" ref="merchantRoleActionFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MerchantRoleFacade" ref="merchantRoleFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MerchantRoleOperatorFacade" ref="merchantRoleOperatorFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MerchantSecretFacade" ref="merchantSecretFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MerchantOnlineFacade" ref="merchantOnlineFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserOperatorFacade" ref="userOperatorFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserOperatorLogFacade" ref="userOperatorLogFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserQueryFacade" ref="userQueryFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserManagementFacade" ref="userManagementFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.PortalCaFacade" ref="portalCaFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MemberInfoFacade" ref="memberInfoFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserTradePwdFacade" ref="userTradePwdFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserBankAccountFacade" ref="userBankAccountFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserCacheFacade" ref="userCacheFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserAuditFacade" ref="userAuditFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.UserVerificationCodeFacade" ref="userVerificationCodeFacade" />
+	
+	<!-- 代理商系统需要用到的 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.agent.service.AgentMerchantRelationFacade" ref="agentMerchantRelationFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.agent.service.AgentRelationFacade" ref="agentRelationFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.user.service.MerchantFileFacade" ref="merchantFileFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.agent.service.AgentRequestFileManagerFacade" ref="agentRequestFileManagerFacade" />
+
+	<!-- 提供给手机端使用 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.mobile.service.MobileServiceFacade" ref="mobileServiceFacade" />
+	
+</beans>  

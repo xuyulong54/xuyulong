@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	
+	<!-- 支付规则模块 -->
+	<package name="rulePackage" extends="loginPackage">
+	
+		<!-- 支付渠道Action -->
+		<action name="frp_*" class="wusc.edu.pay.web.boss.action.rule.FrpAction" method="{1}">
+			<result name="addFrpUI">page/rule/frp/frpAdd.jsp</result>
+			<result name="editFrpUI">page/rule/frp/frpEdit.jsp</result>
+			<result name="listFrp">page/rule/frp/frpList.jsp</result>
+			<result name="lookupFrpList">page/rule/frp/frpLookupList.jsp</result>
+		</action>
+		
+		<!-- 银行分流Action -->
+		<action name="bankBranch_*" class="wusc.edu.pay.web.boss.action.rule.BankBranchAction" method="{1}">
+			<result name="list">page/rule/bankBranch/branchList.jsp</result>
+			<result name="add">page/rule/bankBranch/branchAdd.jsp</result>
+			<result name="edit">page/rule/bankBranch/branchEdit.jsp</result>
+		</action>
+
+		<!--  支付产品Action -->
+		<action name="payProduct_*" class="wusc.edu.pay.web.boss.action.rule.PayProductAction" method="{1}">
+			<result name="listPayProduct">page/rule/payProduct/listPayProduct.jsp</result>
+			<result name="listPayProductForLookup">page/rule/payProduct/listPayProductForLookup.jsp</result>
+			<result name="addView">page/rule/payProduct/addView.jsp</result>
+			<result name="editView">page/rule/payProduct/editView.jsp</result>
+			<!-- <result name="editPayProductUI">page/rule/payRule/editPayProductUI.jsp</result> -->
+		</action>
+		
+		<!--  支付方式Action -->
+		<action name="payWay_*" class="wusc.edu.pay.web.boss.action.rule.PayWayAction" method="{1}">
+			<result name="addView">page/rule/payWay/addView.jsp</result>
+			<result name="editUI">page/rule/payWay/editUI.jsp</result>
+			<result name="editView">page/rule/payWay/editView.jsp</result>
+			<result name="editProductPayWayUI">page/rule/payWay/editProductPayWayUI.jsp</result>
+			<result name="payWayLookupList">page/rule/payWay/payWayLookupList.jsp</result>
+		</action>
+		
+		<!-- 支付规则 -->
+		<action name="payRule_*" class="wusc.edu.pay.web.boss.action.rule.PayRuleAction" method="{1}">
+			<result name="listPayRule">page/rule/payRule/listPayRule.jsp</result>
+			<result name="addPayRule">page/rule/payRule/addPayRule.jsp</result>
+			<result name="editPayRule">page/rule/payRule/editPayRule.jsp</result>
+			<!-- 
+			<result name="bindPayProductSwitchUI">page/rule/payRule/bindPayProductSwitchUI.jsp</result>
+			<result name="bindPayWaySwitchUI">page/rule/payRule/bindPayWaySwitchUI.jsp</result>
+			 -->
+			<result name="bindAllSwitchUI">page/rule/payRule/bindAllSwitchUI.jsp</result>
+			<result name="bindPayRule">/page/merchant/bindPayRule.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>

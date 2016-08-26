@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="limit" extends="base">
+
+		<!-- 限制开关 -->
+		<action name="switchLimit_*" class="wusc.edu.pay.web.boss.action.limit.SwitchLimitAction"
+			method="{1}">
+			<result name="switchLimitList">page/limit/switchLimit/switchLimitList.jsp</result>
+			<result name="switchLimitAdd">page/limit/switchLimit/switchLimitAdd.jsp</result>
+			<result name="switchLimitEdit">page/limit/switchLimit/switchLimitEdit.jsp</result>
+			<result name="bindAllSwitchUI">page/limit/switchLimit/bindAllSwitchUI.jsp</result>
+			<result name="openBizFunction">page/limit/switchLimit/openBizFunction.jsp</result>
+		</action>
+
+		<!-- 金额限制 -->
+		<action name="amountLimit_*" class="wusc.edu.pay.web.boss.action.limit.AmountLimitAction"
+			method="{1}">
+			<result name="amountLimitList">page/limit/amountLimit/amountLimitList.jsp</result>
+			<result name="amountLimitEdit">page/limit/amountLimit/amountLimitEdit.jsp</result>
+		</action>
+
+		<!-- 金额限制包 -->
+		<action name="amountLimitPack_*" class="wusc.edu.pay.web.boss.action.limit.AmountLimitPackAction"
+			method="{1}">
+			<result name="amountLimitPackList">page/limit/amountLimitPack/amountLimitPackList.jsp
+			</result>
+			<result name="amountLimitPackEdit">page/limit/amountLimitPack/amountLimitPackEdit.jsp
+			</result>
+		</action>
+		
+		
+		<!-- 支付接口路由 -->
+		<action name="merchantCustomPayInterface_*" class="wusc.edu.pay.web.boss.action.limit.MerchantCustomPayInterfaceAction"
+			method="{1}">
+			<result name="merchantCustomPayInterfaceList">page/limit/merchantCustomPayInterface/merchantCustomPayInterfaceList.jsp
+			</result>
+			<result name="merchantCustomPayInterfaceEdit">page/limit/merchantCustomPayInterface/merchantCustomPayInterfaceEdit.jsp
+			</result>
+			<result name="merchantCustomPayInterfaceAdd">page/limit/merchantCustomPayInterface/merchantCustomPayInterfaceAdd.jsp
+			</result>
+		</action>
+		
+		<!-- 业务功能参数配置 -->
+		<action name="bizFunctionParamConfig_*" class="wusc.edu.pay.web.boss.action.limit.BizFunctionParamConfigAction" method="{1}">
+			<result name="bizFunctionParamConfigList">page/limit/bizFunctionParamConfig/bizFunctionParamConfigList.jsp</result>
+			<result name="bizFunctionParamConfigAdd">page/limit/bizFunctionParamConfig/bizFunctionParamConfigAdd.jsp</result>
+			<result name="bizFunctionParamConfigEdit">page/limit/bizFunctionParamConfig/bizFunctionParamConfigEdit.jsp</result>
+		</action>
+		
+		
+				
+		<!-- 支付方式开关 -->
+		<action name="tradeLimitRouter_*" class="wusc.edu.pay.web.boss.action.limit.TradeLimitRouterAction" method="{1}">
+			<result name="tradeLimitRouterList">page/limit/tradeLimitRouter/tradeLimitRouterList.jsp</result>
+			<result name="tradeLimitRouterAdd">page/limit/tradeLimitRouter/tradeLimitRouterAdd.jsp</result>
+			<result name="tradeLimitRouterEdit">page/limit/tradeLimitRouter/tradeLimitRouterEdit.jsp</result>		
+		</action>
+	</package>	
+</struts>

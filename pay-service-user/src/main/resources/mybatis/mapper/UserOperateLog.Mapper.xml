@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserOperatorLogDaoImpl">
+
+	<sql id="table"> TBL_PORTAL_USER_OPERATOR_LOG </sql>
+
+	<resultMap id="beanMap" type="UserOperatorLog">
+		<id column="ID" property="id" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="USERNO" property="userNo" />
+		<result column="LOGINNAME" property="loginName" />
+		<result column="OPERATESTATUS" property="operateStatus" />
+		<result column="IP" property="ip" />
+		<result column="CONTENT" property="content" />
+		<result column="OPERTYPE" property="operType" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserOperatorLog" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(CREATETIME, USERNO, LOGINNAME,OPERATESTATUS, IP, CONTENT, OPERTYPE)
+		values (FUN_NOW(), #{userNo}, #{loginName},#{operateStatus}, #{ip}, #{content}, #{operType})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="userNo != null and userNo != ''"> and USERNO = #{userNo}</if>
+		<if test="loginName != null and loginName != ''"> and LOGINNAME = #{loginName}</if>
+		<if test="operateStatus != null and operateStatus != ''"> and OPERATESTATUS = #{operateStatus}</if>
+		<if test="ip != null and ip != ''"> and IP = #{ip}</if>
+		<if test="beginTime != null and beginDate != '' and endTime != null and endTime !=''">
+			and CREATETIME between #{beginTime} and CONCAT(#{endTime}, ' 23:59:59')
+		</if>
+		<if test="operType != null and operType != ''"> and OPERTYPE = #{operType}</if>
+	</sql>
+
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+	
+</mapper>

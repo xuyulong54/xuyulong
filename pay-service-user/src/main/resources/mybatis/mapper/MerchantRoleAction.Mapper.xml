@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.MerchantRoleActionDaoImpl">
+    
+	<sql id="table"> TBL_PORTAL_MERCHANT_ROLE_ACTION </sql>
+	
+	<resultMap id="beanMap" type="MerchantRoleAction">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="ROLEID" property="roleId" />
+		<result column="ACTIONID" property="actionId" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="MerchantRoleAction" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="table"/> (VERSION, ROLEID, ACTIONID) 
+		values (0, #{roleId}, #{actionId})
+	</insert>
+	
+  	<select id="getById" parameterType="long" resultMap="beanMap">
+    	select * from <include refid="table"/> where ID = #{id}
+  	</select>
+  	
+  	<select id="deleteById" parameterType="long" resultType="int">
+    	delete from <include refid="table"/> where ID = #{id}
+  	</select>
+  	
+  	<select id="deleteByActionId" parameterType="long" resultType="int">
+    	delete from <include refid="table"/> where ACTIONID = #{actionId}
+  	</select>
+  	<select id="deleteByRoleId" parameterType="long" resultType="int">
+    	delete from <include refid="table"/> where ROLEID = #{roleId}
+  	</select>
+	
+	<select id="selectListByRoleId" parameterType="long" resultMap="beanMap">
+		select * from <include refid="table"/> where ROLEID = #{roleId}
+	</select>
+
+	<select id="findByRoleIds" resultMap="beanMap">
+    	select * from <include refid="table"/> where ROLEID in 
+    	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">#{item}</foreach>
+  	</select>
+
+</mapper>

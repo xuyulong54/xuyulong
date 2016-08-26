@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.bank.dao.impl.BankSettlementDaoImpl">
+
+	<sql id="table"> TBL_BANK_BANKSETTLEMENT </sql>
+
+	<resultMap type="BankSettlement" id="beanMap">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="settleCycle" column="SETTLECYCLE" />
+		<result property="chargeAccount" column="CHARGEACCOUNT" />
+		<result property="marginAccount" column="MARGINACCOUNT" />
+		<result property="chargeDeductWay" column="CHARGEDEDUCTWAY" />
+		<result property="chargeDeductCycle" column="CHARGEDEDUCTCYCLE" />
+		<result property="chargePayWay" column="CHARGEPAYWAY" />
+		<result property="refoundType" column="REFOUNDTYPE" />
+		<result property="refoundDeductWay" column="REFOUNDDEDUCTWAY" />
+		<result property="refoundValidity" column="REFOUNDVALIDITY" />
+		<result property="isReturnCharge" column="ISRETURNCHARGE" />
+		<result property="isReturnPartFee" column="ISRETURNPARTFEE" />
+		<result property="refundAccountTime" column="REFUNDACCOUNTTIME" />
+		<result property="refundLimit" column="REFUNDLIMIT" />
+		<result property="isNonWorkdayAccount" column="ISNONWORKDAYACCOUNT" />
+		<result property="comments" column="COMMENTS" />
+		<result property="bankChannelCode" column="BANKCHANNELCODE" />
+	</resultMap>
+
+	<insert id="insert" parameterType="BankSettlement" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION , CREATETIME, BANKCHANNELCODE,
+		SETTLECYCLE, CHARGEACCOUNT,
+		MARGINACCOUNT, CHARGEDEDUCTWAY, CHARGEDEDUCTCYCLE,
+		CHARGEPAYWAY, REFOUNDTYPE, REFOUNDDEDUCTWAY,
+		REFOUNDVALIDITY, ISRABATES, ISRETURNCHARGE, ISRETURNPARTFEE ,
+		REFUNDACCOUNTTIME, REFUNDLIMIT, TRADEGAINCHECKFILETIME,
+		TRADEGAINCHECKFILEWAY, ISNONWORKDAYACCOUNT, FUNDGAINCHECKFILETIME,
+		FUNDGAINCHECKFILEWAY, COMMENTS)
+		values (0, #{createTime}, #{bankChannelCode},
+		#{settleCycle}, #{chargeAccount}, #{marginAccount},
+		#{chargeDeductWay}, #{chargeDeductCycle}, #{chargePayWay}, #{refoundType},
+		#{refoundDeductWay}, #{refoundValidity}, #{isReturnCharge}, #{isReturnPartFee},
+		#{refundAccountTime}, #{refundLimit}, #{isNonWorkdayAccount}, #{comments})
+	</insert>
+
+	<update id="update" parameterType="BankSettlement">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			BANKCHANNELCODE = #{bankChannelCode},
+			SETTLECYCLE = #{settleCycle},
+			CHARGEACCOUNT = #{chargeAccount},
+			MARGINACCOUNT = #{marginAccount},
+			CHARGEDEDUCTWAY = #{chargeDeductWay},
+			CHARGEDEDUCTCYCLE = #{chargeDeductCycle},
+			CHARGEPAYWAY = #{chargePayWay},
+			REFOUNDTYPE = #{refoundType},
+			REFOUNDDEDUCTWAY = #{refoundDeductWay},
+			REFOUNDVALIDITY = #{refoundValidity},
+			ISRETURNCHARGE = #{isReturnCharge},
+			ISRETURNPARTFEE = #{isReturnPartFee},
+			REFUNDACCOUNTTIME = #{refundAccountTime},
+			REFUNDLIMIT = #{refundLimit},
+			ISNONWORKDAYACCOUNT = #{isNonWorkdayAccount},
+			COMMENTS = #{comments}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<if test="bankChannelId != null and bankChannelId != ''"> and BANKCHANNELID = #{bankChannelId}</if>
+		<if test="settleCycle != null and settleCycle != ''"> and SETTLECYCLE = #{settleCycle}</if>
+		<if test="chargeAccount != null and chargeAccount != ''"> and CHARGEACCOUNT = #{chargeAccount}</if>
+		<if test="marginAccount != null and marginAccount != ''"> and MARGINACCOUNT = #{marginAccount}</if>
+		<if test="chargeDeductWay != null and chargeDeductWay != ''"> and CHARGEDEDUCTWAY = #{chargeDeductWay}</if>
+		<if test="chargeDeductCycle != null and chargeDeductCycle != ''"> and CHARGEDEDUCTCYCLE = #{chargeDeductCycle}</if>
+		<if test="chargePayWay != null and chargePayWay != ''"> and CHARGEPAYWAY = #{chargePayWay}</if>
+		<if test="refoundType != null and refoundType != ''"> and REFOUNDTYPE = #{refoundType}</if>
+		<if test="refoundDeductWay != null and refoundDeductWay != ''"> and REFOUNDDEDUCTWAY = #{refoundDeductWay}</if>
+		<if test="refoundValidity != null and refoundValidity != ''"> and REFOUNDVALIDITY = #{refoundValidity}</if>
+		<if test="isReturnCharge != null and isReturnCharge != ''"> and ISRETURNCHARGE = #{isReturnCharge}</if>
+		<if test="refundAccountTime != null and refundAccountTime != ''"> and REFUNDACCOUNTTIME = #{refundAccountTime}</if>
+		<if test="refundLimit != null and refundLimit != ''"> and REFUNDLIMIT = #{refundLimit}</if>
+		<if test="isReturnPartFee != null and isReturnPartFee != ''"> AND ISRETURNPARTFEE = #{ISRETURNPARTFEE}</if>
+		<if test="isNonWorkdayAccount != null and isNonWorkdayAccount != ''"> and ISNONWORKDAYACCOUNT = #{isNonWorkdayAccount}</if>
+		<if test="comments != null and comments != ''"> and COMMENTS = #{comments}</if>
+		<if test="bankChannelCode != null and bankChannelCode != ''"> and BANKCHANNELCODE = #{bankChannelCode}</if>
+	</sql>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		AS A , TBL_BANK_BANKCHANNEL AS C
+		<where>
+			<include refid="condition_sql" />
+			and A.BANKCHANNELCODE = C.BANKCHANNELCODE
+		</where>
+	</select>
+
+	<select id="listAvailableBankSettlementInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		A.BANKCHANNELCODE as "bankChannelCode",
+		B.SETTLECYCLE AS "settleCycle"
+		FROM TBL_BANK_BANKCHANNEL A, TBL_BANK_BANKSETTLEMENT B
+		WHERE A.BANKCHANNELCODE = B.BANKCHANNELCODE AND A.STATUS=100
+	</select>
+
+	<select id="listAvailableBankAccount" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT C.BANKACCOUNT as "bankAccount" , A.BANKCHANNELCODE as "bankChannelCode"
+		FROM TBL_BANK_BANKCHANNEL A,
+		TBL_BANK_BANKSETTLEMENT B , TBL_BANK_BANKACCOUNT C
+		WHERE A.BANKCHANNELCODE = B.BANKCHANNELCODE AND A.BANKACCOUNTID = C.ID AND A.STATUS=100
+	</select>
+
+	<select id="getByBankBankChannelCode" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			BANKCHANNELCODE = #{bankChannelCode}
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

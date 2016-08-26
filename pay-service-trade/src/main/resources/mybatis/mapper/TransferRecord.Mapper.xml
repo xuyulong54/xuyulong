@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.trade.dao.impl.TransferRecordDaoImpl">
+
+	<sql id="table"> TBL_TRADE_TRANSFERRECORD </sql>
+
+	<resultMap id="BaseResultMap" type="TransferRecord">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="trxNo" column="TRXNO" />
+		<result property="amount" column="AMOUNT" />
+		<result property="sourceRate" column="SOURCERATE" />
+		<result property="targetRate" column="TARGETRATE" />
+		<result property="sourceUserNo" column="SOURCEUSERNO" />
+		<result property="targetUserNo" column="TARGETUSERNO" />
+		<result property="sourceUserType" column="SOURCEUSERTYPE" />
+		<result property="targetUserType" column="TARGETUSERTYPE" />
+		<result property="targetFee" column="TARGETFEE" />
+		<result property="sourceFee" column="SOURCEFEE" />
+		<result property="platFee" column="PLATFEE" />
+		<result property="status" column="STATUS" />
+		<result property="remark" column="REMARK" />
+		<result property="sourceMobileNo" column="SOURCEMOBILENO" />
+		<result property="sourceLoginName" column="SOURCELOGINNAME" />
+		<result property="sourceName" column="SOURCENAME" />
+		<result property="targetLoginName" column="TARGETLOGINNAME" />
+		<result property="targetName" column="TARGETNAME" />
+	</resultMap>
+
+	<insert id="insert" parameterType="TransferRecord" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, TRXNO, AMOUNT, SOURCERATE, TARGETRATE,
+		SOURCEUSERNO, TARGETUSERNO, SOURCEUSERTYPE, TARGETUSERTYPE, TARGETFEE,
+		SOURCEFEE, PLATFEE, STATUS, REMARK, SOURCEMOBILENO, SOURCELOGINNAME,
+		SOURCENAME,
+		TARGETLOGINNAME,TARGETNAME)
+		values (0, #{createTime},
+		#{trxNo}, #{amount}, #{sourceRate}, #{targetRate},
+		#{sourceUserNo},
+		#{targetUserNo}, #{sourceUserType}, #{targetUserType}, #{targetFee},
+		#{sourceFee},#{platFee}, #{status}, #{remark}, #{sourceMobileNo},
+		#{sourceLoginName}, #{sourceName}, #{targetLoginName},
+		#{targetName})
+	</insert>
+
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and CREATETIME between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="trxNo != null and trxNo != ''"> and TRXNO = #{trxNo}</if>
+		<if test="sourceUserNo != null and sourceUserNo != ''"> and SOURCEUSERNO = #{sourceUserNo}</if>
+		<if test="targetUserNo != null and targetUserNo != ''"> and TARGETUSERNO = #{targetUserNo}</if>
+		<if test="sourceLoginName  != null and sourceLoginName  != ''"> and SOURCELOGINNAME = #{sourceLoginName}</if>
+		<if test="targetLoginName != null and targetLoginName != ''"> and TARGETLOGINNAME = #{targetLoginName}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="countByPageParam" parameterType="java.util.Map" resultType="hashmap">
+		select count(1) as "alls",
+		(SELECT count(STATUS) FROM <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+				and STATUS ='100'
+			</where>
+		) as "success",
+		(SELECT count(STATUS) FROM <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+				and STATUS ='101'
+			</where>
+		) as "failed",
+		(SELECT sum(AMOUNT) FROM <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+				and STATUS ='100'
+			</where>
+		) as "successamount",
+		(SELECT sum(PLATFEE) FROM <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+				and STATUS ='100'
+			</where>
+		) as "platfee"
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

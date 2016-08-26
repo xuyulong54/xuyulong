@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.web.permission.dao.impl.PmsRoleActionDaoImpl">
+	
+	<!-- Pms权限管理：角色与权限关联表 -->
+	<sql id="pms_role_action"> TBL_BOSS_PMS_ROLE_ACTION </sql>
+	
+	<resultMap id="beanMap" type="PmsRoleAction">
+	    <id column="ID" property="id" />
+		<result column="ROLEID" property="roleId" />
+		<result column="ACTIONID" property="actionId" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="PmsRoleAction" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_role_action"/> 
+		(ROLEID,ACTIONID) values (#{roleId},#{actionId})
+	</insert>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="roleId != null"> and ROLEID = #{roleId}</if>
+		<if test="actionId != null"> and ACTIONID = #{actionId}</if>
+	</sql>
+	
+	<select id="listByActionId" parameterType="long" resultMap="beanMap">
+		select * from <include refid="pms_role_action"/> where ACTIONID = #{actionId}
+	</select>
+	
+	<select id="listByRoleId" parameterType="long" resultMap="beanMap">
+		select * from <include refid="pms_role_action"/> where ROLEID = #{roleId}
+	</select>
+	
+	<select id="listByRoleIds" resultMap="beanMap">
+    	select * from <include refid="pms_role_action"/> where ROLEID in 
+    	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">#{item}</foreach>
+  	</select>
+  	
+  	<delete id="deleteByActionId" parameterType="long">
+    	delete from <include refid="pms_role_action"/> where ACTIONID = #{actionId}
+  	</delete>
+  	
+  	<delete id="deleteByRoleId" parameterType="long">
+    	delete from <include refid="pms_role_action"/> where ROLEID = #{roleId}
+  	</delete>
+
+</mapper>

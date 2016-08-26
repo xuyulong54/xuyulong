@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="paymentRecord" extends="loginPackage">
+		<!-- 订单交易记录Action -->
+		<action name="paymentRecord_*" class="wusc.edu.pay.web.boss.action.PaymentRecordAction" method="{1}">
+		<result name="listPaymentRecord">page/paymentRecord/PaymentRecordList.jsp</result>
+		<result name="listPaymentOrder">page/paymentRecord/PaymentOrderList.jsp</result>
+		<result name="addPaymentRecordUI">page/paymentRecord/PaymentRecordAdd.jsp</result>
+		<result name="viewPaymentRecordUI">page/paymentRecord/PaymentRecordView.jsp</result>
+		<result name="viewPaymentOrderUI">page/paymentRecord/PaymentOrderView.jsp</result>
+		
+		<result name="listMerchantRechargeRecode">page/paymentRecord/listMerchantRechargeRecode.jsp</result>
+		<result name="listMerchantTransferRecord">page/paymentRecord/listMerchantTransferRecord.jsp</result>
+		</action>
+	</package>
+</struts>

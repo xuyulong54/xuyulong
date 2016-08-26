@@ -1,0 +1,165 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>wusc.edu.pay.common</groupId>
+		<artifactId>pay-common-parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../pay-common-parent</relativePath>
+	</parent>
+
+	<groupId>wusc.edu.pay.web</groupId>
+	<artifactId>pay-web-bank-receive</artifactId>
+	<version>${pay-web-bank-receive.version}</version>
+	<packaging>war</packaging>
+
+	<name>pay-web-bank-receive</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<log4j.leve>debug</log4j.leve>
+		<log4j.ale>debug</log4j.ale>
+	</properties>
+	
+	<!-- 过虑日志中的变量 -->
+	<profiles>  
+	    <profile>  
+	        <build>  
+	            <filters>  
+	                <filter>WEB-INF/classes/log4j.properties</filter>  
+	            </filters>  
+	        </build>  
+	    </profile>  
+	</profiles>
+
+	<build>
+		<finalName>pay-web-bank-receive</finalName>
+		<resources>
+			<resource>
+				<targetPath>${project.build.directory}/classes</targetPath>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			</resources>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>wusc.edu.pay.common</groupId>
+			<artifactId>pay-common</artifactId>
+			<version>${pay-common.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>wusc.edu.pay.common</groupId>
+			<artifactId>pay-common-config</artifactId>
+			<version>${env}-${pay-common-config.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>wusc.edu.pay.common</groupId>
+			<artifactId>pay-common-web</artifactId>
+			<version>${pay-common-web.version}</version>
+		</dependency>
+
+		<!-- 订单接口 -->
+		<dependency>
+			<groupId>wusc.edu.pay.facade</groupId>
+			<artifactId>pay-facade-trade</artifactId>
+			<version>${pay-facade-trade.version}</version>
+		</dependency>
+
+		<!-- user接口 -->
+		<dependency>
+			<groupId>wusc.edu.pay.facade</groupId>
+			<artifactId>pay-facade-user</artifactId>
+			<version>${pay-facade-user.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>wusc.edu.pay.facade</groupId>
+			<artifactId>pay-facade-banklink</artifactId>
+			<version>${pay-facade-banklink.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.ezmorph</groupId>
+			<artifactId>ezmorph</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+		</dependency>
+		<!-- Common Dependency End -->
+
+		<!-- Others Begin -->
+		<dependency>
+			<groupId>com.google.code</groupId>
+			<artifactId>kaptcha</artifactId>
+			<version>2.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>net.sf.ehcache</groupId> -->
+		<!-- <artifactId>ehcache</artifactId> -->
+		<!-- </dependency> -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<!-- Others End -->
+		<!-- dubbo required jars start -->
+		<dependency>
+			<groupId>org.jboss.netty</groupId>
+			<artifactId>netty</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.101tec</groupId>
+			<artifactId>zkclient</artifactId>
+		</dependency>
+		<!-- dubbo required jars end -->
+
+	</dependencies>
+
+</project>

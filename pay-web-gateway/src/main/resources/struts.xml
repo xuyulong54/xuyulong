@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+	<!-- 设置Action请求后缀 value="action,," -->
+	<constant name="struts.action.extension" value="action" />
+	<!-- 设置浏览器是否缓存静态内容,默认值为true(生产环境下使用),开发阶段最好关闭 -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<!-- 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用),开发阶段最好打开 -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
+	<constant name="struts.devMode" value="false" />
+	<!-- 使用spring的工厂去替换struts2的默认工厂,也就是Action由spring来创建和维护 -->
+	<!-- constant name="struts.objectFactory" value="spring" / -->
+	<constant value="UTF-8" name="struts.i18n.encoding"/>
+	
+	<include file="struts-default.xml" />
+
+	<package name="base" namespace="/" extends="struts-default">
+		<interceptors>
+
+			<!--定义属性驱动的拦截器 -->
+			<interceptor name="params"
+				class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"></interceptor>
+			<!--定义模型驱动的拦截器 -->
+			<interceptor name="model-driven"
+				class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"></interceptor>
+			<!-- 异常拦截器 -->
+			<interceptor name="exceptionInterceptor"
+				class="wusc.edu.pay.gateway.interceptor.ExceptionInterceptor"></interceptor>
+
+			<!-- 加载拦截器至stack -->
+			<interceptor-stack name="ourDefaultStack">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="model-driven" />
+				<interceptor-ref name="params" />
+				<interceptor-ref name="exceptionInterceptor" />
+			</interceptor-stack>
+
+		</interceptors>
+
+		<!-- 设置系统默认拦截器 -->
+		<default-interceptor-ref name="ourDefaultStack" />
+		<global-results>
+			<result name="exception">page/error_exception.jsp</result>
+			<result name="bizException">page/error_bizException.jsp</result>
+			<result name="sessionOutTime">page/common/error.jsp</result>
+		</global-results>
+		
+		<global-exception-mappings> 
+			<exception-mapping result="bizException" exception="wusc.edu.pay.common.exceptions.BizException"></exception-mapping> 
+		</global-exception-mappings> 
+
+	</package>
+
+	<!-- Struts2配置文件分模块引用 -->
+	<include file="struts-payment.xml" />
+</struts>

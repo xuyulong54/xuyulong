@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitRequestDaoImpl">
+
+	<sql id="table"> TBL_REMIT_REQUEST </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitRequest">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="REQUEST_NO" property="requestNo" jdbcType="VARCHAR" />
+		<result column="FLOW_NO" property="flowNo" jdbcType="VARCHAR" />
+		<result column="TRADE_INITIATOR" property="tradeInitiator" jdbcType="SMALLINT" />
+		<result column="ACCOUNT_TYPE" property="accountType" jdbcType="SMALLINT" />
+		<result column="IS_URGENT" property="isUrgent" jdbcType="SMALLINT" />
+		<result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+		<result column="BANK_CHANNEL_NO" property="bankChannelNo" jdbcType="VARCHAR" />
+		<result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+		<result column="NOTIFY_ADDRESS" property="notifyAddress" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+		<result column="IS_AUTO_PROCESS" property="isAutoProcess" jdbcType="SMALLINT" />
+		<result column="USER_NO" jdbcType="VARCHAR" property="userNo" />
+		<result column="BUSINESS_TYPE" jdbcType="SMALLINT" property="businessType" />
+		<result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="CONFIRM" jdbcType="VARCHAR" property="confirm" />
+		<result column="CONFIRM_DATE" property="confirmDate" jdbcType="TIMESTAMP" />
+		<result column="CANCEL_REASON" property="cancelReason" jdbcType="VARCHAR" />
+		<result column="BANK_REMARK" property="bankRemark" jdbcType="VARCHAR" />
+		<result column="ORIAL_ID" property="orialId" jdbcType="BIGINT" />
+		<result column="COPIED" property="copied" jdbcType="BIGINT" />
+		<result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, REQUEST_NO, FLOW_NO, TRADE_INITIATOR, ACCOUNT_TYPE, IS_URGENT, ACCOUNT_NAME,
+		ACCOUNT_NO, BANK_CHANNEL_NO, BANK_NAME, PROVINCE, CITY, CURRENCY, NOTIFY_ADDRESS, STATUS,
+		AMOUNT, IS_AUTO_PROCESS, USER_NO, BUSINESS_TYPE, CREATOR, CREATE_DATE,CONFIRM, CONFIRM_DATE, CANCEL_REASON, BANK_REMARK ,BATCH_NO
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="requestNo != null and requestNo != ''"> and REQUEST_NO = #{requestNo}</if>
+		<if test="batchNo != null and batchNo != ''"> and BATCH_NO = #{batchNo}</if>
+		<if test="flowNo != null and flowNo != ''"> and FLOW_NO = #{flowNo}</if>
+		<if test="copied != null and copied != ''"> and COPIED != #{copied}</if>
+		<if test="tradeInitiator != null and tradeInitiator != ''"> and TRADE_INITIATOR = #{tradeInitiator}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="accountName != null and accountName != ''"> and ACCOUNT_NAME like CONCAT(CONCAT('%', #{accountName}), '%')</if>
+		<if test="bankName != null and bankName != ''"> and BANK_NAME like CONCAT(CONCAT('%', #{bankName}), '%')</if>
+		<if test="accountNo != null and accountNo != ''"> and ACCOUNT_NO like CONCAT(CONCAT('%', #{accountNo}), '%')</if>
+		<if test="bankChannelNo != null and bankChannelNo != ''"> and BANK_CHANNEL_NO like CONCAT(CONCAT('%', #{bankChannelNo}), '%')</if>
+
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and CREATE_DATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="creator != null and creator != ''"> and CREATOR = #{creator}</if>
+		
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="statusList != null and statusList != ''">
+			and STATUS in
+			<foreach item="item" index="index" collection="statusList" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="ids != null and ids != ''">
+			and ID in
+			<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">${item}</foreach>
+		</if>
+
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitRequest" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, REQUEST_NO,
+		FLOW_NO, TRADE_INITIATOR, ACCOUNT_TYPE,
+		IS_URGENT, ACCOUNT_NAME, ACCOUNT_NO,
+		BANK_CHANNEL_NO, BANK_NAME, PROVINCE,
+		CITY, CURRENCY, NOTIFY_ADDRESS,
+		STATUS, AMOUNT, IS_AUTO_PROCESS, USER_NO, BUSINESS_TYPE, CREATOR,
+		CREATE_DATE, CONFIRM, CONFIRM_DATE, CANCEL_REASON,
+		BANK_REMARK, ORIAL_ID, COPIED,BATCH_NO)
+		values (0, #{requestNo},
+		#{flowNo}, #{tradeInitiator}, #{accountType},
+		#{isUrgent}, #{accountName}, #{accountNo},
+		#{bankChannelNo}, #{bankName}, #{province},
+		#{city}, #{currency}, #{notifyAddress},
+		#{status}, #{amount}, #{isAutoProcess},
+		#{userNo}, #{businessType}, #{creator},
+		FUN_NOW(), #{confirm}, #{confirmDate}, #{cancelReason},
+		#{bankRemark}, #{orialId}, #{copied},#{batchNo})
+	</insert>
+
+	<insert id="batchInsert" parameterType="wusc.edu.pay.facade.remit.entity.RemitRequest">
+		insert into
+		<include refid="table" />
+		(
+		VERSION, REQUEST_NO,FLOW_NO, TRADE_INITIATOR, ACCOUNT_TYPE,IS_URGENT, ACCOUNT_NAME, ACCOUNT_NO,
+		BANK_CHANNEL_NO, BANK_NAME, PROVINCE,CITY, CURRENCY, NOTIFY_ADDRESS,STATUS, AMOUNT,
+		IS_AUTO_PROCESS, USER_NO, BUSINESS_TYPE, CREATOR,CREATE_DATE, CONFIRM, CONFIRM_DATE, CANCEL_REASON,
+		BANK_REMARK, ORIAL_ID, COPIED,BATCH_NO
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			0, #{item.requestNo}, #{item.flowNo}, #{item.tradeInitiator}, #{item.accountType}, #{item.isUrgent}, #{item.accountName}, #{item.accountNo},
+			#{item.bankChannelNo}, #{item.bankName}, #{item.province},#{item.city}, #{item.currency}, #{item.notifyAddress},#{item.status}, #{item.amount},
+			#{item.isAutoProcess}, #{item.userNo}, #{item.businessType}, #{item.creator}, FUN_NOW(), #{item.confirm}, #{item.confirmDate}, #{item.cancelReason},
+			#{item.bankRemark}, #{item.orialId}, #{item.copied},#{item.batchNo}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitRequest">
+		update
+		<include refid="table" />
+		set VERSION = #{version}+1,
+		ACCOUNT_NAME = #{accountName},
+		ACCOUNT_NO = #{accountNo},
+		ACCOUNT_TYPE = #{accountType},
+		AMOUNT = #{amount},
+		PROVINCE = #{province},
+		CITY = #{city},
+		BANK_CHANNEL_NO = #{bankChannelNo},
+		BANK_NAME = #{bankName},
+		FLOW_NO = #{flowNo},
+		BATCH_NO = #{batchNo},
+		STATUS = #{status},
+		CONFIRM = #{confirm},
+		CONFIRM_DATE = #{confirmDate},
+		CANCEL_REASON = #{cancelReason},
+		BANK_REMARK = #{bankRemark},
+		COPIED = #{copied},
+		CREATE_DATE = #{createDate},
+		CREATOR = #{creator}
+		where ID = #{id} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="listBatchNoIsNull" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from <include refid="table" />
+		<where>
+			STATUS = 3
+			and (BATCH_NO is null or BATCH_NO = '')
+		</where>
+	</select>
+
+	<select id="getByRequestNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where REQUEST_NO = #{requestNo}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id}
+	</delete>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<if test="orderByParam != null and orderByParam != ''"> 
+			<![CDATA[ order by  ${orderByParam}  ${sort}]]>
+		</if>
+		<if test="orderByParam == null or  orderByParam == ''"> 
+			<![CDATA[ order by ID desc]]>
+		</if>
+		
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="countByPageParam" parameterType="java.util.Map" resultType="hashmap">
+		select 
+			sum(amount) as "totalAmount"
+		from 
+		<include refid="table" /> 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="listByIdsIn" parameterType="java.util.List" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			id in(
+			<foreach collection="list" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			)
+		</where>
+	</select>
+
+	<select id="batchUpdateToUnApprove" parameterType="java.util.Map" resultMap="BaseResultMap">
+		update
+		<include refid="table" />
+		set STATUS = 7 , CONFIRM = #{confirm} , CONFIRM_DATE = FUN_NOW()
+		<where>
+			id in(
+			<foreach collection="lists" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			)
+		</where>
+	</select>
+
+	<select id="batchUpdateToAudited" parameterType="java.util.Map" resultMap="BaseResultMap">
+		update
+		<include refid="table" />
+		set STATUS = 2 , CONFIRM = #{confirm} , CONFIRM_DATE = FUN_NOW()
+		<where>
+			id in(
+			<foreach collection="lists" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			)
+		</where>
+	</select>
+
+	<update id="batchUpdateRemitRequestStatus" parameterType="java.util.Map">
+		update
+		<include refid="table" />
+		set COPIED = #{copied}
+		<where>
+			id in(
+			<foreach collection="ids" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			)
+		</where>
+	</update>
+	
+	<update id="batchUpdateToStatus" parameterType="java.util.Map">
+		update
+		<include refid="table" />
+		set STATUS = #{status}
+		<where>
+			ID in(
+			<foreach collection="lists" item="item" index="index"
+				separator=",">
+				#{item.id}
+			</foreach>
+			)
+		</where>
+	</update>
+	
+</mapper>

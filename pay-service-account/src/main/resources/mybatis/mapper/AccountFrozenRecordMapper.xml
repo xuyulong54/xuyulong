@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.account.dao.impl.AccountFrozenRecordDaoImpl">
+
+	<sql id="table"> TBL_ACCOUNT_FROZEN_RECORD </sql>
+
+	<resultMap id="beanMap" type="AccountFrozenRecord">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="accountNo" column="ACCOUNT_NO" />
+		<result property="initiator" column="INITIATOR" />
+		<result property="operationType" column="OPERATION_TYPE" />
+		<result property="lastTime" column="LAST_TIME" />
+		<result property="remark" column="REMARK" />
+	</resultMap>
+
+	<insert id="insert" parameterType="AccountFrozenRecord" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, ACCOUNT_NO, INITIATOR, OPERATION_TYPE, LAST_TIME, REMARK)
+		values (0, #{createTime}, #{accountNo}, #{initiator}, #{operationType}, #{lastTime}, #{remark})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="AccountFrozenRecord">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			INITIATOR = #{initiator},
+			OPERATION_TYPE = #{operationType},
+			LAST_TIME= #{lastTime},
+			REMARK = #{remark}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="accountNo != null and accountNo !='' "> and ACCOUNT_NO = #{accountNo}</if>
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''"> and CREATE_TIME between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		as A
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

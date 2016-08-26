@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="pay-web-bank-receive"
+  id="myeclipse.1382065649973"
+  context-root="/pay-web-bank-receive"
+  j2ee-spec="6.0"
+  archive="pay-web-bank-receive.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

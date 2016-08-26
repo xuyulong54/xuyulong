@@ -1,0 +1,154 @@
+@charset "utf-8";
+body,p,ul,li,a,input,h3,h4,h2{ margin:0px; padding:0px; font-family:'Microsoft YaHei';font-size:14px;color:#}
+li{ list-style:none;}
+body{min-width:930px;}
+a{ text-decoration:none;}
+a:hover{ text-decoration:underline;}
+.clear{height:0px; clear:both; overflow:hidden; display:block;}
+
+    input[type="submit"],input[type="button"]
+ {
+  margin:0px;
+  overflow:visible;
+
+ }
+.h10{ height:10px;}
+
+.none {display: none !important;}
+.newContent{position:relative; height:400px;margin-top: -10px;}
+.bannerContent{ width:256px; height:400px; position:absolute;z-index: 100;right:0px; }
+.newContent .contentWrap{width: 930px; margin: 0 auto;position: relative;z-index: 101;}
+.newContent .bannerdot{position:absolute; z-index:102; width:200px; left:48%;top:370px;}
+.newContent .bannerdot li{ float:left; width:45px; cursor:pointer;}
+.newContent .banner{position:relative; z-index:100; }
+.newContent .banner li{ position:absolute;z-index: 10; width:100%;height:400px;}
+.newContent .banner li a{ display:block;position:absolute; z-index: 11; height: 400px; width:100%; background: transition; -ms-filter:alpha(opacity=0)  background:#fff;opacity:0; filter:alpha(opacity=0); }
+.newContent .banner li.p1 {background:url(../images/bigBanner.jpg) center center; }
+.newContent .banner .p1 .content {width:806px;margin:150px auto;}
+.newContent .banner .p1 .content .text {width:355px;color:#8f908e; font-size: 14px; font-family: 微软雅黑;}
+.newContent .banner li.p2 {background:url(../images/banner_gd.jpg) center center; }
+.loginFilter{ position:absolute; top:30px; right:0px;width:256px; height:320px;filter:alpha(opacity=50);opacity:0.5;background:#000;-moz-border-radius:0px 0px 10px 10px; -webkit-border-radius: 0px 0px 10px 10px; border-radius:0px 0px 10px 10px;}
+.contentwrap{ position:absolute; top:30px; right:0px;;width:258px; height:320px;}
+.loginBox{ width:258px;float:right;-moz-border-radius:0px 0px 10px 10px; -webkit-border-radius: 0px 0px 10px 10px; border-radius:0px 0px 10px 10px; }
+.loginBox .tabHead{ width:258px;height:40px; background:#FFF;}
+.tabHead li{ display:block; width:128px; color:#959595;float:left; text-align:center; height:40px; line-height:40px; cursor:pointer; border-top:2px solid #c9c9c9;}
+ .tabHead .now{border-top:2px solid #c11920; color:#000;}
+.loginBox .login{padding-top:10px; width:256px;-moz-border-radius: 0px 0px 10px 10px;
+-webkit-border-radius: 0px 0px 10px 10px;
+border-radius: 0px 0px 10px 10px;}
+.opa{
+   background: rgba(0,0,0,.5);
+   filter:progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#77000000', endColorstr='#77000000');
+}
+:root .opa {
+    filter:none;c
+    background-color:rgba(0,0,0,0.5);
+}
+.userwrap{ margin-left:20px;width:216px; height:35px; background: url(../images/userbg.jpg) no-repeat;position:relative;}
+.userwrap .user{ line-height:35px;height:35px;*line-height:31px;*height:31px; width:172px;border:none; position:absolute; right:0px;}
+.passwordwrap{ margin:20px;width:216px; height:35px; background: url(../images/passwordbg.jpg) no-repeat; position:relative;}
+.passwordwrap .password{ line-height:35px;height:35px; width:172px;border:none; position:absolute; right:0px;}
+.yanzhengma{ margin:20px;width:216px; height:35px;}
+.testwrap{width:121px; height:35px; background: url(../images/testbg.jpg) no-repeat; position:relative; float:left;}
+.testwrap .test{ line-height:35px;height:35px;*line-height:31px;*height:31px; width:78px;border:none; position:absolute; right:0px;}
+.yanzhengma img{ float:right;}
+.submit{width:216px; height:40px;margin:20px;}
+.commonBtnLong
+{display: block;text-align: center;height:40px;background:#C70606;border:none;border-radius:3px;color:#fff;font-size:18px;line-height:40px;cursor:pointer;width:216px; height:40px;}
+.commonBtnLong:hover
+{background: #D83E24;color: #fff;}
+.loginBox .passwordwrap,.loginBox .yanzhengma,.loginBox .submit{ margin:15px 20px;}
+.loginBox .wronginfos{ margin-bottom:10px;width:216px; height:28px; background:#ffe3e3 url(../images/wronginfos.jpg) 10px center no-repeat; height:28px; line-height:28px; margin-left:20px; font-size:12px; color:#535353; text-indent:30px;}
+.others{ width:216px; height:35px; margin:0px 20px;}
+.others .forgetpass{ color:#e7ebec; font-size:12px; float:left;}
+.others .registerfree{ color:#f1c630; font-size:12px; float:right;}
+
+/*-----------页脚开始-----------------*/
+.header{height:34px; background:#535353;}
+.header a ,.navWrap a{ text-decoration:none;}
+.header a:hover,.navWrap a:hover{ text-decoration:underline;}
+.headerContent{height:34px; width:930px; margin:0px auto;}
+.headerContent .notice{  width:600px; float:left;}
+.headerContent .notice .noticeTitle{line-height:34px; height:34px; font-size:14px; color:#FFF; float:left;}
+.headerContent .links{ float:right;  height:34px; color:#FFF; font-size:14px; line-height:14px;}
+.headerContent .links a{ color:#FFF; padding:0px 10px;font-size:12px; line-height:34px;height:34px; background:url(../images/line.png) no-repeat right center;}
+.headerContent .links .noline{ background:none;}
+
+.navWrap{ height:78px; background:url(../images/bannerbg.png) repeat-x;position: relative;z-index: 9999; }
+.newNav{ width:930px; margin:0px auto;}
+.newNav .logo{ float:left; margin-top:20px;}
+.newNav ul{float:right; margin-top:40px;}
+.newNav ul li{ display:block; float:left; padding:0px 25px; }
+.newNav ul .active{background:url(../images/reddot.png) no-repeat 5px center;}
+.newNav ul .active a{color:#c11920;}
+.newNav ul li a{ font-size:18px; color:#000;}
+.newNav ul li a:hover{ text-decoration:none;}
+.newNav ul .lastMenu{padding-right:0px;}
+/*-----------头部结束-----------------*/
+
+/*-----------页脚开始-----------------*/
+.footerWrap{background: #fff;}
+.footer{ font-size:14px; color:#959595; width:100% ; background:#eee; border-top:1px solid #ddd; padding-top:20px; margin-top:30px;line-height:32px;}
+.footer a{ text-decoration:none;}
+.footer a:hover{ text-decoration:underline;}
+.footer ul{width:700px;margin:0px auto;}
+.footer ul li{ display:block; padding:0px 25px; float:left; background:url('../images/greyline.jpg') no-repeat right center;}
+.footer ul li a{font-size:14px; color:#959595; line-height:32px;}
+.footer p{ width:495px; margin:0px auto;color:#535353}
+/*-----------页脚 结束-----------------*/
+/*注册页面*/
+.registerwrap{ width:930px; margin:40px auto;}
+.registerwrap .line2{ padding:0px 10px 0px 18px;}
+.registerwrap .registerLogoWrap{width:260px;height:40px;position:relative;}
+.registerwrap .logofont{ font-size:24px; color:#959595;position:absolute;right:0px;width:80px;top:0px;height:35px;line-height:35px;}
+.registerwrap .content{ width:930px; height:327px; margin:34px auto;}
+.registerwrap .content .registerpic{ width:443px; height:327px; float:left;}
+.registerbox{ width:370px; border:1px solid #c9c9c9; float:right; margin-right:60px;}
+.registerbox .tabHead{ width:370px;height:35px; background: url(../images/tabbg.jpg) repeat-x;}
+.registerbox .tabHead li{ width:185px; height:35px;line-height:35px;font-size:16px;cursor:auto;}
+.registerbox .tabHead li a{color:#959595;}
+.registerbox .tabHead li a:hover{text-decoration: none;}
+.registerbox .tabHead .now a{ color:#000;}
+.register{ margin:20px 0px 0px 40px;}
+.register .userwrap{ width:256px; height:34px; background:url(../images/registeruser.jpg) no-repeat; border:1px solid #959595; margin-bottom:15px;}
+.register .userwrap .user{ line-height:24px;height:24px; width:200px;}
+.register .yanzhengma{width:256px; height:34px;margin-bottom:15px;margin-top:10px;}
+.register .testwrap{width:148px; height:34px; background:url(../images/registertest.jpg) no-repeat;border:1px solid #959595;}
+.register .testwrap .test{ line-height:24px;height:24px; width:90px;}
+.register .wronginfos{ width:216px; height:28px; background:#ffe3e3 url(../images/wronginfos.jpg) 10px center no-repeat; height:28px; line-height:28px; margin-left:20px; font-size:12px; color:#535353; text-indent:30px;display:none;}
+.checkbox{ font-size:12px; width:256px; margin:20px 0px 0px 20px;}
+.checkbox .check{ margin-right:10px;}
+.checkbox  a{color:#000;}
+.register .commonBtnLong{width:256px;}
+.registerwrap .merchantType{width:256px;padding-left:20px;}
+.register .wronginfo{ width:256px;height:28px; background:#ffe3e3 url(../images/wronginfos.jpg) 10px center no-repeat; line-height:28px; margin-left:20px; font-size:12px; color:#535353; text-indent:30px;}
+
+ .commonBtn,.btn_lfRed,.btn_rtRed{ display:block; float:left; height:30px; border:none; background: url( '../images/btn_common_bgRed.jpg' ); cursor:pointer;}
+.commonBtn {background-repeat:repeat-x; background-position: 0px -30px;}
+.btn_lfRed{background-repeat:no-repeat;}
+ .btn_rtRed{background-repeat:no-repeat; background-position: right -60px; line-height:30px; padding:0px 20px;  font-family:微软雅黑; font-size:14px; color:White;_overflow:visible;}
+
+
+.shadow{height:6px;background: url(../images/shadow.jpg) repeat-x; }
+.bankWrap,.productWrap{width:930px; margin:0 auto; padding:30px 0px; }
+.productWrap h2,.bankWrap h2{height:35px;line-height:35px;font-size:24px;font-weight:normal;margin-bottom:10px; }
+.productWrap .areaA{width:930px;}
+.productWrap .box{width:342px;height:240px; float:left;overflow:hidden;}
+.productWrap .boxA,.productWrap .boxB{position:relative;}
+.productWrap .boxLine{border-right:1px solid #D6D6D6;box-shadow:1px 0px 0px #fff;width:1px;height:130px;float:left;margin:50px 10px;}
+.productWrap .zuojiantou,.productWrap .youjiantou{position:absolute;cursor:pointer;z-index:4;filter:alpha(opacity=0);opacity:0;}
+.productWrap .youtubiao,.productWrap .zuotubiao{position:absolute;cursor:pointer;z-index:2;right:5px;top:94px;width:15px;height:16px;background: url(../images/ico_pointer.gif) 0px -19px;}
+.productWrap .zuotubiao{left:5px;background: url(../images/ico_pointer.gif) no-repeat 1px -1px;}
+.productWrap .zuojiantou{left:0px;top:60px;}
+.productWrap .youjiantou{right:0px;top:60px;}
+.productWrap h3{height:40px; line-height:40px; /* background:#f4f4f4; border-bottom:1px solid #c9c9c9; */font-size:14px;font-weight:normal;text-indent:10px;}
+.productWrap .box ul{width:970px; margin:5px 25px;position:relative;}
+.productWrap .boxB ul{width:640px;}
+.productWrap .box ul li { width:320px; float:left; padding:4px 0px 4px 0px;}
+.productWrap .box img { float:left;}
+.productWrap .box .description{ float:left; margin-left:10px;width:140px;}
+.productWrap .boxC{width:180px;}
+.productWrap .boxC ul,.productWrap .boxC ul li{width:180px;}
+.bankWrap ul{width:890px;/* border:1px solid #c9c9c9; */ }
+.bankWrap ul li{ display:block; width:124px; height:40px; float:left; margin:0px 16px 15px 0px;}
+.bankWrap ul .nomargin{ margin-right:0px;}

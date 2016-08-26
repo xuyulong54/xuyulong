@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.agent.dao.impl.AgentRequestFileDaoImpl">
+
+	<sql id="table"> TBL_AGENT_REQUEST_FILE </sql>
+
+	<resultMap id="beanMap" type="AgentRequestFile">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="agentNo" column="AGENT_NO" />
+		<result property="agentName" column="AGENT_NAME" />
+		<result property="filePath" column="FILE_PATH" />
+		<result property="requestType" column="REQUEST_TYPE" />
+		<result property="requestStatus" column="REQUEST_STATUS" />
+		<result property="verifyStatus" column="VERIFY_STATUS" />
+		<result property="lastTime" column="LAST_TIME" />
+		<result property="requestOperator" column="REQUEST_OPERATOR" />
+		<result property="requestName" column="REQUEST_NAME" />
+	</resultMap>
+
+	<insert id="insert" parameterType="AgentRequestFile" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, AGENT_NO, AGENT_NAME , FILE_PATH, REQUEST_TYPE, REQUEST_STATUS, VERIFY_STATUS,
+		 LAST_TIME, REQUEST_OPERATOR, REQUEST_NAME)
+		values
+		(0, #{createTime}, #{agentNo}, #{agentName}, #{filePath}, #{requestType}, #{requestStatus}, #{verifyStatus},
+		  #{lastTime}, #{requestOperator}, #{requestName})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" /> a
+		where ID = #{id}
+	</select>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="AgentRequestFile">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			FILE_PATH = #{filePath} ,
+			REQUEST_TYPE = #{requestType} ,
+			REQUEST_STATUS = #{requestStatus} ,
+			VERIFY_STATUS = #{verifyStatus} ,
+			LAST_TIME = #{lastTime}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<if test="startDate != null and startDate != null and endDate != '' and endDate != ''">
+			and CREATE_TIME between #{startDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+		<if test="agentNo != null and agentNo != ''"> and b.AGENT_NO = #{agentNo}</if>
+		<if test="agentName != null and agentName != ''"> and b.AGENT_NAME = #{agentName}</if>
+		<if test="requestStatus != null and requestStatus != ''"> and b.REQUEST_STATUS = #{requestStatus} </if>
+		<if test="verifyStatus != null and verifyStatus != ''"> and b.VERIFY_STATUS = #{verifyStatus} </if>
+		<if test="requestType != null and requestType != ''"> and b.REQUEST_TYPE = #{requestType} </if>
+		
+		<if test="parentAgentNo != null and parentAgentNo != ''">
+			and (a.AGENT_NO=#{parentAgentNo} or a.PARENT_AGENT_NO=#{parentAgentNo} or a.PARENT_UP_AGENT_NO=#{parentAgentNo})
+		</if>
+		
+		<if test="merchantParentAgentNo != null and merchantParentAgentNo != ''">
+			and (a.FIRST_AGENT_NO=#{merchantParentAgentNo} or 
+			a.SECOND_AGENT_NO=#{merchantParentAgentNo} or 
+			a.THIRD_AGENT_NO=#{merchantParentAgentNo})
+		</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select b.* from TBL_AGENT_REQUEST_FILE b LEFT JOIN 
+		TBL_AGENT_MERCHANT_RELATION a 
+		on a.MERCHANT_NO = b.AGENT_NO 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by b.ID desc  ]]>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" /> b
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	
+	
+	<!-- 代理商信息变更列表，只能看到自己的变更 -->
+	<select id="listPageByAgentFile" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		TBL_AGENT_REQUEST_FILE as b
+		<where>
+			<include refid="condition_sql_agent" /> 
+		</where>
+		<![CDATA[ order by b.ID desc  ]]>
+	</select>
+
+	<select id="listPageCountByAgentFile" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		TBL_AGENT_REQUEST_FILE  as b
+		<where>
+			<include refid="condition_sql_agent" />
+		</where>
+	</select>
+	
+	<sql id="condition_sql_agent">
+		<if test="startDate != null and startDate != null and endDate != '' and endDate != ''">
+			and CREATE_TIME between #{startDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+		<if test="agentNo != null and agentNo != ''"> and b.AGENT_NO = #{agentNo}</if>
+		<if test="agentName != null and agentName != ''"> and b.AGENT_NAME = #{agentName}</if>
+		<if test="requestStatus != null and requestStatus != ''"> and b.REQUEST_STATUS = ${requestStatus} </if>
+		<if test="verifyStatus != null and verifyStatus != ''"> and b.VERIFY_STATUS = ${verifyStatus} </if>
+		<if test="requestType != null and requestType != ''"> and b.REQUEST_TYPE = ${requestType} </if>
+	</sql>
+	
+	<!-- 统计商户和代理商变更未审核的数据 -->
+	<select id="loadChangeInfoStatus" parameterType="java.util.Map" resultType="hashmap">
+		SELECT 
+			SUM(CASE WHEN (A.REQUEST_TYPE = 1) THEN 1 ELSE 0 END) AS "merchBaseInfo",
+			SUM(CASE WHEN (A.REQUEST_TYPE = 2) THEN 1 ELSE 0 END) AS "merchRateInfo",
+			SUM(CASE WHEN (A.REQUEST_TYPE = 3) THEN 1 ELSE 0 END) AS "merchSettInfo",
+			SUM(CASE WHEN (A.REQUEST_TYPE = 4) THEN 1 ELSE 0 END) AS "merchTermInfo",
+			SUM(CASE WHEN (A.REQUEST_TYPE = 5) THEN 1 ELSE 0 END) AS "agentBaseInfo",
+			SUM(CASE WHEN (A.REQUEST_TYPE = 6) THEN 1 ELSE 0 END) AS "agentSettInfo"
+		FROM 
+		TBL_AGENT_REQUEST_FILE as A 
+		where A.VERIFY_STATUS = 101
+	</select>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.web.permission.dao.impl.PmsOperatorLogDaoImpl">
+
+	<!-- Pms权限管理：操作员操作日志表 -->
+	<sql id="pms_operator_log"> TBL_BOSS_PMS_OPERATOR_LOG </sql>
+
+	<resultMap id="beanMap" type="PmsOperatorLog">
+		<id column="ID" property="id" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="OPERATORID" property="operatorId" />
+		<result column="OPERATORNAME" property="operatorName" />
+		<result column="OPERATETYPE" property="operateType" />
+		<result column="STATUS" property="status" />
+		<result column="IP" property="ip" />
+		<result column="CONTENT" property="content" />
+	</resultMap>
+
+	<insert id="insert" parameterType="PmsOperatorLog" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_operator_log" />
+		(CREATETIME, OPERATORID, OPERATORNAME, OPERATETYPE, STATUS, IP, CONTENT)
+		values (FUN_NOW(), #{operatorId}, #{operatorName}, #{operateType},
+		#{status}, #{ip}, #{content})
+	</insert>
+
+	<select id="getById" parameterType="long" resultType="PmsOperatorLog">
+		select * from <include refid="pms_operator_log" /> where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="operatorName != null and operatorName != ''"> and operatorName = #{operatorName}</if>
+		<if test="operateType != null and operateType != ''"> and OPERATETYPE = #{operateType}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="ip != null and ip != ''"> and IP = #{ip}</if>
+		<if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+			and CREATETIME between #{beginDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="pms_operator_log" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="pms_operator_log" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.settlement.dao.impl.SettRecordDaoImpl">
+
+	<sql id="table"> TBL_SETT_RECORD </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.settlement.entity.SettRecord">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+		<result column="REMIT_NO" property="remitNo" jdbcType="VARCHAR" />
+		<result column="SETT_MODE" property="settMode" jdbcType="SMALLINT" />
+		<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+		<result column="USER_NO" property="userNo" jdbcType="VARCHAR" />
+		<result column="USER_TYPE" property="userType" jdbcType="SMALLINT" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="SETT_DATE" property="settDate" jdbcType="DATE" />
+		<result column="CURRENCY_TYPE" property="currencyType"
+			jdbcType="SMALLINT" />
+		<result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+		<result column="BANK_CHANNEL_NO" property="bankChannelNo"
+			jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT_NAME" property="bankAccountName"
+			jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT_NO" property="bankAccountNo"
+			jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT_TYPE" property="bankAccountType"
+			jdbcType="SMALLINT" />
+		<result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="BANK_ACCOUNT_ADDRESS" property="bankAccountAddress"
+			jdbcType="VARCHAR" />
+		<result column="SETT_AMOUNT" property="settAmount" jdbcType="DECIMAL" />
+		<result column="SETT_FEE" property="settFee" jdbcType="DECIMAL" />
+		<result column="REMIT_AMOUNT" property="remitAmount" jdbcType="DECIMAL" />
+		<result column="TRADE_NUM" property="tradeNum" jdbcType="INTEGER" />
+		<result column="TRADE_AMOUNT" property="tradeAmount" jdbcType="DECIMAL" />
+		<result column="TRADE_FEE" property="tradeFee" jdbcType="DECIMAL" />
+		<result column="REFUND_NUM" property="refundNum" jdbcType="INTEGER" />
+		<result column="REFUND_AMOUNT" property="refundAmount"
+			jdbcType="DECIMAL" />
+		<result column="SETT_STATUS" property="settStatus" jdbcType="SMALLINT" />
+		<result column="REFUND_FEE" property="refundFee" jdbcType="DECIMAL" />
+		<result column="RETURN_FEE_TYPE" property="returnFeeType"
+			jdbcType="SMALLINT" />
+		<result column="RETURN_AMOUNT" property="returnAmount"
+			jdbcType="DECIMAL" />
+		<result column="BEGIN_DATE" property="beginDate" jdbcType="DATE" />
+		<result column="END_DATE" property="endDate" jdbcType="DATE" />
+		<result column="REMIT_REQUEST_TIME" property="remitRequestTime"
+			jdbcType="TIMESTAMP" />
+		<result column="REMIT_CONFIRM_TIME" property="remitConfirmTime"
+			jdbcType="TIMESTAMP" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="REMIT_REMARK" property="remitRemark" jdbcType="VARCHAR" />
+		<result column="OPERATOR_LOGINNAME" property="operatorLoginname"
+			jdbcType="VARCHAR" />
+		<result column="OPERATOR_REALNAME" property="operatorRealname"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, BATCH_NO, REMIT_NO, SETT_MODE,
+		ACCOUNT_NO, USER_TYPE,USER_NO, USER_NAME,
+		SETT_DATE, CURRENCY_TYPE,
+		BANK_CODE, BANK_CHANNEL_NO, BANK_ACCOUNT_NAME, BANK_ACCOUNT_NO,
+		BANK_ACCOUNT_TYPE,
+		COUNTRY, PROVINCE, CITY, BANK_ACCOUNT_ADDRESS,
+		SETT_AMOUNT, SETT_FEE, REMIT_AMOUNT,
+		TRADE_NUM, TRADE_AMOUNT,
+		TRADE_FEE, REFUND_NUM, REFUND_AMOUNT, SETT_STATUS, REFUND_FEE,
+		RETURN_FEE_TYPE, RETURN_AMOUNT, BEGIN_DATE, END_DATE,
+		REMIT_REQUEST_TIME, REMIT_CONFIRM_TIME,
+		REMARK, REMIT_REMARK,
+		OPERATOR_LOGINNAME, OPERATOR_REALNAME
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="withDraw != null and withDraw != ''"> and SETT_MODE != #{withDraw,jdbcType=SMALLINT}</if>
+		<if test="bankAccountName != null and bankAccountName != ''"> and BANK_ACCOUNT_NAME LIKE
+			CONCAT('%',CONCAT(#{bankAccountName,jdbcType=VARCHAR},'%'))</if>
+		<if test="batchNo != null and batchNo != ''"> and BATCH_NO = #{batchNo,jdbcType=VARCHAR}</if>
+		<if test="remitNo != null and remitNo != ''"> and REMIT_NO = #{remitNo,jdbcType=VARCHAR}</if>
+		<if test="settMode != null and settMode != ''"> and SETT_MODE = #{settMode,jdbcType=SMALLINT}</if>
+		<if test="accountNo != null and accountNo != ''"> and ACCOUNT_NO = #{accountNo,jdbcType=VARCHAR}</if>
+		<if test="userNo != null and userNo != ''"> and USER_NO = #{userNo,jdbcType=VARCHAR}</if>
+		<if test="currencyType != null and currencyType != ''"> and CURRENCY_TYPE = #{currencyType,jdbcType=SMALLINT}
+		</if>
+		<if test="bankCode != null and bankCode != ''"> and BANK_CODE = #{bankCode,jdbcType=VARCHAR}</if>
+		<if test="bankChannelNo != null and bankChannelNo != ''"> and BANK_CHANNEL_NO = #{bankChannelNo,jdbcType=VARCHAR}
+		</if>
+		<if test="bankAccountNo != null and bankAccountNo != ''"> and BANK_ACCOUNT_NO = #{bankAccountNo,jdbcType=VARCHAR}
+		</if>
+		<if test="bankAccountType != null and bankAccountType != ''"> and BANK_ACCOUNT_TYPE =
+			#{bankAccountType,jdbcType=SMALLINT}</if>
+		<if test="settStatus != null and settStatus != ''"> and SETT_STATUS = #{settStatus,jdbcType=SMALLINT}</if>
+		<if test="returnFeeType != null and returnFeeType != ''"> and RETURN_FEE_TYPE = #{returnFeeType,jdbcType=SMALLINT}
+		</if>
+		<if test="operatorLoginName != null and operatorLoginName != ''"> and OPERATOR_LOGIN_NAME =
+			#{operatorLoginName,jdbcType=VARCHAR}</if>
+		<if
+			test="beginTime != null and beginTime != '' and endTime != null and endTime !=''">
+			and CREATE_TIME between #{beginTime} AND CONCAT(#{endTime},'
+			23:59:59')
+		</if>
+		<!-- 增加结算日期查询条件 -->
+		<if
+			test="startSettDate != null and startSettDate != '' and  endSettDate != null and endSettDate != ''">
+			and SETT_DATE between #{startSettDate} AND CONCAT(#{endSettDate},'
+			23:59:59')
+		</if>
+		<!-- 给pos使用 -->
+		<if test="merchantNos != null and merchantNos != ''">
+			and USER_NO IN
+			 <foreach item="item" index="index" collection="merchantNos" 
+                         open="(" separator="," close=")">
+                        ${item}
+              </foreach>
+		</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true"
+		parameterType="wusc.edu.pay.facade.settlement.entity.SettRecord">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		BATCH_NO, REMIT_NO, SETT_MODE,
+		ACCOUNT_NO,
+		USER_TYPE,USER_NO, USER_NAME,
+		SETT_DATE, CURRENCY_TYPE, BANK_CODE,
+		BANK_CHANNEL_NO,
+		BANK_ACCOUNT_NAME, BANK_ACCOUNT_NO, BANK_ACCOUNT_TYPE,
+		COUNTRY, PROVINCE, CITY,
+		BANK_ACCOUNT_ADDRESS, SETT_AMOUNT, SETT_FEE,
+		REMIT_AMOUNT, TRADE_NUM, TRADE_AMOUNT,
+		TRADE_FEE, REFUND_NUM,
+		REFUND_AMOUNT,
+		SETT_STATUS, REFUND_FEE, RETURN_FEE_TYPE,
+		RETURN_AMOUNT,
+		BEGIN_DATE, END_DATE,
+		REMIT_REQUEST_TIME, REMIT_CONFIRM_TIME,
+		REMARK,
+		REMIT_REMARK, OPERATOR_LOGINNAME,
+		OPERATOR_REALNAME)
+		values (0,
+		#{createTime},
+		#{batchNo,jdbcType=VARCHAR},
+		#{remitNo,jdbcType=VARCHAR}, #{settMode,jdbcType=SMALLINT},
+		#{accountNo,jdbcType=VARCHAR},
+		#{userType,jdbcType=SMALLINT},#{userNo,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR},
+		#{settDate,jdbcType=DATE},
+		#{currencyType,jdbcType=SMALLINT}, #{bankCode,jdbcType=VARCHAR},
+		#{bankChannelNo,jdbcType=VARCHAR},
+		#{bankAccountName,jdbcType=VARCHAR},
+		#{bankAccountNo,jdbcType=VARCHAR},
+		#{bankAccountType,jdbcType=SMALLINT},
+		#{country,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+		#{bankAccountAddress,jdbcType=VARCHAR},
+		#{settAmount,jdbcType=DECIMAL}, #{settFee,jdbcType=DECIMAL},
+		#{remitAmount,jdbcType=DECIMAL}, #{tradeNum,jdbcType=INTEGER},
+		#{tradeAmount,jdbcType=DECIMAL},
+		#{tradeFee,jdbcType=DECIMAL},
+		#{refundNum,jdbcType=INTEGER}, #{refundAmount,jdbcType=DECIMAL},
+		#{settStatus,jdbcType=SMALLINT}, #{refundFee,jdbcType=DECIMAL},
+		#{returnFeeType,jdbcType=SMALLINT},
+		#{returnAmount,jdbcType=DECIMAL},
+		#{beginDate,jdbcType=DATE}, #{endDate,jdbcType=DATE},
+		#{remitRequestTime,jdbcType=TIMESTAMP},
+		#{remitConfirmTime,jdbcType=TIMESTAMP},
+		#{remark,jdbcType=VARCHAR},
+		#{remitRemark,jdbcType=VARCHAR},
+		#{operatorLoginname,jdbcType=VARCHAR},
+		#{operatorRealname,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.settlement.entity.SettRecord">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		BATCH_NO =
+		#{batchNo,jdbcType=VARCHAR},
+		REMIT_NO = #{remitNo,jdbcType=VARCHAR},
+		SETT_MODE = #{settMode,jdbcType=SMALLINT},
+		ACCOUNT_NO =
+		#{accountNo,jdbcType=VARCHAR},
+		USER_NO = #{userNo,jdbcType=VARCHAR},
+		USER_NAME = #{userName,jdbcType=VARCHAR},
+		SETT_DATE =
+		#{settDate,jdbcType=DATE},
+		CURRENCY_TYPE =
+		#{currencyType,jdbcType=SMALLINT},
+		BANK_CODE =
+		#{bankCode,jdbcType=VARCHAR},
+		BANK_CHANNEL_NO =
+		#{bankChannelNo,jdbcType=VARCHAR},
+		BANK_ACCOUNT_NAME =
+		#{bankAccountName,jdbcType=VARCHAR},
+		BANK_ACCOUNT_NO =
+		#{bankAccountNo,jdbcType=VARCHAR},
+		BANK_ACCOUNT_TYPE =
+		#{bankAccountType,jdbcType=SMALLINT},
+		COUNTRY =
+		#{country,jdbcType=VARCHAR},
+		PROVINCE = #{province,jdbcType=VARCHAR},
+		CITY = #{city,jdbcType=VARCHAR},
+		BANK_ACCOUNT_ADDRESS =
+		#{bankAccountAddress,jdbcType=VARCHAR},
+		SETT_AMOUNT =
+		#{settAmount,jdbcType=DECIMAL},
+		SETT_FEE = #{settFee,jdbcType=DECIMAL},
+		REMIT_AMOUNT = #{remitAmount,jdbcType=DECIMAL},
+		TRADE_NUM =
+		#{tradeNum,jdbcType=INTEGER},
+		TRADE_AMOUNT =
+		#{tradeAmount,jdbcType=DECIMAL},
+		TRADE_FEE =
+		#{tradeFee,jdbcType=DECIMAL},
+		REFUND_NUM =
+		#{refundNum,jdbcType=INTEGER},
+		REFUND_AMOUNT =
+		#{refundAmount,jdbcType=DECIMAL},
+		SETT_STATUS =
+		#{settStatus,jdbcType=SMALLINT},
+		REFUND_FEE =
+		#{refundFee,jdbcType=DECIMAL},
+		RETURN_FEE_TYPE =
+		#{returnFeeType,jdbcType=SMALLINT},
+		RETURN_AMOUNT =
+		#{returnAmount,jdbcType=DECIMAL},
+		BEGIN_DATE =
+		#{beginDate,jdbcType=DATE},
+		END_DATE = #{endDate,jdbcType=DATE},
+		REMIT_REQUEST_TIME = #{remitRequestTime,jdbcType=TIMESTAMP},
+		REMIT_CONFIRM_TIME = #{remitConfirmTime,jdbcType=TIMESTAMP},
+		REMARK =
+		#{remark,jdbcType=VARCHAR},
+		REMIT_REMARK =
+		#{remitRemark,jdbcType=VARCHAR},
+		OPERATOR_LOGINNAME =
+		#{operatorLoginname,jdbcType=VARCHAR},
+		OPERATOR_REALNAME =
+		#{operatorRealname,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT}
+		and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateSettStatusByBatchNo" parameterType="java.util.Map">
+		update
+		<include refid="table" />
+		set SETT_STATUS = #{settStatus,jdbcType=SMALLINT}
+		where BATCH_NO =
+		#{batchNo,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="getByRemitNo" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where REMIT_NO = #{remitNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getSettRecordByBatchNoAndAccountNo" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where BATCH_NO = #{batchNo,jdbcType=VARCHAR} and ACCOUNT_NO =
+		#{accountNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map"
+		resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<!-- 统计汇总 -->
+	<select id="countByPageParam" parameterType="java.util.Map"
+		resultType="hashmap">
+		select
+		count(1) as "totalCount",
+		sum(SETT_AMOUNT) as "totalSettAmount",
+		sum(SETT_FEE) as "totalSettFee",
+		sum(REMIT_AMOUNT) as "totalRemitAmount"
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

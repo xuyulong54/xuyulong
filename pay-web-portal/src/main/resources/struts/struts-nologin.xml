@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="nologin" extends="base">
+		<default-interceptor-ref name="defaultInterceptorStack"></default-interceptor-ref>
+		<action name="download" class="wusc.edu.pay.web.portal.action.FileDownloadAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/octet-stream;charset=UTF-8</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>
+		<!-- 请求错误提示页面 Action -->
+		<action name="requestError_*" class="wusc.edu.pay.web.portal.action.ErrorCodeAction" method="{1}">
+			<result name="request_error">page/request_error.jsp</result>
+		</action>
+		<!--手机短信 -->
+		<action name="sms_*" class="wusc.edu.pay.web.portal.action.SmsAction" method="{1}">
+		</action>
+		<!-- 登录 -->
+		<action name="login_*" class="wusc.edu.pay.web.portal.action.LoginAction" method="{1}">
+			<!-- 进入登录页面 -->
+			<result name="loginUI">page/login.jsp</result>
+			<!-- 商户进入首页 -->
+			<result name="merchantIndex">merchantaccount_viewAccount.action?alertPwdDays=${alertPwdDays}</result>
+			<!-- 会员进入首页 -->
+			<result name="memberIndex">memberaccount_viewAccount.action?alertPwdDays=${alertPwdDays}</result>
+			<!-- 商户修改登录、支付密码 -->
+			<result name="firstEditLoginTradePwdUI">merchantpwdedit_firstEditLoginTradePwdUI.action</result>
+      <!-- 操作员修改登录密码 -->
+      <result name="firstEditLoginPwdUI">page/merchant/pwdEdit/LoginPwdEditFirst.jsp</result>
+      <!-- 会员修改登录密码 已不用 -->
+			<!-- <result name="memberEditLoginPwd">memberpwdedit_firstEditLoginPwdUI.action</result> -->
+			<!-- 会员跳转至指定URL -->
+			<result name="memberRedirectUrl">memberinfo_redirectUrl.action</result>
+			<!-- 商户跳转至指定URL -->
+			<result name="merchantRedirectUrl">merchantinfo_redirectUrl.action</result>
+			<!-- 退出系统 -->
+			<result name="loginout">login_loginUI.action</result>
+		</action>
+		<!-- 商户 注册 -->
+		<action name="merchantRegister_*" class="wusc.edu.pay.web.portal.action.merchant.RegisterAction" method="{1}">
+			<!-- 进入帐户名验证页面 -->
+			<result name="checkLoginNameUI">page/merchant/register/LoginNameCheck.jsp</result>
+			<!-- 验证邮件发送后提示页面 -->
+			<result name="checkLoginName">page/merchant/register/CheckedMailSent.jsp</result>
+			<!-- 进入设置身份信息 -->
+			<result name="setIdentityInfoUI">page/merchant/register/setIdentityInfoUI.jsp</result>
+			<!-- POS设置商户身份信息 -->
+			<result name="posSetIdentityInfo">merchantRegister_setPosMerchantInfoUI.action?token=${token}</result>
+			<!-- 在线设置商户身份信息 -->
+			<result name="setIdentityInfo">merchantRegister_setMerchantInfoUI.action?token=${token}</result>
+			<!-- 移动设置商户身份信息 -->
+			<result name="mobileSetIdentityInfo">merchantRegister_setMobileMerchantInfoUI.action?token=${token}</result>
+			<!-- 在线进入设置商户身份信息 -->
+			<result name="setMerchantInfoUI">page/merchant/register/setMerchantInfoUI.jsp</result>
+			<!-- POS进入设置商户身份信息 -->
+			<result name="setPosMerchantInfoUI">page/merchant/register/setPosMerchantInfoUI.jsp</result>
+			<!-- 移动进入设置商户身份信息 -->
+			<result name="setMobileMerchantInfoUI">page/merchant/register/MobileInfoSet.jsp</result>
+			<!-- 注册成功页面 -->
+			<result name="registerSuccess">/page/merchant/register/RegisterSuccess.jsp</result>
+			<!-- 注册出错页面 -->
+			<result name="registerError">/page/merchant/register/RegisterError.jsp</result>
+			<!-- pos商户选择MCC码 -->
+			<result name="selectMcc">/page/merchant/register/selectMcc.jsp</result>
+		</action>
+		<!-- 找回密码:(登录) -->
+		<action name="merchantLookForLoginPwd_*" class="wusc.edu.pay.web.portal.action.merchant.LookForLoginPwdAction" method="{1}">
+			<!-- 登录密码：去验证用户名页面 -->
+			<result name="loginPwdCheckLoginNameUI">page/merchant/lookForLoginPwd/LoginPwdCheckLoginName.jsp</result>
+			<!-- 登录密码：验证用户名 -->
+			<result name="loginPwdCheckLoginName">page/merchant/lookForLoginPwd/LoginPwdListWay.jsp</result>
+			<!-- 登录密码：找回方式列表 -->
+			<result name="listLookForLoginPwdWayUI">page/merchant/lookForLoginPwd/LoginPwdListWay.jsp</result>
+			<!-- 登录密码：发送邮件 -->
+			<result name="loginPwdSendEmailCheck">page/merchant/lookForLoginPwd/LoginPwdSentEmailSuccess.jsp</result>
+			<!-- 登录密码：修改登录密码 -->
+			<result name="editLoginPwd">page/merchant/lookForLoginPwd/LoginPwdLookForSuccess.jsp</result>
+			<!-- 登录密码：去手机验证页面 -->
+			<result name="loginPwdSendPhoneCodeCheckUI">page/merchant/lookForLoginPwd/LoginPwdSendPhoneCodeCheck.jsp</result>
+			<!-- 登录密码：手机验证 -->
+			<result name="editLoginPwdUI">page/merchant/lookForLoginPwd/LoginPwdEdit.jsp</result>
+			<!-- 登录密码：人工服务页面 -->
+			<result name="humanServicesUI">page/merchant/lookForLoginPwd/HumanServices.jsp</result>
+		</action>
+		<!-- 通讯地址 -->
+		<action name="address_*" class="wusc.edu.pay.web.portal.action.AddressAction" method="{1}">
+		</action>
+		<action name="article_*" class="wusc.edu.pay.web.portal.action.ArticleAction" method="{1}">
+			<!-- 企业动态列表 -->
+			<result name="listArticle">page/merchant/article/ArticleList.jsp</result>
+			<!-- 人才招聘列表 -->
+			<result name="listRecruitment">page/merchant/article/RecruitmentList.jsp</result>
+			<!-- 常见问题列表 -->
+			<result name="listAskedquestion">page/merchant/article/AskedquestionList.jsp</result>
+			<!-- 产品列表 -->
+			<result name="listProduct">page/merchant/article/ProductList.jsp</result>
+			<!--通知公告列表 -->
+			<result name="listNotice">page/merchant/article/NoticeList.jsp</result>
+			<!--企业动态详情 -->
+			<result name="viewArticle">page/merchant/article/ArticleView.jsp</result>
+			<!--人才招聘详情 -->
+			<result name="viewRecruitment">page/merchant/article/RecruitmentView.jsp</result>
+			<!--常见问题详情 -->
+			<result name="viewAskedquestion">page/merchant/article/AskedquestionView.jsp</result>
+			<!--产品详情 -->
+			<result name="viewProduct">page/merchant/article/ProductView.jsp</result>
+			<!--通知公告列表 -->
+			<result name="viewNotice">page/merchant/article/NoticeView.jsp</result>
+			<!--关于我们 -->
+			<result name="aboutUs">page/merchant/article/aboutUs.jsp</result>
+			<!--联系我们 -->
+			<result name="contactUs">page/merchant/article/contactUs.jsp</result>
+			<!--合作伙伴 -->
+			<result name="partner">page/merchant/article/partner.jsp</result>
+			<!--网站地图 -->
+			<result name="websiteMap">page/merchant/article/websiteMap.jsp</result>
+			<!--商户服务 -->
+			<result name="gwService">page/merchant/article/gwService.jsp</result>
+			<!--产品 -->
+			<result name="gwProcuct">page/merchant/article/gwProcuct.jsp</result>
+			<!--安全中心 -->
+			<result name="securityCenter">page/merchant/article/securityCenter.jsp</result>
+			<!--客服中心 -->
+			<result name="consultCenter">page/merchant/article/consultCenter.jsp</result>
+		</action>
+		<!-- 会员注册 -->
+		<action name="memberRegister_*" class="wusc.edu.pay.web.portal.action.member.RegisterAction" method="{1}">
+			<!-- 进入帐户名验证页面 -->
+			<result name="checkLoginNameUI">page/member/register/LoginNameCheck.jsp</result>
+			<!-- 验证邮件发送后提示页面 -->
+			<result name="checkLoginName">page/member/register/CheckedMailSent.jsp</result>
+			<!-- 会员手机注册验证页面 -->
+			<result name="mobileVerificationCode">page/member/register/MobileVerificationCode.jsp</result>
+			<!-- 进入设置身份信息 -->
+			<result name="setIdentityInfoUI">page/member/register/IdentityInfoSet.jsp</result>
+			<!-- 注册成功页面 -->
+			<result name="registerSuccess">/page/member/register/RegisterSuccess.jsp</result>
+		</action>
+		<!-- 重新发送邮件 -->
+		<action name="resendemail_*" class="wusc.edu.pay.web.portal.action.ResendEmailAction" method="{1}"></action>
+		<!-- js异步验证 -->
+		<action name="ajaxvalidate_*" class="wusc.edu.pay.web.portal.action.AjaxValidateAction" method="{1}"></action>
+		<!-- Pinyin处理器 -->
+		<action name="pinyin_*" class="wusc.edu.pay.web.portal.action.PinyinAction" method="{1}"></action>
+		
+	</package>
+</struts>

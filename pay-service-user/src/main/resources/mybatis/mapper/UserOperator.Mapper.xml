@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserOperatorDaoImpl">
+
+	<sql id="table"> TBL_PORTAL_USER_OPERATOR </sql>
+
+	<resultMap id="beanMap" type="UserOperator">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="USERNO" property="userNo" />
+		<result column="LOGINNAME" property="loginName" />
+		<result column="LOGINPWD" property="loginPwd" />
+		<result column="REALNAME" property="realName" />
+		<result column="MOBILENO" property="mobileNo" />
+		<result column="STATUS" property="status" />
+		<result column="TYPE" property="type" />
+		<result column="LASTLOGINTIME" property="lastLoginTime" />
+		<result column="ISCHANGEDPWD" property="isChangedPwd" />
+		<result column="PWDERRORTIMES" property="pwdErrorTimes" />
+		<result column="PWDERRORLASTTIME" property="pwdErrorLastTime" />
+		<result column="LASTALERTPWDTIME" property="lastAlertPwdTime" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserOperator" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME,
+		LOGINNAME, LOGINPWD, REALNAME, MOBILENO, STATUS, TYPE, LASTLOGINTIME, ISCHANGEDPWD,
+		PWDERRORTIMES, PWDERRORLASTTIME,LASTALERTPWDTIME,USERNO)
+		values (0, #{createTime}, #{loginName}, #{loginPwd}, #{realName}, #{mobileNo}, #{status},
+		#{type}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{isChangedPwd,jdbcType=SMALLINT},
+		#{pwdErrorTimes}, #{pwdErrorLastTime},#{lastAlertPwdTime},#{userNo})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserOperator">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			LOGINPWD = #{loginPwd},
+			REALNAME = #{realName},
+			MOBILENO = #{mobileNo},
+			STATUS = #{status},
+			TYPE = #{type},
+			LASTLOGINTIME = #{lastLoginTime,jdbcType=TIMESTAMP},
+			ISCHANGEDPWD = #{isChangedPwd,jdbcType=SMALLINT},
+			PWDERRORTIMES = #{pwdErrorTimes},
+			PWDERRORLASTTIME = #{pwdErrorLastTime},
+			LASTALERTPWDTIME = #{lastAlertPwdTime},
+			USERNO = #{userNo}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="userNo != null and userNo != ''"> and USERNO = #{userNo}</if>
+		<if test="type != null and type != ''"> and TYPE = #{type}</if>
+		<if test="loginName != null and loginName != ''"> and LOGINNAME = #{loginName}</if>
+		<if test="struts != null and struts != ''"> and STRUTS = #{status}</if>
+		<if test="realName != null and realName != ''"> and REALNAME like CONCAT(#{realName}, '%')</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<!-- 批量修改用户操作员的状态 -->
+	<update id="updateUserOperatorStatusByUserNo" parameterType="java.util.Map">
+		update
+		<include refid="table" />
+		set STATUS = #{status} where USERNO = #{userNo}
+	</update>
+
+</mapper>

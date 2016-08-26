@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.payrule.dao.impl.FrpDaoImpl">
+        <!-- 启用缓存 -->  
+	<sql id="table"> TBL_RULE_FRP </sql>
+	
+	<resultMap id="beanMap" type="Frp">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="FRP_CODE" property="frpCode"  jdbcType="VARCHAR" />
+		<result column="BANK_NAME" property="bankName"  jdbcType="VARCHAR" />
+		<result column="BANK_CODE" property="bankCode"  jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" />
+		<result column="BUS_TYPE" property="busType" />
+		<result column="PAY_TYPE" property="payType" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="Frp" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="table"/> (VERSION, FRP_CODE, BANK_NAME, BANK_CODE, STATUS, BUS_TYPE,PAY_TYPE) 
+		values (0, #{frpCode}, #{bankName}, #{bankCode}, #{status}, #{busType} ,#{payType})
+	</insert>
+	
+	<!-- 更新:version+1  实现乐观锁-->
+	<update id="update" parameterType="Frp">
+		update <include refid="table"/>
+		<set>
+		VERSION = #{version}+1 ,
+		BANK_NAME = #{bankName},
+		BANK_CODE = #{bankCode},
+		STATUS = #{status},
+		BUS_TYPE = #{busType},
+		PAY_TYPE = #{payType}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+  	
+  	<select id="getById" parameterType="long" resultMap="beanMap">
+    	select * from <include refid="table"/> where ID = #{id}
+  	</select>
+  	
+  	<select id="findByFrpCode" parameterType="string" resultMap="beanMap">
+    	select * from <include refid="table"/> where FRP_CODE = #{frpCode}
+  	</select>
+  	
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="frpCode != null and frpCode != ''"> and FRP_CODE = #{frpCode}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="bankCode != null and bankCode != ''"> and BANK_CODE = #{bankCode}</if>
+		<if test="bankName != null and bankName != ''"> and BANK_NAME like CONCAT(#{bankName}, '%')</if>
+		<if test="busType != null and busType != ''"> and BUS_TYPE = #{busType} </if>
+		<if test="payType != null and payType != ''"> and PAY_TYPE = #{payType} </if>
+	</sql>
+	
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+	
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from <include refid="table"/>
+		<where>
+			<include refid="condition_sql"/>
+		</where>
+	</select>
+	
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from <include refid="table"/>
+		<where>
+			<include refid="condition_sql"/>
+		</where>
+	</select>
+		
+</mapper>

@@ -1,0 +1,583 @@
+@charset "utf-8";
+
+
+.ht{ height:30px; _height:40px;}
+.ht1{ height:150px; _height:160px;}
+.flRt{float:right;}
+.flLt{float:left;}
+  input[type="submit"],input[type="button"]
+ {
+ 	margin:0px;
+ 	overflow:visible;
+
+ }
+
+/* CSS Document */
+/****订单显示样式*****/
+.showOrder{ width: 896px; margin:0 auto; background: #f7f7f7; margin: 10px 0px 10px 0px;;}
+.showOrder .tb{width:890px;border-collapse: collapse;}
+.showOrder .tb th,.showOrder .tb td{height:30px;line-height: 30px; text-align: center;}
+.showOrder .tb td{border-top:1px dashed #D5D6D9; }
+
+/*
+.showOrder .tb{width:890px;border-collapse: collapse;}
+.showOrder div td{ text-align:left; text-indent:10px; height:30px;}
+.head{ border-bottom:1px dashed #D5D6D9 }*/
+/****订单显示样式 结束*****/
+/*---首页提示信息---*/
+.warmWrap{width:100%;height:40px;background: #fffff2;position:relative;}
+.closeImg{position: absolute;right:20px;top:10px;cursor:pointer;}
+.warminfos{ height:40px;line-height:40px;padding:0px 20px;color:#8b8867;width:900px;margin:0px auto;font-size:14px;}
+/*------公用字体样式------*/
+   h4{ font-size:14px; font-family:微软雅黑;}
+  .numRed{color:#D83E24; font-size:24px; font-weight:bold;}
+  .numGray{color:#535353; font-size:16px; font-weight:bold;}
+  .markRed{ color:#D83E24;}
+
+
+
+.tag {
+	height: 38px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+.cirArrow, .tagCon {
+	float:left
+}
+.cirArrow {
+	width:2px;
+	height:38px;
+	overflow:hidden;
+	background:url(../images/rebg.png) no-repeat left top;
+}
+.arg {
+	background-position:left buttom;
+}
+.tagCon {
+	height:33px;
+	width:870px;
+	padding-left:26px;
+	padding-top:5px;
+	overflow:hidden;
+	background:url(../images/rebg.png)  0px repeat-x
+}
+.tagCon ul li {
+	float:left;
+	display:inline;
+	height:33px;
+	background:url(../images/small_allbgs.png) no-repeat -14px -151px
+}
+.tagCon ul li.firstLi {
+	background: none repeat scroll 0 0 transparent;
+}
+.tagCon ul li span, .tagCon ul li a {
+	display:inline-block;
+	zoom:1;
+*display:inline;
+	vertical-align:top;
+	height:33px
+}
+.tagCon ul li span {
+	width:5px;
+  float: left;
+
+}
+.tagCon ul li a {
+	line-height:33px;
+	padding:0px 24px;
+	color:#FFF;
+	font-size:14px;
+	font-weight:boldk;
+	font-family:"微软雅黑"
+}
+/*.tagCon ul li a:hover{color:#FFF !important}*/
+
+.tagCon ul li.hover span {
+	background:url(../images/icoA.png) no-repeat -89px -68px
+}
+.tagCon ul li.current span {
+	background:url(../images/icoA.png) no-repeat 0px -34px
+}
+.tagCon ul li.hover a {
+	background:url(../images/tagA_bg.png) no-repeat 100% -50px;
+	color:#FFF;
+}
+.tagCon ul li.current a {
+	background:url(../images/tagA_bg.png) no-repeat 100% 0px;
+	color:#C70606;
+	font-weight: bold;
+}
+/*.tagCon ul li.current a:hover{color:#359335 !important}*/
+
+
+.tipsMsg{width:310px;height:50px; margin-left:160px; background:url('../images/img_tipMsg.png') no-repeat; color:#fff; text-align:left;text-indent:10px; line-height:40px; }
+
+.bankContainer {
+	height:auto;
+	overflow:hidden;
+	width:818px;
+	_margin-top:-10px;
+	padding:20px 40px 20px 40px;
+	border:#C70606 solid 1px;
+	border-top:none
+}
+.bankContainer h3 {
+	color:#5d5d5d;
+	font-family: 微软雅黑;
+}
+.bankContainer .bank_list {
+	width:840px;
+	height:150px;
+	overflow:hidden;
+	margin-top:25px;
+}
+.bankContainer .bank_list li {
+	float:left;
+    display:inline;
+	width:165px;
+	margin-left:20px;
+	height: 35px;
+    line-height: 35px;
+	cursor: pointer;
+}
+.bankContainer .bank_list li input {
+	float:left;
+	vertical-align:middle;
+	 margin-right: 8px;
+	 margin-top:5px;
+	 border:0;
+}
+.bankContainer .bank_list li label {
+	float:left;
+	display:block;
+	border:#DADADA solid 1px;
+	height:30px;
+	width:120px;
+	background:url(../images/bank.png) no-repeat;
+	vertical-align:middle
+}
+.bankContainer .bank_list li label.hover,.bankContainer .bank_list li label.checked{ border:#f8a5a7 solid 1px}
+.bankContainer .bank_list li label.bus{width:137px;}
+/*农业银行,农业银行信用卡,农业银行借记卡*/
+.ABC,.ABCCREDIT,.ABCDEBIT{background-position:0px 0px !important;}
+/*北京银行, 北京银行信用卡*/
+.BCCB,.BCCBCREDIT{background-position:0px -60px !important;}
+/*北京农商银行*/
+.BJRCB{background-position:0px -119px !important;}
+/*中国银行,中国银行信用卡*/
+.BOC,.BOCCREDIT{background-position:0px -180px !important;}
+/*交通银行, 交通银行信用卡*/
+.BOCO,.BOCOCREDIT{background-position:0px -240px !important;}
+/*上海银行*/
+.BOSHCREDIT,.SHB{background-position:0px -300px !important;}
+/*渤海银行*/
+.CBHB{background-position:0px -365px !important;}
+/*建设银行*/
+.CCB{background-position:0px -430px !important;}
+/*建设银行,建设银行信用卡,建行借记卡*/
+.CCB,.CCBCREDIT,.CCBDEBIT{background-position:0px -430px !important;}
+/*光大银行, 光大银行借记卡,光大银行信用卡*/
+.CEB,.EBANKDEBIT,.EVERBRIGHTCREDIT{background-position:0px -495px !important;}
+/* 银联*/
+.CHINAPAY{background-position:0px -562px !important;}
+/* 兴业银行,兴业银行信用卡,兴业借记卡*/
+.CIB,.CIBCREDIT,.CIBDEBIT{background-position:0px -600px !important;}
+/* 民生银行,民生银行信用卡,民生借记卡*/
+.CMBC,.CMBCCREDIT,.CMBCDEBIT{background-position:0px -660px !important;}
+/*  招商银行, 招商银行信用卡, 招行专业版*/
+.CMBCHIANDEBIT,.CMBCHINA,.CMBCHINAPRO{background-position:0px -720px !important;}
+/*浙商银行*/
+.CZ{background-position:0px -788px !important;}
+/*中信银行,中信银行信用卡*/
+.ECITIC,.ECITICCREDIT{background-position:0px -849px !important;}
+/*广东发展银行, 广东发展银行信用卡*/
+.CGB,.CGBCREDIT{background-position:0px -913px !important;}
+/*东亚银行*/
+.HKBEA{background-position:0px -980px !important;}
+/*华夏银行,华夏银行信用卡*/
+.HXB,.HXBCREDIT{background-position:0px -1044px !important;}
+/*杭州银行*/
+.HZBANK{background-position:0px -1123px !important;}
+/*工商银行, 工商银行信用卡, 工行借记卡*/
+.ICBC,.ICBCCREDIT,.ICBCDEBIT{background-position:0px -1158px !important;}
+/*锦州银行信用卡*/
+.JINZHOUCREDIT{background-position:0px -1230px !important;}
+/*宁波银行*/
+.NBCB{background-position:0px -1270px !important;}
+/*南洋商业银行*/
+.NCBBANK{background-position:0px -1340px !important;}
+/*南京银行*/
+.NJCB{background-position:0px -1376px !important;}
+/*平安银行, 平安银行信用卡,平安银行借记卡*/
+.PINGANBANK,.PINGANCREDIT,.CPBDEBIT{background-position:0px -1440px !important;}
+/*中国邮政储蓄, 邮政储蓄借记卡*/
+.POST,.PSBCDEBIT{background-position:0px -1503px !important;}
+/*河北银行*/
+.SCCB{background-position:0px -1568px !important;}
+/*深圳发展银行, 深发展银行借记卡*/
+.SDB,.SDBDEBIT{background-position:0px -1600px !important;}
+/*上海农村商业银行,上海农村商业银行, 上海农村商业银行*/
+.SHRCB,.SHRCB,.SRCB{background-position:0px -1672px !important;}
+/*上海浦东发展银行,浦东发展银行信用卡, 浦东发展银行借记卡*/
+.SPDB,.SPDBCREDIT,.SPDDEBIT{background-position:0px -1737px !important;}
+/*浙江泰隆商业银行*/
+.ZJTLCB{background-position:0px -1803px !important;}
+/*恒丰银行*/
+.HF{background-position:0px -1845px !important;}
+/*微钱包*/
+.SINA{background-position:0px -1914px !important;}
+
+
+.moreBank{position:relative; width:800px; margin-left:22px; margin-bottom:35px; _margin-top:18px; border-top:#e34145 solid 1px;}
+.moreBank span{position:absolute; top:0px; right:0px; display:block; width:87px; height:18px; overflow:hidden; background:url(../images/more_bank_btn.png); border-radius:0px 0px 3px 3px; color:#FFF; text-align:center; line-height:18px; cursor:pointer;}
+.moreBank span.hover{background-position:0px -18px;}
+.moreBank span em{font-size:10px; -webkit-text-size-adjust:none;}
+.next_step_btn, .submit_btn {
+	margin:18px 22px
+}
+
+
+
+.form .submit_btn input,.form .submit_btn a{
+	display:inline-block;
+	vertical-align:middle;
+	height:33px;
+	line-height:33px;
+	border:none;
+	background:url(../images/btn_bg.jpg) no-repeat;
+	cursor:pointer;
+	text-align:center;
+	color:#FFF !important;
+	font-weight:bold;
+	font-size:14px
+}
+.form .num2,.form .num4{width:102px;}
+.form .num6{
+	width:133px;
+	background-position:0px -66px;
+}
+.form .num8{
+	width:163px;
+	background-position:0px -132px;
+}
+.form .num10{
+	width:193px;
+  background-position:0px -198px;
+}
+
+.bankContainer .bank_list li label.gzzyzz{background:url(../images/logo.png) no-repeat;}
+.btn{overflow: hidden;}
+.tab,.bankContainer .bank_list li.down label.tab{border:1px solid #2D943E;font-size:14px;font-weight: bold;width: 125px;float: left; line-height: 33px;padding-left:8px;border-bottom:0;background-color:#fff;}
+.tab_list{width:300px;border:1px solid #2D943E;position: absolute;top: 33px;left:22px; z-index: -1;_left: 27px;left: 27px \9;display:none;-webkit-box-shadow: 3px 3px 3px #C9D8CB;-moz-box-shadow: 3px 3px 3px #C9D8CB;box-shadow:3px 3px 3px #C9D8CB;background-color:#fff;}
+.tab{ cursor: pointer;float: left;width: 125px;}
+.bankContainer .bank_list li .tab_list span{width:120px;float:left; padding: 0 10px;line-height: 35px;height:35px;_padding-top:10px;cursor: pointer;}
+.bankContainer .bank li{height:50px;}
+.bankContainer .bank_list li.down label.tab{float:none; width: 120px;padding-left:0;}
+.bank .more_icon{margin-right:10px;}
+.bank .tab_list{_top:31px;left:24px;_left: 32px;}
+.bank .tab_list{ width: 420px;}
+
+.bankContainer .tbCheckInfo{margin-top:18px;width:400px;}
+.tbCheckInfo .leftW{width:250px;}
+.bankContainer .tbCheckInfo .linkImg{ display:block;height:30px; line-height:30px; widht:100px; background:url('../images/icon-quer.png') no-repeat; background-position:left;  text-indent: 20px;color:blue;}
+
+table.global_vtable th {
+    background: none repeat scroll 0 0 #F5FAFA;
+    border: 1px solid #D9D9D9;
+    padding: 7px 0;
+	font-weight: normal;
+}
+table.global_vtable td {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #C5D9DA;
+    padding: 7px 5px;
+}
+.foat_r{float:right;}
+.divNone{display:none;}
+.tagCon ul li.li_none_back{background:none;}
+.name_list .more_li{_margin-top:-8px;}
+
+.help_table_content {border: 1px solid #D9D9D9;text-align: center;}
+.help_table_content td {border: 1px solid #D9D9D9;}
+.help_table_title td{border:0;}
+.MsoNormal{margin-top:10px;}
+
+
+a, a:visited {
+    text-decoration: none !important;
+}
+/*上海农商银行*/
+.SRCB{background-position:0px -1879px !important;}
+
+.yb_logo, .nimlogo {
+    border-right: 1px solid #CCCCCC;
+}
+.hot_line{float:right; height:40px; margin-top:12px; line-height:40px; color:#38B54A;}
+.warn{border:#ffee9f solid 1px; margin-top:5px; background-color:#FFF; padding:1px;}
+.warn p{background: url(../images/r_22.gif) no-repeat 8px center #FFFFCC; padding:6px 28px;}
+.herder_line2{height:3px; background-color:#38B54A; overflow:hidden;}
+.southern_air_logo{margin-bottom:10px;}
+.southern_air_logo a{display:inline-block; height:39px; margin-right:15px; padding-right:15px;}
+
+
+
+
+
+
+
+
+
+/****logo 开始*****/
+/*
+.banner .lf_td{ width:50%;height:40px; text-indent:100px; margin-left:100px;}
+.banner .lf_td span{color: #4B4F52; padding-left: 20px; font-family: 微软雅黑; font-size: 20px;}
+.banner .md_td{ width:40%;height:40px; text-align: right;}
+.banner .rt_td{ text-align:left;}
+.banner .rt_td span {color: #A22E31; font-family: 微软雅黑; font-size: 20px;}*/
+/****logo 结束*****/
+
+
+  /*---提示安装证书---*/
+.caTips{ font-size:14px; background-image:url('../images/tips.png'); background-repeat:no-repeat; background-position: 4px 10px; padding:10px 0px; line-height:25px; text-indent:30px; border: 1px solid #F8BE8A; ; background-color: #F6F2D6;}
+.caTips .title{font-weight: bold;}
+
+/*---提示安装证书---*/
+
+
+  /*---提示框 样式---*/
+.tips{ background-image:url('../images/tips.png'); background-repeat:no-repeat; margin-left:40px; width:230px; height:25px; line-height:25px; text-indent:30px; border: 1px solid #F8BE8A; ; background-color: #F6F2D6; font-size:12px;}
+/*---提示框 样式结束---*/
+
+ /*------显示支付成功-------*/
+ .success{ width:300px; height:182px; margin:20px 500px 20px -10px;_margin:20px 500px 20px 300px; background-image:url('../images/rest1.jpg'); }
+ .success .left_td{ width:100px;height:64px; text-align:right;font-size:14px; }
+ .success .mid_td{width:200px; text-align:left; font-size:14px;}
+ .success .mid_td span{color: #0F7E02; font-size:25px; font-weight:bold; letter-spacing:1px;}
+ /*------显示支付成功-------*/
+
+/*--------返回 样式------*/
+  .reback{width:136px; height:60px; border:none; background-image:url('../images/reback_btn2.jpg'); background-repeat:no-repeat; font-family:微软雅黑; font-size:14px; color:#535353; text-indent:35px; padding-top:9px; }
+/*--------返回 样式------*/
+
+/****会员支付开始*****/
+.main1box{clear: both;margin-left:200px;text-align: center;width: 900px;border: 3px solid #bcccee;}
+#main1 ul{display: none;}
+#main1 ul.block{display: block;}
+
+.ada-tips{background:#F6F2D6 url('../images/adatips.png') no-repeat left center;border:1px solid #F8BE8A;height:40px;line-height:40px;padding-bottom:0px;padding-top:0px;padding-left:30px;}
+/*==========提示信息样式==========*/
+.msgTip{ display:block; width:500px; background-image:url('../images/tips.png'); background-repeat:no-repeat; background-position:left;  text-align:left;  height:25px; line-height:25px; vertical-align:middle; border: 1px solid #F8BE8A; background-color: #F6F2D6; text-indent:25px;  margin-left:80px; _margin-left:-10px; }
+
+
+/*.block{ width:500px;  margin-left:100px; _margin-left:-200px;}*/
+.orderContent{background: #eee; }
+.orderContent .infobox{background: #fff;border:2px solid #ccc;padding: 3px; padding: 10px\9;padding: 3px\0; }
+
+
+/****会员支付输入框结束*****/
+
+/*-----登录------*/
+.left_td{ width:100px;height:30px; text-align:right; margin-right:5px;font-size:14px;}
+.right_td{width:200px;height:30px;}
+.mid_td{width:200px;height:30px; text-align:left; margin-right:5px;font-size:14px; padding-left:0px;}
+.mid_td .input { height: 25px;width: 200px;}
+/*-----登录------*/
+
+ /****橙色支付按钮样式*****/
+.Pay_btn{display: block;text-align: center;padding: 0px 20px; *padding:0px 3px;height:30px;background:#C70606;border:none;border-radius:3px;
+color:#fff;font-size:14px;line-height:30px;font-weight:bold;cursor:pointer;}
+/****按钮样式 结束*****/
+
+
+/* 网银支付弹出层开始*/
+.mydiv
+        {
+
+       display: none;
+	position: absolute;
+	width: 420px;
+	height:auto;
+	border: 1px solid #ddd;
+	z-index:1002;
+	background-color: #fff;
+    box-shadow: 0px 3px 5px rgba(34,25,25,.4);
+    -moz-box-shadow: 0 3px 5px rgba(34,25,25,.4);
+    -webkit-box-shadow: 0 3px 5px rgba(34,25,25,.4);
+    top:35%;
+    left:30%;
+        }
+
+
+.black_overlay
+        {   background:black;filter:alpha(opacity=20);opacity:0.2;position:fixed;_position:absolute;z-index:1000;display:none;
+           top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+
+
+        }
+
+
+
+.mydiv .cont{ padding:20px 0px;}
+.mydiv p{ clear:both; display:block; margin-bottom:10px;}
+.mydiv .btnDiv{ clear:both; display:block; height:auto; margin-bottom:10px;}
+.mydiv input[type="text"] .popupBox input[type="password"] .popupBox textarea { float:left;}
+
+
+.mydiv strong{width:100px; float:left; text-align: right; padding-right: 3px;}
+.mydiv .font{display: block; width: 300px; margin-bottom:10px;float: left; margin-right: 15px; text-align:left;}
+
+.mydiv .top{width:420px; height:45px;}
+.mydiv .topRed{ width:420px; height:45px; background-color:#e23f43;  }
+.mydiv .topRed span{  display:block; float:left; text-align:left; color:White; font-size:14px; line-height:45px; text-indent:20px; font-weight:bold;}
+
+.mydiv .btnClost{ display:block; width:16px;height:16px; background-image:url('../images/closebtnImg.png'); background-repeat:no-repeat; float: right; padding-right: 15px; margin-top:15px;  }
+.mydiv .btnClostRed{ display:block; width:16px;height:16px; background-image:url('../images/closebtnImgRed.png'); background-repeat:no-repeat; float: right; padding-right: 15px; margin-top:15px;  }
+
+/*网银支付弹出层结束 */
+
+
+
+
+
+ /*-------报错页面样式----------------*/
+.errorpg{ width:980px;height:600px; margin:0 auto; background: url('../images/errorbBg.jpg'); background-position: 50%; background-repeat: no-repeat;}
+.errorpg .content{ text-align: left;width:545px; float:right; margin-top: 260px; }
+.errorpg .content .topTitle{ font-family: 微软雅黑; font-size: 30px; color:#ba3309; line-height: 40px;}
+.errorpg .content .ordinaryTitle {font-family: 微软雅黑; font-size: 20px; color:#6f90e7;line-height: 30px;}
+.btnReturn{ display:block; width:90px;height:30px; background: url('../images/btnReturn.png'); background-position: 50%; background-repeat: no-repeat; cursor: pointer; }
+
+
+
+
+/*
+.errorpg .content{ border:0px;  width:850px; height:235px; background-image:url('../images/errorbBg.jpg'); background-repeat:no-repeat; position:50%;margin-top:60px;}
+.content .frm{ padding-top:20px;  text-align:left; padding-left:80px;}
+.content .frm span{ font-size:16px; font-weight:bold; line-height:30px; color:#4B73C5;}
+.content .frm a{color:#4B73C5;}
+ .frm .title{ font-size: 24px; font-weight: bold; color:#E77B33;  margin-top: 10px;}*/
+/*-------报错页面样式 结束---------------*/
+
+
+ /*--------弹出层2样式--------*/
+
+.popupBox  {
+	display: none;
+	position:fixed ;
+	width: 420px;
+	height: auto;
+	border: 1px solid #ddd;
+	z-index:1002;
+	background-color: #fff;
+    box-shadow: 0px 3px 5px rgba(34,25,25,.4);
+    -moz-box-shadow: 0 3px 5px rgba(34,25,25,.4);
+    -webkit-box-shadow: 0 3px 5px rgba(34,25,25,.4);
+}
+
+/*===========*遮罩层=====*/
+.popupMask{background:black;filter:alpha(opacity=20);opacity:0.2;position:fixed;_position:absolute;z-index:1000;top:0px; left:0px;display:none;}
+
+/*===========*遮罩层=====*/
+
+
+.popupBox .cont{ padding:20px 0px 40px 0px;}
+.popupBox p{ clear:both; display:block; margin-bottom:10px;font-size:14px;line-height: 30px;}
+.popupBox input[type="text"], .popupBox input[type="password"], .popupBox textarea { float:left;}
+.popupBox strong{width:80px; float:left; text-align: right; padding-right: 3px;}
+.popupBox .font{display: block; width: 300px; text-align: left;margin-bottom:10px;margin-bottom:5px\9;margin-bottom:10px\0;float: right; margin-right: 15px; }
+.popupBox .top{width:420px; height:35px;}
+.popupBox .topRed{ width:420px; height:45px; background-color:#e23f43;  }
+.popupBox .topRed span{  display:block; float:left; text-align:left; color:White; font-size:14px; line-height:45px; text-indent:20px; font-weight:bold;}
+.popupBox .test{color:#e23f43; font-weight:bold;}
+.popupBox .btnClost{ display:block; width:16px;height:16px; background-image:url('../images/closebtnImg.png'); background-repeat:no-repeat; float: right; padding-right: 15px; margin-top:15px;  }
+.popupBox .btnClostRed{ display:block; width:16px;height:16px; background-image:url('../images/closebtnImgRed.png'); background-repeat:no-repeat; float: right; padding-right: 15px; margin-top:15px;  }
+
+  /*--------弹出层样式2 结束--------*/
+
+.commonBtn,.btn_lfRed,.btn_rtRed{ display:block; float:left; height:30px; border:none; background: url( '../images/btn_common_bgRed.jpg' ); cursor:pointer;}
+.commonBtn
+        {
+           background-repeat:repeat-x; background-position: 0px -30px;
+        }
+.btn_lfRed
+        {
+           background-repeat:no-repeat;
+        }
+ .btn_rtRed
+        {
+           background-repeat:no-repeat; background-position: right -60px; line-height:30px; padding:0px 20px;  font-family:微软雅黑; font-size:14px; color:White;_overflow:visible;
+        }
+ .commonBtn a:hover{color:#fff;}
+
+
+ .submitBtn
+{
+	display:block;
+	text-align:center;
+	border: none;
+	float: left;
+	cursor: pointer;
+	width: 90px;
+	height: 35px;
+	line-height:35px;
+	font-family: 微软雅黑;
+	font-size: 13px;
+	color: White;
+	overflow: hidden;
+	background: url(  '../images/btn_submit.png' );
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+
+.cancelBtn
+{
+	border: none;
+	float: left;
+	cursor: pointer;
+	width: 90px;
+	height: 35px;
+	line-height:35px;
+	text-align:center;
+	font-family: 微软雅黑;
+	font-size: 13px;
+	color:#595757;
+	background: url(  '../images/btn_cancel.png' );
+	background-repeat: no-repeat;
+}
+
+
+  .pageContent{ min-height:550px; height:auto;  padding-top: 10px; padding-bottom: 10px; }
+
+  /*银行卡网银信息样式*/
+ .tablebanking{ border-collapse:collapse; line-height: 24px; margin-top: 10px; }
+.tablebanking td,.tablebanking th{border:1px solid #c9c9c9; }
+.tablebanking thead{background: #f2f2f3; text-align:left; text-indent: 10px; }
+.tablebanking tbody{text-align: center;}
+.tablebanking tfoot{text-align:left; text-indent: 10px;}
+  /*银行卡网银信息样式*/
+
+   /*------显示余额充足-------*/
+  .orderInfo{padding: 20px;}
+  .orderInfo li{ display:block; float:left; height:40px; line-height: 40x;}
+
+.rest{ width:300px; border-collapse:collapse; margin-bottom: 20px; }
+.rest .left_td{ height:30px; text-align:left; line-height:30px;font-size:14px; }
+.rest .mid_td{width:200px;height:30px; text-align:left; line-height:30px;font-size:14px;}
+.rest .mid_td span{ color:#D83E24; font-size:20px; font-weight:bold;}
+
+ .REbtn{display:block; color:#fff; width:90px; height:30px; line-height:30px;background-color: #e44246 ; text-align: center; color:white; font-weight: 700;}
+ .REbtn:hover{color:#fff;}
+
+.WYtips{ widht:350px; height:100px; clear: both;padding-top: 20px; }
+ .WYtips .span1{font-size: 16px; font-weight: 700; font-style:italic; color:#E77B33;}
+ .WYtips .span2{color:#E77B33; font-weight: 700;}
+ .WYtips .div1{float:left;}
+ .WYtips .div2{clear: both;}
+  /*------显示余额充足-------*/
+
+
+
+
+

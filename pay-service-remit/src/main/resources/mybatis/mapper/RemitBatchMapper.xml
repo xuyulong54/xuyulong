@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitBatchDaoImpl">
+
+	<sql id="table"> TBL_REMIT_BATCH </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitBatch">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="TOTAL_NUM" property="totalNum" jdbcType="SMALLINT" />
+		<result column="TOTAL_AMOUNT" property="totalAmount" jdbcType="DECIMAL" />
+		<result column="ACCEPT_SUC_NUM" property="acceptSucNum" jdbcType="SMALLINT" />
+		<result column="ACCEPT_SUC_AMOUNT" property="acceptSucAmount" jdbcType="DECIMAL" />
+		<result column="ACCEPT_FAIL_NUM" property="acceptFailNum" jdbcType="SMALLINT" />
+		<result column="ACCEPT_FAIL_AMOUNT" property="acceptFailAmount" jdbcType="DECIMAL" />
+		<result column="PROCESS_SUC_NUM" property="processSucNum" jdbcType="SMALLINT" />
+		<result column="PROCESS_SUC_AMOUNT" property="processSucAmount" jdbcType="DECIMAL" />
+		<result column="PROCESS_FAIL_NUM" property="processFailNum" jdbcType="SMALLINT" />
+		<result column="PROCESS_FAIL_AMOUNT" property="processFailAmount" jdbcType="DECIMAL" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="ACCEPT_DATE" property="acceptDate" jdbcType="TIMESTAMP" />
+		<result column="PROCESS_DATE" property="processDate" jdbcType="TIMESTAMP" />
+		<result column="CONFIRM" property="confirm" jdbcType="VARCHAR" />
+		<result column="CONFIRM_DATE" property="confirmDate" jdbcType="TIMESTAMP" />
+		<result column="REMIT_CHANNEL_CODE" property="remitChannelCode" jdbcType="VARCHAR" />
+		<result column="IS_AUTO_REMIT" property="isAutoRemit" jdbcType="SMALLINT" />
+		<result column="REMIT_BANK_ACCOUNT_NO" property="remitBankAccountNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, BATCH_NO, STATUS, TOTAL_NUM, TOTAL_AMOUNT, ACCEPT_SUC_NUM, ACCEPT_SUC_AMOUNT,
+		ACCEPT_FAIL_NUM, ACCEPT_FAIL_AMOUNT, PROCESS_SUC_NUM, PROCESS_SUC_AMOUNT, PROCESS_FAIL_NUM,
+		PROCESS_FAIL_AMOUNT, CREATE_DATE, ACCEPT_DATE, PROCESS_DATE , CONFIRM , CONFIRM_DATE, REMIT_CHANNEL_CODE, IS_AUTO_REMIT, REMIT_BANK_ACCOUNT_NO
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="remitBankAccountNo != null and remitBankAccountNo != ''"> and REMIT_BANK_ACCOUNT_NO = #{remitBankAccountNo}</if>
+		<if test="isAutoRemit != null and isAutoRemit != ''"> and IS_AUTO_REMIT = #{isAutoRemit}</if>
+		<if test="batchNo != null and batchNo != ''"> and BATCH_NO = #{batchNo}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="confirm != null and confirm != ''"> and CONFIRM = #{confirm}</if>
+		<if test="confirmDate != null and confirmDate != ''"> and CONFIRM_DATE = #{confirmDate}</if>
+		<if test="recheck != null and recheck != ''"> and BATCH_NO in(SELECT DISTINCT(BATCH_NO) FROM TBL_REMIT_PROCESS WHERE IS_AUTO_PROCESS=101)  </if>
+		<!--创建时间 -->
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and CREATE_DATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitBatch" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, BATCH_NO,
+		STATUS, TOTAL_NUM, TOTAL_AMOUNT,
+		ACCEPT_SUC_NUM, ACCEPT_SUC_AMOUNT, ACCEPT_FAIL_NUM,
+		ACCEPT_FAIL_AMOUNT, PROCESS_SUC_NUM, PROCESS_SUC_AMOUNT,
+		PROCESS_FAIL_NUM, PROCESS_FAIL_AMOUNT,
+		CREATE_DATE,
+		ACCEPT_DATE, PROCESS_DATE, CONFIRM , CONFIRM_DATE, REMIT_CHANNEL_CODE, IS_AUTO_REMIT, 
+		REMIT_BANK_ACCOUNT_NO)
+		values (0, #{batchNo,jdbcType=VARCHAR},
+		#{status,jdbcType=SMALLINT}, #{totalNum,jdbcType=SMALLINT},
+		#{totalAmount,jdbcType=DECIMAL},
+		#{acceptSucNum,jdbcType=SMALLINT}, #{acceptSucAmount,jdbcType=DECIMAL}, #{acceptFailNum,jdbcType=SMALLINT},
+		#{acceptFailAmount,jdbcType=DECIMAL},
+		#{processSucNum,jdbcType=SMALLINT}, #{processSucAmount,jdbcType=DECIMAL},
+		#{processFailNum,jdbcType=SMALLINT}, #{processFailAmount,jdbcType=DECIMAL}, FUN_NOW() ,
+		#{acceptDate,jdbcType=TIMESTAMP},
+		#{processDate,jdbcType=TIMESTAMP}, #{confirm,jdbcType=VARCHAR}, #{confirmDate,jdbcType=TIMESTAMP},
+		#{remitChannelCode,jdbcType=VARCHAR}, #{isAutoRemit,jdbcType=SMALLINT}, 
+		#{remitBankAccountNo,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitBatch">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=SMALLINT}+1,
+		BATCH_NO = #{batchNo,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=SMALLINT},
+		TOTAL_NUM = #{totalNum,jdbcType=SMALLINT},
+		TOTAL_AMOUNT =
+		#{totalAmount,jdbcType=DECIMAL},
+		ACCEPT_SUC_NUM = #{acceptSucNum,jdbcType=SMALLINT},
+		ACCEPT_SUC_AMOUNT = #{acceptSucAmount,jdbcType=DECIMAL},
+		ACCEPT_FAIL_NUM = #{acceptFailNum,jdbcType=SMALLINT},
+		ACCEPT_FAIL_AMOUNT = #{acceptFailAmount,jdbcType=DECIMAL},
+		PROCESS_SUC_NUM = #{processSucNum,jdbcType=SMALLINT},
+		PROCESS_SUC_AMOUNT = #{processSucAmount,jdbcType=DECIMAL},
+		PROCESS_FAIL_NUM =
+		#{processFailNum,jdbcType=SMALLINT},
+		PROCESS_FAIL_AMOUNT = #{processFailAmount,jdbcType=DECIMAL},
+		CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+		ACCEPT_DATE = #{acceptDate,jdbcType=TIMESTAMP},
+		PROCESS_DATE = #{processDate,jdbcType=TIMESTAMP},
+		CONFIRM = #{confirm,jdbcType=VARCHAR},
+		CONFIRM_DATE = #{confirmDate,jdbcType=TIMESTAMP},
+		REMIT_CHANNEL_CODE = #{remitChannelCode,jdbcType=VARCHAR},
+		IS_AUTO_REMIT = #{isAutoRemit,jdbcType=SMALLINT},
+		REMIT_BANK_ACCOUNT_NO = #{remitBankAccountNo,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="merchantPackage" extends="loginPackage">
+		<!-- 商户Action -->
+		<action name="merchant_*" class="wusc.edu.pay.web.boss.action.MerchantAction" method="{1}">
+			<!-- 商户信息列表页面 -->
+			<result name="listMerchant">page/merchant/merchantList.jsp</result>
+			<!-- 商户信息添加页面 -->
+			<result name="addMerchantUI">page/merchant/merchantAdd.jsp</result>
+			<!-- 商户信息修改页面 -->
+			<result name="editMerchantUI">page/merchant/merchantEdit.jsp</result>
+			<!-- 商户详细信息显示页面 -->
+			<result name="viewMerchant">page/merchant/merchantView.jsp</result>
+			<!-- 商户账户信息显示页面 -->
+			<result name="viewMerchantAccount">page/merchant/merchantAccountView.jsp</result>	
+			<!-- 商户银行账户信息显示页面 -->
+			<result name="viewMerchantBankAccount">page/merchant/merchantBankAccountView.jsp</result>	
+			<!-- 商户银行账户添加页面 -->
+			<result name="addMerchantBankAccountUI">page/merchant/merchantBankAccountAdd.jsp</result>
+			
+			<!--商户信息的查找带回，用于在其他依赖于商户信息的模块中选择商户信息进行关联 -->
+			<result name="merchantLookupList">page/merchant/merchantLookupList.jsp</result>
+			
+			<result name="accountBankPageFrag">page/merchant/accountBankPageFrag.jsp</result>
+			<result name="auditNoPassPage">/page/merchant/auditNoPassPage.jsp</result>
+			<result name="changeMerchantStatusUI">/page/merchant/changeMerchantStatusUI.jsp</result>
+			<result name="merchantAuditList">/page/merchant/merchantAuditList.jsp</result>
+			<result name="cellMerchantUI">/page/merchant/cellMerchantUI.jsp</result>
+			
+			<result name="merchantRemindList">/page/merchant/merchantRemindList.jsp</result>
+		</action>
+		
+		<action name="merchantCell_*" class="wusc.edu.pay.web.boss.action.MerchantCellAction" method="{1}">
+			<result name="merchantCellList">/page/merchantCell/cellList.jsp</result>
+			<result name="merchantCellView">/page/merchantCell/cellView.jsp</result>
+		</action>
+		
+		<!-- 商户状态变更（新） -->
+		<action name="userAuditRecordStatus_*" class="wusc.edu.pay.web.boss.action.UserAuditRecordStatusAction" method="{1}">
+			
+			<result name="changeMerchantStatusUI">/page/merchant/changeMerchantStatusUI.jsp</result>
+			
+			<result name="merchantStatusAduitList">/page/merchantStatusAduit/merchantStatusAduitList.jsp</result>
+			<result name="merchantStatusAduitView">/page/merchantStatusAduit/merchantStatusAduitView.jsp</result>
+			
+		</action>
+		
+		<!-- 商户计费设置（挂节点）Action -->
+		<action name="merchantNode_*" class="wusc.edu.pay.web.boss.action.fee.MerchantNodeAction" method="{1}">
+			<result name="merchantNodeList">page/fee/MerchantNodeList.jsp</result>
+			<result name="addMerchantNode">page/fee/MerchantNodeAdd.jsp</result>
+		</action>
+		
+		<!-- 文件管理Action-->
+		<action name="contract_*" class="wusc.edu.pay.web.boss.action.ContractManagementAction" method="{1}">
+			<interceptor-ref name="fileUploadStack"></interceptor-ref>
+			<result name="listContract">page/contract/listContract.jsp</result>
+      		<result name="viewContract">page/contract/viewContract.jsp</result>
+			<result name="addContract">page/contract/addContract.jsp</result>
+			<result name="editContract">page/contract/editContract.jsp</result>
+			<result name="listBankAgreement">page/contract/listBankAgreement.jsp</result>
+			<result name="fileDownLoad">page/contract/merchantFileDownLoad.jsp</result>
+			<result name="merchantLookupList">page/contract/merchantLookupList.jsp</result>
+		</action>
+		
+	</package>
+</struts>

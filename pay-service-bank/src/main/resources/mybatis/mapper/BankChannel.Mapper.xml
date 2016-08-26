@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.bank.dao.impl.BankChannelDaoImpl">
+
+	<sql id="table"> TBL_BANK_BANKCHANNEL </sql>
+
+	<resultMap id="beanMap" type="BankChannel">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="BANKCHANNELCODE" property="bankChannelCode" />
+		<result column="BANKCHANNELNAME" property="bankChannelName" />
+		<result column="BANKNAME" property="bankName" />
+		<result column="BANKCODE" property="bankCode" />
+		<result column="STATUS" property="status" />
+		<result column="LANDINGBANKNAME" property="landingBankName" />
+		<result column="BANKAGREEMENTID" property="bankAgreementId" />
+		<result column="BANKACCOUNTID" property="bankAccountId" />
+		<result column="REMARK" property="remark" />
+		<result column="BANKSEQUENCE" property="bankSequence" />
+		<result column="BANKACCOUNTNAME" property="bankAccountName" />
+		<result column="PROVINCE" property="province" />
+		<result column="CITY" property="city" />
+	</resultMap>
+
+	<!-- 插入语句，10-11注释linktype字段 -->
+	<insert id="insert" parameterType="BankChannel" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME,
+		BANKCHANNELCODE, BANKCHANNELNAME, BANKNAME, BANKCODE, REMARK,BANKAGREEMENTID, BANKACCOUNTID, STATUS, LANDINGBANKNAME)
+		values (0,
+		#{createTime}, #{bankChannelCode},
+		#{bankChannelName}, #{bankName}, #{bankCode}, #{remark},
+		#{bankAgreementId}, #{bankAccountId},
+		#{status},#{landingBankName})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="BankChannel">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			BANKCHANNELCODE = #{bankChannelCode},
+			BANKCHANNELNAME = #{bankChannelName},
+			BANKNAME = #{bankName},
+			BANKCODE =
+			#{bankCode},
+			REMARK = #{remark},
+			STATUS = #{status},
+			LANDINGBANKNAME = #{landingBankName}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select A.* , B.USERNAME AS BANKACCOUNTNAME from
+		<include refid="table" />
+		AS A , TBL_BANK_BANKACCOUNT AS B
+		where A.ID = #{id} AND A.BANKACCOUNTID = B.ID
+	</select>
+
+	<select id="deleteById" parameterType="long" resultType="int">
+		delete from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="deleteChannelByCode" parameterType="string" resultType="int">
+		delete from
+		<include refid="table" />
+		where BANKCHANNELCODE = #{bankChannelCode}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="bankCode != null and bankCode != ''"> and BANKCODE = #{bankCode}</if>
+		<if test="bankAgreementId != null and bankAgreementId != ''"> and BANKAGREEMENTID = #{bankAgreementId}</if>
+		<if test="bankAccountId != null and bankAccountId != ''"> and BANKACCOUNTID = #{bankAccountId}</if>
+		<if test="bankChannelCode != null and bankChannelCode != ''"> and BANKCHANNELCODE = #{bankChannelCode}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="channelName != null and channelName != ''"> and BANKCHANNELNAME = #{channelName}</if>
+		<if test="bankSequence != null and bankSequence != ''"> and C.BANKSEQUENCE = #{bankSequence}</if>
+		<!-- Like query -->
+		<if test="bankName != null and bankName != ''"> and BANKNAME like CONCAT(CONCAT('%', #{bankName}), '%')</if>
+		<if test="bankChannelName != null and bankChannelName != ''"> and BANKCHANNELNAME like CONCAT(CONCAT('%', #{bankChannelName}), '%')</if>
+		<if test="landingBankName != null and landingBankName != ''"> and LANDINGBANKNAME like CONCAT(CONCAT('%', #{landingBankName}), '%')</if>
+		<if test="bankChannelCode2 != null and bankChannelCode2 != ''"> and BANKCHANNELCODE like CONCAT(CONCAT('%', #{bankChannelCode2}), '%')</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		as A , TBL_BANK_BANKAGREEMENT as C
+		<where>
+			<include refid="condition_sql" />
+			and A.BANKAGREEMENTID = C.ID
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		order by BANKCODE asc
+	</select>
+
+	<select id="likeBy" parameterType="java.util.Map" resultType="java.util.Map">
+		select BANKCHANNELCODE as "code", BANKCHANNELCODE as "name", BANKCHANNELNAME as "desc" from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listChannalByAgreementBusType" parameterType="java.util.Map" resultMap="beanMap">
+		select B.* ,A.PROVINCE AS PROVINCE, A.CITY AS CITY from TBL_BANK_BANKAGREEMENT A, TBL_BANK_BANKCHANNEL B,
+		TBL_BANK_BANKACCOUNT C
+		where A.ID = B.BANKAGREEMENTID AND B.BANKACCOUNTID = C.ID
+		AND A.LINKTYPE = #{linkType} and B.BANKAGREEMENTID is not null
+		and B.STATUS = 100 and FUN_NOW() between A.ONLINETIME and
+		A.OFFLINETIME
+		AND C.ACCOUNTNATURE = #{accountNature}
+	</select>
+
+	<select id="isUsableBankChannel" parameterType="string" resultMap="beanMap">
+		SELECT A.* FROM TBL_BANK_BANKCHANNEL AS A , TBL_BANK_BANKAGREEMENT AS B
+		WHERE A.BANKAGREEMENTID = B.ID AND
+		A.BANKCHANNELCODE=#{bankChannelCode}
+		AND A.STATUS = 100 AND FUN_NOW() BETWEEN B.ONLINETIME AND B.OFFLINETIME
+	</select>
+</mapper>

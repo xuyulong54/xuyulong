@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">       
+
+ 	<!-- 账户子系统对外服务接口 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountManagementFacade" id="accountManagementFacade"  check="false" />
+    <dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountTransactionFacade" id="accountTransactionFacade" check="false" />
+    <dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountQueryFacade" id="accountQueryFacade" check="false" />
+    
+   
+</beans>  

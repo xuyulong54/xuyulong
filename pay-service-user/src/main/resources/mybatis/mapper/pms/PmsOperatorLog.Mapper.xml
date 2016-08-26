@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.pms.dao.impl.PmsOperatorLogDaoImpl">
+
+	<!-- Pms权限管理：操作员操作日志表 -->
+	<sql id="pms_operator_log"> TBL_AGENT_PMS_OPERATOR_LOG </sql>
+
+	<resultMap id="beanMap" type="PmsOperatorLog">
+		<id column="ID" property="id" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="OPERATORTYPE" property="operatorType" />
+		<result column="LOGINNAME" property="loginName" />
+		<result column="USERNO" property="userNo" />
+		<result column="TYPE" property="type" />
+		<result column="STATUS" property="status" />
+		<result column="IP" property="ip" />
+		<result column="CONTENT" property="content" />
+	</resultMap>
+
+	<insert id="insert" parameterType="PmsOperatorLog" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_operator_log" />
+		(CREATETIME, OPERATORTYPE, LOGINNAME, USERNO, TYPE, STATUS, IP, CONTENT)
+		values (FUN_NOW(), #{operatorType}, #{loginName}, #{userNo}, #{type},
+		#{status}, #{ip}, #{content})
+	</insert>
+
+	<select id="getById" parameterType="long" resultType="PmsOperatorLog">
+		select 			
+			L.ID as "id",
+			L.CREATETIME as "createTime",
+			L.OPERATORTYPE as "operatorType",
+			L.LOGINNAME as "loginName",
+			L.USERNO as "userNo",
+			L.TYPE as "type",
+			L.STATUS as "status",
+			L.IP as "ip",
+			L.CONTENT as "content" 
+		from <include refid="pms_operator_log" /> L where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<!-- 分页中的foreach中${item}要用美元符，不能用#{item}，这是项目自定过SQL过滤器的原因 -->
+		<if test="operatorTypeList != null and operatorTypeList != ''"> 
+			and L.OPERATORTYPE in
+			<foreach item="item" index="index" collection="operatorTypeList" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		<if test="loginName != null and loginName != ''"> and L.LOGINNAME = #{loginName}</if>
+		<if test="userNo != null and userNo != ''"> and L.USERNO = #{userNo}</if>
+		<if test="type != null and type != ''"> and L.TYPE = #{type}</if>
+		<if test="status != null and status != ''"> and L.STATUS = #{status}</if>
+		<if test="ip != null and ip != ''"> and L.IP = #{ip}</if>
+		<if test="beginDate != null and beginDate != '' and endDate != null and endDate != ''">
+			and L.CREATETIME between #{beginDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultType="PmsOperatorLog">
+		select 
+			L.ID as "id",
+			L.CREATETIME as "createTime",
+			L.OPERATORTYPE as "operatorType",
+			L.LOGINNAME as "loginName",
+			L.USERNO as "userNo",
+			L.TYPE as "type",
+			L.STATUS as "status",
+			L.IP as "ip",
+			L.CONTENT as "content" 
+		from
+		<include refid="pms_operator_log" /> L 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		order by L.ID desc
+	</select>
+
+</mapper>

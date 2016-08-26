@@ -1,0 +1,140 @@
+
+.onLoad
+{
+    background:#E9FFEB url(../images/onLoad.gif) no-repeat 3px 3px;
+    padding-left:25px;
+	font-size: 12px;
+	line-height:22px; 
+	vertical-align:middle;
+} 
+
+
+
+.onCorrect{ 
+	display:inline-block; 
+	height:22px; 
+	background:url(../images/reg-menu.gif) no-repeat 0px -22px; 
+	padding-left:15px; 
+	margin-left:10px; 
+	vertical-align:middle; 
+	padding-right:5px;
+	margin-top:5px;
+	font-size: 12px;
+}
+
+
+.onError .onFocus p
+{
+	list-style-type:none;
+	list-style-image:none;
+	line-height : 2;
+	font-size: 12px;
+}
+.onError .onFocus span
+{
+	color : #000;
+	font-size : 12px  ;
+	
+}
+
+
+.onFocus{ 
+	
+	width:287px; 
+	height:20px; 
+	*height:30px;
+	padding-top:3px; 
+	left:0px;top:0px;
+	padding:0px;
+	margin::0px;
+	font-size : 12px  ;
+}
+
+.onFocus_top
+{
+	
+	display:block;
+	width:253px;
+	padding: 6px 0px 0px 35px;
+    font-size : 12px  ;
+	min-height:15px;
+	_height:10px;
+	background:url(../images/verification-ui6.gif) no-repeat 0px 0;
+}
+.onFocus_bot
+{
+	display:block;
+	width:287px;
+	font-size : 12px  ;
+	height:5px;
+	background:url(../images/verification-ui6.gif) no-repeat 0px -185px;
+	overflow:hidden;
+}
+
+.onShow{ 
+	width:287px; 
+	font-size : 12px  ;
+	height:20px; 
+	padding-top:3px; 
+	left:0px;top:0px;
+	padding:0px;
+	margin::0px;
+	*height:30px;
+}
+
+.onShow_top
+{
+	font-size : 12px  ;
+	display: block;
+	width:253px;
+	padding: 6px 0px 0px 35px;
+	_height: 10px;
+	height: 20px;
+	background: url(../images/verification-ui6.gif) no-repeat 0px 0;
+}
+
+.onShow_bot
+{
+	display:block;
+	width:287px;
+	
+    font-size : 12px  ;
+	height:5px;
+	background:url(../images/verification-ui6.gif) no-repeat 0px -185px;
+	overflow:hidden;
+}
+
+.onError
+{ 
+	width:287px; 
+	height:20px; 
+    font-size : 12px  ;
+	padding-top:3px; 
+	left:0px;top:0px;
+	padding:0px;
+	margin::0px;
+	*height:30px;
+	
+}
+
+.onError_top
+{ 
+	display:block; 
+	width:253px; 
+    font-size : 12px  ;
+	padding: 6px 0px 0px 35px;
+	min-height:15px; 
+	_height:10px; 
+	background:url(../images/verification-ui6.gif) no-repeat 0px -190px;
+
+}
+.onError_bot
+{ 
+	display:block; 
+	width:287px;
+    font-size : 12px  ;
+	height:5px; 
+	background:url(../images/verification-ui6.gif) no-repeat 0px -375px; 
+	overflow:hidden;
+}
+

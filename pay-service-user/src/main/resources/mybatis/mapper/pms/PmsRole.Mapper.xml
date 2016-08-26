@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.pms.dao.impl.PmsRoleDaoImpl">
+
+	<!-- Pms权限管理：角色表 -->
+	<sql id="pms_role"> TBL_AGENT_PMS_ROLE </sql>
+	<sql id="pms_role_action"> TBL_AGENT_PMS_ROLE_ACTION </sql>
+	
+	<resultMap id="beanMap" type="PmsRole">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="ROLETYPE" property="roleType" />
+		<result column="ROLENAME" property="roleName" />
+		<result column="REMARK" property="remark" />
+		<result column="USERNO" property="userNo" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="PmsRole" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_role"/> (VERSION, CREATETIME, ROLETYPE, ROLENAME, REMARK, USERNO) 
+		values (0, FUN_NOW(), #{roleType}, #{roleName}, #{remark}, #{userNo})
+	</insert>
+	
+	<update id="update" parameterType="PmsRole">
+		update <include refid="pms_role"/>
+		<set>
+			VERSION = #{version}+1,
+			ROLETYPE = #{roleType},
+			ROLENAME = #{roleName},
+			REMARK = #{remark},
+			USERNO = #{userNo}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+	
+	<select id="getById" parameterType="long" resultType="PmsRole">
+    	select 
+    		R.ID as "id",
+    		R.VERSION as "version",
+    		R.CREATETIME as "createTime",
+    		R.ROLETYPE as "roleType",
+    		R.ROLENAME as "roleName",
+    		R.REMARK as "remark",
+    		R.USERNO as "userNo"
+    	from <include refid="pms_role"/> R where R.ID = #{id}
+  	</select>
+  	
+  	<select id="getByRoleNameAndUserNo" parameterType="java.util.Map" resultType="PmsRole">
+    	select 
+    		R.ID as "id",
+    		R.VERSION as "version",
+    		R.CREATETIME as "createTime",
+    		R.ROLETYPE as "roleType",
+    		R.ROLENAME as "roleName",
+    		R.REMARK as "remark",
+    		R.USERNO as "userNo"
+    	from <include refid="pms_role"/> R where R.USERNO = #{userNo} and R.ROLENAME = #{roleName}
+  	</select>
+  	
+  	<select id="getByRoleNameAndUserNoNotEqId" parameterType="java.util.Map" resultType="PmsRole">
+    	select 
+    		R.ID as "id",
+    		R.VERSION as "version",
+    		R.CREATETIME as "createTime",
+    		R.ROLETYPE as "roleType",
+    		R.ROLENAME as "roleName",
+    		R.REMARK as "remark",
+    		R.USERNO as "userNo"
+		from <include refid="pms_role"/> R where R.USERNO = #{userNo} and R.ROLENAME = #{roleName} and R.ID != #{id} 
+  	</select>
+  	
+  	<select id="listByRoleTypeAndUserNo" parameterType="java.util.Map" resultType="PmsRole">
+    	select 
+    		R.ID as "id",
+    		R.VERSION as "version",
+    		R.CREATETIME as "createTime",
+    		R.ROLETYPE as "roleType",
+    		R.ROLENAME as "roleName",
+    		R.REMARK as "remark",
+    		R.USERNO as "userNo"
+    	from <include refid="pms_role"/> R 
+    	where R.ROLETYPE = #{roleType} and R.USERNO = #{userNo}
+    	order by R.ID
+  	</select>
+  	
+  	<delete id="deleteById" parameterType="long">
+    	delete from <include refid="pms_role"/> where ID = #{id}
+  	</delete>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="userNo != null and userNo != ''"> and R.USERNO = #{userNo} </if>
+		<if test="roleType != null and roleType != ''"> and R.ROLETYPE = #{roleType} </if>
+		<!-- 分页中的foreach中${item}要用美元符，不能用#{item}，这是项目自定过SQL滤器的原因 -->
+		<if test="roleTypeList != null and roleTypeList != ''"> 
+			and R.ROLETYPE in
+			<foreach item="item" index="index" collection="roleTypeList" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		<!-- Like query -->
+		<if test="roleName != null and roleName != ''"> and R.ROLENAME like CONCAT(CONCAT('%', #{roleName}), '%')</if>
+	</sql>
+	
+	<select id="listPage" parameterType="java.util.Map" resultType="PmsRole">
+		select 
+    		R.ID as "id",
+    		R.VERSION as "version",
+    		R.CREATETIME as "createTime",
+    		R.ROLETYPE as "roleType",
+    		R.ROLENAME as "roleName",
+    		R.REMARK as "remark",
+    		R.USERNO as "userNo"
+		from
+		<include refid="pms_role" /> R
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		order by R.ID desc
+	</select>
+	
+	<select id="listByActionId" parameterType="long" resultType="PmsRole">
+    	select 
+    		R.ID as "id",
+    		R.VERSION as "version",
+    		R.CREATETIME as "createTime",
+    		R.ROLETYPE as "roleType",
+    		R.ROLENAME as "roleName",
+    		R.REMARK as "remark",
+    		R.USERNO as "userNo"
+ 		from <include refid="pms_role"/> R 
+    	left join <include refid="pms_role_action"/> RA on R.ID = RA.ROLEID 
+    	where RA.ACTIONID = #{actionId}
+    	order by R.ID ASC
+  	</select>
+
+</mapper>

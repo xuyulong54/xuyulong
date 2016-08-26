@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<package name="paymentPackage" extends="base">
+
+	<global-results>
+		<result name="error_message">page/error_message.jsp</result>
+		<result name="b2cLogin">page/b2c/loginPayment.jsp</result>
+		<result name="b2bLogin">page/b2b/loginPayment.jsp</result>
+	</global-results>
+		<!-- b2c支付Action -->
+		<action name="gateway_*" class="wusc.edu.pay.gateway.action.b2c.InitPayAction"
+			method="{1}">
+			<!-- 支付网关页面 -->
+			<result name="payGateway">page/b2c/gateway.jsp</result>
+			<result name="loginPayment">page/b2c/loginPayment.jsp</result>
+			<result name="confirmPayment">page/b2c/confirmPayment.jsp</result>
+			<result name="redirect" type="redirectAction">bankPay_execute.action</result>
+		</action>
+		
+		<action name="balancePay_*" class="wusc.edu.pay.gateway.action.b2c.BalancePayAction"  method="{1}">
+			<!-- 使用余额显示页面 -->
+			<result name="confirmPayment">page/b2c/confirmPayment.jsp</result>
+			<result name="bizException">page/error_bizException.jsp</result>
+			<result name="success">page/common/success.jsp</result>
+			<result name="error">page/common/error.jsp</result>
+			<result name="accountBalancePayComplete">balancePay_accountBalancePayComplete.action?token=${token}</result>
+		</action>
+
+		<action name="bankPay_*" class="wusc.edu.pay.gateway.action.b2c.B2CBankCardPayAction" method="{1}">
+			<!-- 重定向到银行网关页面 -->
+			<result name="redirect">page/payment/redirect.jsp</result>
+		</action>
+
+		<!-- 充值action -->
+		<action name="rechargePay_*" class="wusc.edu.pay.gateway.action.recharge.MemberRechargeAction" method="{1}">
+			<!-- 到会员充值网关页面 -->
+			<result name="rechargeGateway">page/recharge/rechargeGateway.jsp</result>
+		</action>
+		
+		<action name="rechargeBankPay_*" class="wusc.edu.pay.gateway.action.recharge.RechargeBankCardPayAction" method="{1}">
+			<!-- 重定向到银行网关页面 -->
+			<result name="redirect">page/payment/redirect.jsp</result>
+			<result name="success">page/common/success.jsp</result>
+			<result name="error">page/common/error.jsp</result>
+		</action>
+		
+		<action name="rechargeBankPaySuccess_*" class="wusc.edu.pay.gateway.action.recharge.RechargeBankPaySuccessAction" method="{1}">
+			<!--充值成功 -->
+			<result name="rechargePaySuccess">page/recharge/rechargePaySuccess.jsp</result>
+			<!--充值错误 -->
+			<result name="rechargePayFalse">page/recharge/rechargePayFalse.jsp</result>
+		</action>
+
+		<action name="bankPaySuccess_*" class="wusc.edu.pay.gateway.action.BankPaySuccessAction" method="{1}">
+			<!--支付成功 -->
+			<result name="bankPaySuccess">page/payment/bankPaySuccess.jsp</result>
+			<!--支付错误bankPayFalse -->
+			<result name="bankPayFalse">page/payment/bankPayFalse.jsp</result>
+		</action>
+		<!-- 支付b2b Action -->
+		<action name="b2bgateway_*" class="wusc.edu.pay.gateway.action.b2b.B2BPayAction"
+			method="{1}">
+			<!-- 支付网关页面 -->
+			<result name="b2bGateway">page/b2b/b2bGateway.jsp</result>
+		</action>
+		
+		<action name="b2bbalancePay_*" class="wusc.edu.pay.gateway.action.b2b.B2BBalancePayAction" method="{1}">
+			<!-- 使用余额显示页面 -->
+			<result name="confirmPayment">page/b2b/confirmPayment.jsp</result>
+			<result name="loginPayment">page/b2b/loginPayment.jsp</result>
+			<result name="success">page/common/success.jsp</result>
+			<result name="accountBalancePayComplete">b2bbalancePay_accountBalancePayComplete.action?token=${token}</result>
+		</action>
+
+		<action name="b2bbankPay_*" class="wusc.edu.pay.gateway.action.b2b.B2BBankCardPayAction" method="{1}">
+			<!-- 重定向到银行网关页面 -->
+			<result name="redirect">page/payment/redirect.jsp</result>
+			<result name="success">page/common/success.jsp</result>
+			<result name="error">page/common/error.jsp</result>
+		</action>
+	</package>
+
+</struts>

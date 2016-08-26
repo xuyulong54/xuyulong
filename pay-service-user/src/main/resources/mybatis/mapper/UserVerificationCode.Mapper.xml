@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserVerificationCodeDaoImpl">
+
+	<sql id="table"> TBL_USER_VERIFICATIONCODE </sql>
+
+	<resultMap id="beanMap" type="UserVerificationCode">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="USER_NO" property="userNo" />
+		<result column="LOGIN_NAME" property="loginName" />
+		<result column="VERIFICATION_TYPE" property="verificationType" />
+		<result column="STATUS" property="status" />
+		<result column="VERIFICATION_CODE" property="verificationCode" />
+		<result column="GENERATE_TIME" property="generateTime" />
+		<result column="MATURITY_TIME" property="maturityTime" />
+		<result column="REMARK" property="remark" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserVerificationCode" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		USER_NO, LOGIN_NAME, VERIFICATION_TYPE, STATUS, VERIFICATION_CODE, GENERATE_TIME, MATURITY_TIME, REMARK)
+		values (0, #{createTime}, #{userNo}, #{loginName}, #{verificationType}, #{status}, #{verificationCode}, #{generateTime}, #{maturityTime} ,#{remark})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserVerificationCode">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			STATUS = #{status}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="userNo != null and userNo != ''"> and USER_NO = #{userNo}</if>
+		<if test="loginName != null and loginName != ''"> and LOGIN_NAME = #{loginName}</if>
+		<if test="verificationType != null and verificationType != ''"> and VERIFICATION_TYPE = #{verificationType}</if>
+		<if test="struts != null and struts != ''"> and STRUTS = #{status}</if>
+	</sql>
+	
+	<select id="getByLoginName" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where LOGIN_NAME = #{loginName} and STATUS = #{status} order by CREATE_TIME desc 
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

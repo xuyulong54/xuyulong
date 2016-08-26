@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserAuditRecordRealNameDaoImpl">
+
+	<sql id="table"> TBL_USER_AUDIT_RECORD_REALNAME </sql>
+
+	<resultMap id="beanMap" type="UserAuditRecordRealName">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="loginName" column="LOGINNAME" />
+		<result property="userNo" column="USERNO" />
+		<result property="fullName" column="FULLNAME" />
+		<result property="userType" column="userType" />
+		<result property="auditStatus" column="AUDITSTATUS" />
+		<result property="applyDesc" column="APPLYDESC" />
+		<result property="auditDesc" column="AUDITDESC" />
+		<result property="auditOperatorLoginName" column="AUDITOPERATORLOGINNAME" />
+		<result property="auditOperatorName" column="AUDITOPERATORNAME" />
+		<result property="dealTime" column="DEALTIME" />
+		<result property="realName" column="REALNAME" />
+		<result property="cardNo" column="CARDNO" />
+		<result property="cardFrontPath" column="CARDFRONTPATH" />
+		<result property="cardBackPath" column="CARDBACKPATH" />
+		<result property="cardNoValid" column="CARDNOVALID" />
+		<result property="applyOperatorLoginName" column="APPLYOPERATORLOGINNAME" />
+		<result property="applyOperatorName" column="APPLYOPERATORNAME" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserAuditRecordRealName" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME,LOGINNAME, USERNO,fullName,
+		userType,AUDITSTATUS, APPLYDESC,AUDITDESC,AUDITOPERATORLOGINNAME,
+		AUDITOPERATORNAME,DEALTIME,REALNAME,CARDNO,CARDFRONTPATH,
+		CARDBACKPATH,CARDNOVALID,APPLYOPERATORLOGINNAME,APPLYOPERATORNAME
+		)
+		values (0, #{createTime},#{loginName},#{userNo},#{fullName},
+		#{userType},
+		#{auditStatus},#{applyDesc},#{auditDesc},#{auditOperatorLoginName},
+		#{auditOperatorName},#{dealTime},#{realName},#{cardNo},#{cardFrontPath},
+		#{cardBackPath},#{cardNoValid},
+		#{applyOperatorLoginName},#{applyOperatorName}
+		)
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserAuditRecordRealName">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1,
+			AUDITSTATUS = #{auditStatus},
+			APPLYDESC = #{applyDesc},
+			AUDITDESC = #{auditDesc},
+			AUDITOPERATORLOGINNAME = #{auditOperatorLoginName},
+			AUDITOPERATORNAME =
+			#{auditOperatorName},
+			REALNAME = #{realName},
+			CARDNO = #{cardNo},
+			CARDFRONTPATH = #{cardFrontPath},
+			CARDBACKPATH = #{cardBackPath},
+			CARDNOVALID = #{cardNoValid},
+			DEALTIME = FUN_NOW()
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<delete id="deleteById" parameterType="long">
+		delete
+		<include refid="table" />
+		where ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="loginName != null and loginName !='' "> and LOGINNAME = #{loginName}</if>
+		<if test="fullName != null and fullName !='' "> and FULLNAME = #{fullName}</if>
+		<if test="userType != null and userType !='' "> and USERTYPE = #{userType}</if>
+		<if test="userNo != null and userNo !='' "> AND USERNO = #{userNo}</if>
+		<if test="realName != null and realName !='' "> AND REALNAME = #{realName}</if>
+		<if test="cardNo != null and cardNo !='' "> AND CARDNO = #{cardNo}</if>
+		<if test="auditStatus != null and auditStatus !='' "> and AUDITSTATUS = #{auditStatus}</if>
+		<if test="auditOperatorName != null and auditOperatorName !='' "> and AUDITOPERATORNAME = #{auditOperatorName}</if>
+		<if test="applyOperatorLoginName != null and applyOperatorLoginName !='' "> and APPLYOPERATORLOGINNAME = #{applyOperatorLoginName}</if>
+
+		<if test="beginDate != null and beginDate != null and endDate != '' and endDate != ''">
+			and CREATETIME between #{beginDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+
+</mapper>

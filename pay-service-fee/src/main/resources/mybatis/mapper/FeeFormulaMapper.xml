@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.fee.dao.impl.FeeFormulaDaoImpl">
+
+	<sql id="table"> TBL_FEE_FORMULA </sql>
+
+	<resultMap id="beanMap" type="FeeFormula">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="calculateWayId" column="CALCULATE_WAY_ID" />
+		<result property="formulaType" column="FORMULA_TYPE" />
+		<result property="fixedFee" column="FIXED_FEE" />
+		<result property="percentFee" column="PERCENT_FEE" />
+		<result property="singleMinFee" column="SINGLE_MIN_FEE" />
+		<result property="singleMaxFee" column="SINGLE_MAX_FEE" />
+		<result property="minLadderAmount" column="MIN_LADDER_AMOUNT" />
+		<result property="maxLadderAmount" column="MAX_LADDER_AMOUNT" />
+		<result property="minAmount" column="MIN_AMOUNT" />
+		<result property="maxAmount" column="MAX_AMOUNT" />
+		<result property="status" column="STATUS" />
+	</resultMap>
+
+	<insert id="insert" parameterType="FeeFormula" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, CALCULATE_WAY_ID, FORMULA_TYPE, FIXED_FEE, PERCENT_FEE, SINGLE_MIN_FEE, SINGLE_MAX_FEE,
+		MIN_LADDER_AMOUNT,MAX_LADDER_AMOUNT,MIN_AMOUNT,MAX_AMOUNT,STATUS)
+		values (0,
+		#{createTime}, #{calculateWayId}, #{formulaType}, #{fixedFee}, #{percentFee},
+		#{singleMinFee}, #{singleMaxFee},
+		#{minLadderAmount},
+		#{maxLadderAmount}, #{minAmount}, #{maxAmount}, #{status})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="FeeFormula">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			CALCULATE_WAY_ID = #{calculateWayId},
+			FORMULA_TYPE = #{formulaType},
+			FIXED_FEE = #{fixedFee},
+			PERCENT_FEE = #{percentFee},
+			SINGLE_MIN_FEE = #{singleMinFee},
+			SINGLE_MAX_FEE =
+			#{singleMaxFee},
+			MIN_LADDER_AMOUNT = #{minLadderAmount},
+			MAX_LADDER_AMOUNT = #{maxLadderAmount},
+			MIN_AMOUNT = #{minAmount},
+			MAX_AMOUNT = #{maxAmount},
+			STATUS = #{status}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="calculateWayId != null and calculateWayId !='' "> and CALCULATE_WAY_ID = #{calculateWayId}</if>
+		<if test="formulaType != null and formulaType !='' "> and FORMULA_TYPE = #{formulaType}</if>
+		<if test="fixedFee != null and fixedFee !='' "> and FIXED_FEE = #{fixedFee}</if>
+		<if test="percentFee != null and percentFee !='' "> and PERCENT_FEE = #{percentFee}</if>
+		<if test="singleMinFee != null and singleMinFee !='' "> and SINGLE_MIN_FEE = #{singleMinFee}</if>
+		<if test="singleMaxFee != null and singleMaxFee !='' "> and SINGLE_MAX_FEE = #{singleMaxFee}</if>
+		<if test="minLadderAmount != null and minLadderAmount !='' "> and MIN_LADDER_AMOUNT = #{minLadderAmount}</if>
+		<if test="maxLadderAmount != null and maxLadderAmount !='' "> and MAX_LADDER_AMOUNT = #{maxLadderAmount}</if>
+		<if test="minAmount != null and minAmount !='' "> and MIN_AMOUNT = #{minAmount}</if>
+		<if test="maxAmount != null and maxAmount !='' "> and MAX_AMOUNT = #{maxAmount}</if>
+		<if test="status != null and status !='' "> and STATUS = #{status}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<!-- 检查公式是否唯一 -->
+	<select id="checkUnique" parameterType="FeeFormula" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listByCalWayId" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			CALCULATE_WAY_ID = #{calWayId}
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="getFeeFormulas" parameterType="java.util.Map" resultMap="beanMap">
+		SELECT
+		ID,
+		VERSION,
+		CALCULATE_WAY_ID,
+		FORMULA_TYPE,
+		FIXED_FEE,
+		PERCENT_FEE,
+		SINGLE_MIN_FEE,
+		SINGLE_MAX_FEE,
+		MIN_LADDER_AMOUNT,
+		MAX_LADDER_AMOUNT,
+		MIN_AMOUNT,
+		MAX_AMOUNT,
+		STATUS
+		FROM TBL_FEE_FORMULA
+		WHERE
+		STATUS=100
+		AND
+		CALCULATE_WAY_ID
+		IN(
+		SELECT
+		calWay.ID
+		FROM
+		TBL_FEE_CALCULATE_WAY calWay
+		WHERE
+		<![CDATA[calWay.EFFECTIVE_DATE_START <= #{transferDate}
+		and
+		(calWay.EFFECTIVE_DATE_END >= #{transferDate} or calWay.EFFECTIVE_DATE_END is null)
+		)]]>
+	</select>
+
+</mapper>

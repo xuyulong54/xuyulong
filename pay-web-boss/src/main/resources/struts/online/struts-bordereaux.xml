@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="bordereauxPackg" extends="loginPackage">
+		<action name="bordereaux_*" class="wusc.edu.pay.web.boss.action.BordereauxAction" method="{1}">
+			<result name="merchantBordereauxList">page/bordereaux/merchantBordereauxList.jsp</result>
+			<result name="memberBordereauxList">page/bordereaux/memberBordereauxList.jsp</result>
+			<result name="paymentRecordBordereauxList">page/bordereaux/paymentRecordBordereauxList.jsp</result>
+			<result name="refundRecordBordereauxList">page/bordereaux/refundRecordBordereauxList.jsp</result>
+			<result name="transferRecordBordereauxList">page/bordereaux/transferRecordBordereauxList.jsp</result>
+			<result name="settlementRecordBordereauxList">page/bordereaux/settlementRecordBordereauxList.jsp</result>
+			<result name="merchantLookupList">page/bordereaux/merchantLookupList.jsp</result>
+			<result name="memberLookupList">page/bordereaux/memberLookupList.jsp</result>
+			<result name="calCostInterfaceListLookupList">page/bordereaux/calCostInterfaceListLookupList.jsp</result>
+		</action>
+	</package>
+</struts>

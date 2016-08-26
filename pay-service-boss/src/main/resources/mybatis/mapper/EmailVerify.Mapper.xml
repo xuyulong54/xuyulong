@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.boss.dao.impl.EmailVerifyDaoImpl">
+
+	<sql id="table"> TBL_BOSS_EMAIL_VERIFY </sql>
+
+	<resultMap id="beanMap" type="EmailVerify">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="VALIDTIME" property="validTime" />
+		<result column="TOKEN" property="token" />
+		<result column="TYPE" property="type" />
+		<result column="STATUS" property="status" />
+		<result column="USERNO" property="userNo" />
+		<result column="USERTYPE" property="userType" />
+		<result column="TOEMAIL" property="toEmail" />
+	</resultMap>
+
+	<insert id="insert" parameterType="EmailVerify" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, VALIDTIME, TOKEN, TYPE, STATUS, USERNO, USERTYPE, TOEMAIL)
+		values (0, #{createTime}, #{validTime}, #{token}, #{type}, #{status}, #{userNo}, #{userType}, #{toEmail})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="EmailVerify">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			VALIDTIME = #{validTime},
+			STATUS = #{status}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<update id="updateStatus" parameterType="java.util.Map">
+		update
+		<include refid="table" />
+		<set>
+			STATUS = #{status}
+		</set>
+		<where>
+			<![CDATA[ TYPE =#{type} and USERNO = #{userNo} and USERTYPE=#{userType} and TOKEN <> #{token}]]>
+		</where>
+	</update>
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="getByToken" parameterType="string" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where TOKEN = #{token}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="token != null and token != ''"> and TOKEN = #{token}</if>
+		<if test="type != null and type != ''"> and TYPE = #{type}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="userNo != null and userNo != ''"> and USERNO = #{userNo}</if>
+		<if test="userType != null and userType != ''"> and USERTYPE = #{userType}</if>
+		<if test="toEmail != null and toEmail != ''"> and TOEMAIL = #{toEmail}</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

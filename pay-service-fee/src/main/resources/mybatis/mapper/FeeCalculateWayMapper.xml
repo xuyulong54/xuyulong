@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.fee.dao.impl.FeeCalculateWayDaoImpl">
+
+	<sql id="table"> TBL_FEE_CALCULATE_WAY </sql>
+
+	<resultMap id="beanMap" type="FeeCalculateWay">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="feeDimensionId" column="FEE_DIMENSION_ID" />
+		<result property="isRefundFee" column="ISREFUND_FEE" />
+		<result property="calculateType" column="CALCULATE_TYPE" />
+		<result property="chargeType" column="CHARGE_TYPE" />
+		<result property="feeRole" column="FEE_ROLE" />
+		<result property="feeFreeAmount" column="FEE_FREE_AMOUNT" />
+		<result property="effectiveDateStart" column="EFFECTIVEDATE_START" />
+		<result property="effectiveDateEnd" column="EFFECTIVE_DATE_END" />
+		<result property="billCycleType" column="BILL_CYCLE_TYPE" />
+		<result property="customizeBillCycleType" column="CUSTOMIZE_BILL_CYCLE_TYPE" />
+		<result property="customizeBillDay" column="CUSTOMIZE_BILL_DAY" />
+		<result property="isDelete" column="ISDELETE" />
+		<result property="modifyTime" column="MODIFYTIME" />
+		<result property="ladderCycleType" column="LADDER_CYCLE_TYPE" />
+		<result property="customizeCycleType" column="CUSTOMIZE_CYCLE_TYPE" />
+		<result property="customizeDay" column="CUSTOMERIZE_DAY" />
+		<result property="ladderName" column="LADDER_NAME" />
+    <result property="isRound" column="IS_ROUND" />
+	</resultMap>
+
+	<resultMap id="FeeCalWayAndDimensionDTOMap" type="wusc.edu.pay.facade.fee.dto.FeeCalWayAndDimensionDTO">
+		<result property="calculateWayId" column="ID" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="feeDimensionId" column="FEE_DIMENSION_ID" />
+		<result property="isRefundFee" column="ISREFUND_FEE" />
+		<result property="calculateType" column="CALCULATE_TYPE" />
+		<result property="chargeType" column="CHARGE_TYPE" />
+		<result property="feeRole" column="FEE_ROLE" />
+		<result property="feeFreeAmount" column="FEE_FREE_AMOUNT" />
+		<result property="effectiveDateStart" column="EFFECTIVEDATE_START" />
+		<result property="effectiveDateEnd" column="EFFECTIVE_DATE_END" />
+		<result property="billCycleType" column="BILL_CYCLE_TYPE" />
+		<result property="customizeBillCycleType" column="CUSTOMIZE_BILL_CYCLE_TYPE" />
+		<result property="customizeBillDay" column="CUSTOMIZE_BILL_DAY" />
+		<result property="isDelete" column="ISDELETE" />
+		<result property="modifyTime" column="MODIFYTIME" />
+		<result property="ladderCycleType" column="LADDER_CYCLE_TYPE" />
+		<result property="customizeCycleType" column="CUSTOMIZE_CYCLE_TYPE" />
+		<result property="customizeDay" column="CUSTOMERIZE_DAY" />
+		<result property="ladderName" column="LADDER_NAME" />
+    <result property="isRound" column="IS_ROUND" />
+
+		<result property="payProduct" column="PAY_PRODUCT" />
+		<result property="frpCode" column="FRP_CODE" />
+		<result property="bankChannelCode" column="BANK_CHANNEL_CODE" />
+		<result property="payProductName" column="PAY_PRODUCT_NAME" />
+		<result property="nodeName" column="NODE_NAME" />
+	</resultMap>
+
+	<insert id="insert" parameterType="FeeCalculateWay" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, FEE_DIMENSION_ID, ISREFUND_FEE, CALCULATE_TYPE, CHARGE_TYPE, FEE_ROLE, FEE_FREE_AMOUNT,
+		EFFECTIVEDATE_START,EFFECTIVE_DATE_END,BILL_CYCLE_TYPE,
+		CUSTOMIZE_BILL_CYCLE_TYPE,CUSTOMIZE_BILL_DAY,ISDELETE,MODIFYTIME,
+		LADDER_CYCLE_TYPE,CUSTOMIZE_CYCLE_TYPE,CUSTOMERIZE_DAY,LADDER_NAME,IS_ROUND)
+		values (0, #{createTime},
+		#{feeDimensionId}, #{isRefundFee},
+		#{calculateType}, #{chargeType}, #{feeRole}, #{feeFreeAmount},
+		#{effectiveDateStart},
+		#{effectiveDateEnd}, #{billCycleType}, #{customizeBillCycleType},
+		#{customizeBillDay}, #{isDelete}, #{modifyTime},
+		#{ladderCycleType}, #{customizeCycleType}, #{customizeDay},#{ladderName},#{isRound}
+
+		)
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="FeeCalculateWay">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			FEE_DIMENSION_ID = #{feeDimensionId},
+			ISREFUND_FEE = #{isRefundFee} ,
+			CALCULATE_TYPE = #{calculateType} ,
+			FEE_ROLE = #{feeRole},
+			CHARGE_TYPE =
+			#{chargeType} ,
+			FEE_FREE_AMOUNT
+			= #{feeFreeAmount} ,
+			EFFECTIVEDATE_START = #{effectiveDateStart},
+			EFFECTIVE_DATE_END =
+			#{effectiveDateEnd},
+			BILL_CYCLE_TYPE = #{billCycleType},
+			CUSTOMIZE_BILL_CYCLE_TYPE = #{customizeBillCycleType} ,
+			CUSTOMIZE_BILL_DAY = #{customizeBillDay} ,
+			ISDELETE = #{isDelete},
+			MODIFYTIME = #{modifyTime},
+			LADDER_CYCLE_TYPE = #{ladderCycleType},
+			CUSTOMIZE_CYCLE_TYPE = #{customizeCycleType},
+			CUSTOMERIZE_DAY =
+			#{customizeDay},
+			LADDER_NAME = #{ladderName}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test=" calculateType!= null and calculateType !='' "> and CALCULATE_TYPE = #{calculateType}</if>
+		<if test=" chargeType!= null and chargeType !='' "> and CHARGE_TYPE = #{chargeType}</if>
+		<if test=" feeRole!= null and feeRole !='' "> and FEE_ROLE = #{feeRole}</if>
+		<if test=" feeDimensionId != null and feeDimensionId !='' "> and FEE_DIMENSION_ID = #{feeDimensionId}</if>
+		<if test=" isRefundFee == true"> and ISREFUND_FEE = 1 </if>
+		<if test=" isRefundFee == false"> and ISREFUND_FEE = 0 </if>
+		<if test=" isDelete == true"> and ISDELETE = 1 </if>
+		<if test=" isDelete == false"> and ISDELETE = 0 </if>
+		<if test=" feeFreeAmount != null and feeFreeAmount !='' "> and FEE_FREE_AMOUNT = #{feeFreeAmount}</if>
+		<if test=" effectiveDateStart != null and effectiveDateStart !='' "> and EFFECTIVEDATE_START = #{effectiveDateStart}</if>
+		<if test=" effectiveDateEnd != null and effectiveDateEnd !='' "> and EFFECTIVE_DATE_END = #{effectiveDateEnd}</if>
+		<if test=" ladderCycleType != null and ladderCycleType !='' "> and LADDER_CYCLE_TYPE = #{ladderCycleType}</if>
+		<if test=" customizeCycleType != null and customizeCycleType !='' "> and CUSTOMIZE_CYCLE_TYPE = #{customizeCycleType}</if>
+		<if test=" customizeDay != null and customizeDay !='' "> and CUSTOMERIZE_DAY = #{customizeDay}</if>
+		<if test=" nodeName != null and nodeName !='' ">
+			and NODE_NAME LIKE
+	<![CDATA[ CONCAT('%', CONCAT(#{nodeName},'%')) ]]>
+		</if>
+	</sql>
+
+	<select id="listDimensionAndCalWay" parameterType="java.util.Map" resultMap="FeeCalWayAndDimensionDTOMap">
+		select
+		FEE_DIMENSION_ID, ISREFUND_FEE, CALCULATE_TYPE, CHARGE_TYPE, FEE_ROLE, FEE_FREE_AMOUNT,
+		EFFECTIVEDATE_START,EFFECTIVE_DATE_END,BILL_CYCLE_TYPE,
+		CUSTOMIZE_BILL_CYCLE_TYPE,CUSTOMIZE_BILL_DAY,ISDELETE,MODIFYTIME,
+		LADDER_CYCLE_TYPE,CUSTOMIZE_CYCLE_TYPE,CUSTOMERIZE_DAY,LADDER_NAME,
+		PAY_PRODUCT, FRP_CODE, BANK_CHANNEL_CODE, PAY_PRODUCT_NAME,
+		TBL_FEE_CALCULATE_WAY.ID as ID,
+		TBL_FEE_CALCULATE_WAY.CREATETIME as
+		CREATETIME,
+		TBL_FEE_NODE.NODE_NAME as NODE_NAME
+		from TBL_FEE_CALCULATE_WAY
+		JOIN
+		(TBL_FEE_DIMENSION
+		INNER JOIN TBL_FEE_NODE
+		on
+		TBL_FEE_DIMENSION.FEE_NODE_ID = TBL_FEE_NODE.ID
+		)
+		ON
+		TBL_FEE_CALCULATE_WAY.FEE_DIMENSION_ID=TBL_FEE_DIMENSION.ID
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by NODE_NAME asc,PAY_PRODUCT asc]]>
+	</select>
+
+	<select id="listDimensionAndCalWayPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1)
+		from TBL_FEE_CALCULATE_WAY
+		JOIN
+		(TBL_FEE_DIMENSION
+		INNER JOIN TBL_FEE_NODE
+		on TBL_FEE_DIMENSION.FEE_NODE_ID = TBL_FEE_NODE.ID
+		)
+		ON
+		TBL_FEE_CALCULATE_WAY.FEE_DIMENSION_ID=TBL_FEE_DIMENSION.ID
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+
+	<!-- 按费率维度查询计费方式 -->
+	<select id="queryCalculateWayByFeeDimensionId" parameterType="java.util.Map" resultType="list" resultMap="beanMap">
+		SELECT *FROM
+		<include refid="table" />
+		WHERE
+		FEE_DIMENSION_ID = #{dimensionId}
+		and
+		ISDELETE = 0
+		and
+    			<![CDATA[#{date}>=EFFECTIVEDATE_START  AND (EFFECTIVE_DATE_END >= #{date} or EFFECTIVE_DATE_END is null)]]>
+	</select>
+
+	<!-- 检查是否唯一。。条件查询所有 -->
+	<select id="checkUnique" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

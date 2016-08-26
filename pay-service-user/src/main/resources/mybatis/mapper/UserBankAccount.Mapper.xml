@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserBankAccountDaoImpl">
+
+	<sql id="table"> TBL_USER_BANK_ACCOUNT </sql>
+
+	<resultMap id="beanMap" type="UserBankAccount">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="loginName" column="LOGINNAME" />
+		<result property="userNo" column="USERNO" />
+		<result property="bankName" column="BANKNAME" />
+		<result property="bankCode" column="BANKCODE" />
+		<result property="bankAccountName" column="BANKACCOUNTNAME" />
+		<result property="bankAccountNo" column="BANKACCOUNTNO" />
+		<result property="contractNo" column="CONTRACTNO" />
+		<result property="bankAccountType" column="BANKACCOUNTTYPE" />
+		<result property="isAuth" column="ISAUTH" />
+		<result property="authTime" column="AUTHTIME" />
+		<result property="cardType" column="CARDTYPE" />
+		<result property="cardNo" column="CARDNO" />
+		<result property="mobileNo" column="MOBILENO" />
+		<result property="lastTime" column="LASTTIME" />
+		<result property="isDelete" column="ISDELETE" />
+		<result property="isDefault" column="ISDEFAULT" />
+		<result property="province" column="PROVINCE" />
+		<result property="city" column="CITY" />
+		<result property="bankAccountAddress" column="BANKACCOUNTADDRESS" />
+		<result property="bankChannelNo" column="BANKCHANNELNO" />
+		<result property="remark" column="REMARK" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserBankAccount" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME,LOGINNAME, USERNO,BANKNAME,
+		BANKCODE,
+		BANKACCOUNTNAME, BANKACCOUNTNO,CONTRACTNO,BANKACCOUNTTYPE,
+		ISAUTH,AUTHTIME,CARDTYPE,CARDNO,MOBILENO,
+		LASTTIME,ISDELETE,ISDEFAULT,
+		PROVINCE,CITY,BANKACCOUNTADDRESS,BANKCHANNELNO,REMARK
+		)
+		values (0, #{createTime},#{loginName},#{userNo},#{bankName},
+		#{bankCode}, #{bankAccountName},#{bankAccountNo},#{contractNo},
+		#{bankAccountType},
+		#{isAuth},#{authTime},#{cardType},#{cardNo},#{mobileNo},
+		#{lastTime}, #{isDelete}, #{isDefault},
+		#{province}, #{city}, #{bankAccountAddress},#{bankChannelNo},#{remark} )
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserBankAccount">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1,
+			ISAUTH = #{isAuth},
+			ISDELETE = #{isDelete},
+			ISDEFAULT = #{isDefault},
+			BANKACCOUNTNO = #{bankAccountNo},
+			CONTRACTNO = #{contractNo},
+			lastTime =
+			FUN_NOW(),
+			province=#{province},
+			city=#{city},
+			bankAccountType=#{bankAccountType},
+			bankName=#{bankName},
+			bankCode=#{bankCode},
+			BANKACCOUNTADDRESS=#{bankAccountAddress},
+			BANKCHANNELNO=#{bankChannelNo},
+			bankAccountName = #{bankAccountName},
+			remark = #{remark},
+			USERNO = #{userNo}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+	
+	<!-- 修改授权状态根据银行卡账号、用户名、身份证号 -->
+	<update id="updateAuthStatusByUserNameAndAccountNo">
+		update
+		<include refid="table" />
+		<set>
+			ISAUTH = #{isAuth}
+		</set>
+		<where>
+			bankAccountName = #{bankAccountName} and BANKACCOUNTNO = #{bankAccountNo} and  CARDNO = #{cardNo}
+		</where>
+	</update>
+
+	<delete id="deleteById" parameterType="long">
+		delete
+		<include refid="table" />
+		where ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="loginName != null and loginName !='' "> and LOGINNAME = #{loginName}</if>
+		<if test="bankName != null and bankName !='' "> and BANKNAME = #{bankName}</if>
+		<if test="bankCode != null and bankCode !='' "> and BANKCODE = #{bankCode}</if>
+		<if test="bankAccountNo != null and bankAccountNo !='' "> AND BANKACCOUNTNO = #{bankAccountNo}</if>
+		<if test="contractNo != null and contractNo !='' "> and CONTRACTNO = #{contractNo}</if>
+		<if test="isAuth != null and isAuth !='' "> and ISAUTH = #{isAuth}</if>
+		<if test="cardType != null and cardType !='' "> and CARDTYPE = #{cardType}</if>
+		<if test="cardNo != null and cardNo !='' "> and CARDNO = #{cardNo}</if>
+		<if test="mobileNo != null and mobileNo !='' "> and MOBILENO = #{mobileNo}</if>
+		<if test="userNo != null and userNo !='' "> and USERNO = #{userNo}</if>
+		<if test="isDelete != null and isDelete !='' "> and ISDELETE = #{isDelete}</if>
+		<if test="isDefault != null and isDefault !='' "> and ISDEFAULT = #{isDefault}</if>
+		<if test="bankAccountType != null and bankAccountType !='' "> and BANKACCOUNTTYPE = #{bankAccountType}</if>
+		<if test="bankChannelNo != null and bankChannelNo !='' "> and BANKCHANNELNO = #{bankChannelNo}</if>
+		<if test="remark != null and remark !='' "> and REMARK = #{remark}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+
+</mapper>

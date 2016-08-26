@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.cost.dao.impl.CalFeeFlowDaoImpl">
+	<sql id="table"> TBL_CAL_FEE_FLOW </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.cost.entity.CalFeeFlow">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="FEE_WAY_ID" property="feeWayId" jdbcType="BIGINT" />
+		<result column="BEGIN_DATE" property="beginDate" jdbcType="DATE" />
+		<result column="END_DATE" property="endDate" jdbcType="DATE" />
+		<result column="TOTAL_AMOUNT" property="totalAmount" jdbcType="DECIMAL" />
+		<result column="THIS_AMOUNT" property="thisAmount" jdbcType="DECIMAL" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="feeWayId != null and feeWayId != ''"> and FEE_WAY_ID = #{feeWayId}</if>
+	</sql>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, FEE_WAY_ID, BEGIN_DATE, END_DATE, TOTAL_AMOUNT, THIS_AMOUNT, CREATE_TIME,
+		MODIFY_TIME
+	</sql>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from TBL_CAL_FEE_FLOW
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from TBL_CAL_FEE_FLOW
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.cost.entity.CalFeeFlow">
+		insert into TBL_CAL_FEE_FLOW (VERSION, FEE_WAY_ID,
+		BEGIN_DATE, END_DATE, TOTAL_AMOUNT,
+		THIS_AMOUNT, CREATE_TIME, MODIFY_TIME
+		)
+		values (0, #{feeWayId,jdbcType=BIGINT},
+		#{beginDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, #{totalAmount,jdbcType=DECIMAL},
+		#{thisAmount,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+
+	<update id="update" parameterType="wusc.edu.pay.facade.cost.entity.CalFeeFlow">
+		update TBL_CAL_FEE_FLOW
+		<set>
+			VERSION = #{version}+1 ,
+			<if test="feeWayId != null">
+				FEE_WAY_ID = #{feeWayId,jdbcType=BIGINT},
+			</if>
+			<if test="beginDate != null">
+				BEGIN_DATE = #{beginDate,jdbcType=DATE},
+			</if>
+			<if test="endDate != null">
+				END_DATE = #{endDate,jdbcType=DATE},
+			</if>
+			<if test="totalAmount != null">
+				TOTAL_AMOUNT = #{totalAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="thisAmount != null">
+				THIS_AMOUNT = #{thisAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+
+</mapper>

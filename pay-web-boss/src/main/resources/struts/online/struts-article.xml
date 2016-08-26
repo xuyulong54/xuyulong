@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="article" extends="loginPackage">
+		<!-- 销售人员管理Action -->
+		<action name="article_*" class="wusc.edu.pay.web.boss.action.ArticleAction" method="{1}">
+			<interceptor-ref name="fileUploadStack"></interceptor-ref>
+			<result name="list">page/article/list.jsp</result>
+			<result name="add">page/article/add.jsp</result>
+			<result name="view">/page/article/view.jsp</result>
+		</action>
+	</package>
+</struts>

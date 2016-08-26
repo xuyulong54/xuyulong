@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.web.permission.dao.impl.PmsRoleDaoImpl">
+
+	<!-- Pms权限管理：角色表 -->
+	<sql id="pms_role"> TBL_BOSS_PMS_ROLE </sql>
+	<sql id="pms_role_action"> TBL_BOSS_PMS_ROLE_ACTION </sql>
+	
+	<resultMap id="beanMap" type="PmsRole">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="ROLETYPE" property="roleType" />
+		<result column="ROLENAME" property="roleName" />
+		<result column="REMARK" property="remark" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="PmsRole" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_role"/> (VERSION, CREATETIME, ROLETYPE, ROLENAME, REMARK) 
+		values (0, FUN_NOW(), #{roleType}, #{roleName}, #{remark})
+	</insert>
+	
+	<update id="update" parameterType="PmsRole">
+		update <include refid="pms_role"/>
+		<set>
+			VERSION = #{version}+1,
+			ROLETYPE = #{roleType},
+			ROLENAME = #{roleName},
+			REMARK = #{remark}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+	
+	<select id="getById" parameterType="long" resultType="PmsRole">
+    	select * from <include refid="pms_role"/> where ID = #{id}
+  	</select>
+  	
+  	<select id="getByRoleName" parameterType="string" resultType="PmsRole">
+    	select * from <include refid="pms_role"/> where ROLENAME = #{roleName}
+  	</select>
+  	
+  	<select id="findByRoleNameNotEqId" parameterType="java.util.Map" resultType="PmsRole">
+    	select * from <include refid="pms_role"/> where ID != #{id} and ROLENAME = #{roleName}
+  	</select>
+  	
+  	<select id="listAll" resultMap="beanMap">
+    	select * from <include refid="pms_role"/> order by ID
+  	</select>
+  	
+  	<delete id="deleteById" parameterType="long">
+    	delete from <include refid="pms_role"/> where ID = #{id}
+  	</delete>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="roleType != null and roleType != ''"> and ROLETYPE = #{roleType}</if>
+		<!-- Like query -->
+		<if test="roleName != null and roleName != ''"> and ROLENAME like CONCAT(CONCAT('%', #{roleName}), '%')</if>
+	</sql>
+	
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="pms_role" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+	
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from <include refid="pms_role"/>
+		<where>
+			<include refid="condition_sql"/>
+		</where>
+	</select>
+	
+	<select id="listByActionId" parameterType="long" resultMap="beanMap">
+    	select R.* from <include refid="pms_role"/> R 
+    	LEFT JOIN <include refid="pms_role_action"/> RA 
+    	ON R.ID = RA.ROLEID where RA.ACTIONID = #{actionId}
+    	order by R.ID ASC
+  	</select>
+
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.cost.dao.impl.CalCostInterfaceDaoImpl">
+
+	<sql id="table"> TBL_CAL_COST_INTERFACE </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.cost.entity.CalCostInterface">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="INTERFACE_CODE" property="interfaceCode" jdbcType="VARCHAR" />
+		<result column="INTERFACE_NAME" property="interfaceName" jdbcType="VARCHAR" />
+		<result column="CHARGE_TYPE" property="chargeType" jdbcType="INTEGER" />
+		<result column="BILL_CYCLE" property="billCycle" jdbcType="INTEGER" />
+		<result column="CUSTOM_BILL_CYCLE" property="customBillCycle" jdbcType="INTEGER" />
+		<result column="CUSTOM_BILL_DAY" property="customBillDay" jdbcType="DATE" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="POLICY" property="policy" jdbcType="INTEGER" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, MODIFY_TIME, INTERFACE_CODE, INTERFACE_NAME,
+		CHARGE_TYPE, BILL_CYCLE, CUSTOM_BILL_CYCLE, CUSTOM_BILL_DAY, STATUS, POLICY,REMARK
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="interfaceCode != null and interfaceCode != ''"> and INTERFACE_CODE = #{interfaceCode,jdbcType=VARCHAR}</if>
+		<if test="interfaceName != null and interfaceName != ''"> and INTERFACE_NAME = #{interfaceName,jdbcType=VARCHAR}</if>
+		<if test="chargeType != null and chargeType != ''"> and CHARGE_TYPE = #{chargeType,jdbcType=INTEGER}</if>
+		<if test="billCycle != null and billCycle != ''"> and BILL_CYCLE = #{billCycle,jdbcType=INTEGER}</if>
+		<if test="customBillCycle != null and customBillCycle != ''"> and CUSTOM_BILL_CYCLE = #{customBillCycle,jdbcType=INTEGER}</if>
+		<if test="customBillDay != null and customBillDay != ''"> and CUSTOM_BILL_DAY = #{customBillDay,jdbcType=DATE}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status,jdbcType=INTEGER}</if>
+		<if test="policy != null and policy != ''"> and POLICY = #{policy,jdbcType=INTEGER}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.cost.entity.CalCostInterface">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		MODIFY_TIME, INTERFACE_CODE, INTERFACE_NAME,
+		CHARGE_TYPE, BILL_CYCLE,
+		CUSTOM_BILL_CYCLE, CUSTOM_BILL_DAY, STATUS,
+		POLICY, REMARK)
+		values (0, #{createTime},
+		#{modifyTime,jdbcType=TIMESTAMP}, #{interfaceCode,jdbcType=VARCHAR}, #{interfaceName,jdbcType=VARCHAR},
+		#{chargeType,jdbcType=INTEGER}, #{billCycle,jdbcType=INTEGER},
+		#{customBillCycle,jdbcType=INTEGER}, #{customBillDay,jdbcType=DATE}, #{status,jdbcType=INTEGER},
+		#{policy,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+	</insert>
+
+
+	<update id="update" parameterType="wusc.edu.pay.facade.cost.entity.CalCostInterface">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		MODIFY_TIME = #{modifyTime},
+		INTERFACE_CODE = #{interfaceCode,jdbcType=VARCHAR},
+		INTERFACE_NAME = #{interfaceName,jdbcType=VARCHAR},
+		CHARGE_TYPE = #{chargeType,jdbcType=INTEGER},
+		BILL_CYCLE = #{billCycle,jdbcType=INTEGER},
+		CUSTOM_BILL_CYCLE = #{customBillCycle,jdbcType=INTEGER},
+		CUSTOM_BILL_DAY = #{customBillDay,jdbcType=DATE},
+		STATUS = #{status,jdbcType=INTEGER},
+		POLICY = #{policy,jdbcType=INTEGER},
+		REMARK = #{remark,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by INTERFACE_CODE asc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<delete id="deleteByCalCostInterfaceCode" parameterType="java.lang.String">
+		delete from
+		<include refid="table" />
+		where INTERFACE_CODE = #{calCostInterfaceCode,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

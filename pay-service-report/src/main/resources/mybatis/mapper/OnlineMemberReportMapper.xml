@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.OnlineMemberReportDaoImpl">
+
+	<sql id="table"> RP_ONLINE_MEMBER </sql>
+
+	<resultMap id="beanMap" type="OnlineMemberReport">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="REALNAME" property="realName" />
+		<result column="LONGINNAME" property="longinName" />
+		<result column="TRXTYPE" property="trxType" />
+		<result column="TRANSACTIONAMOUNT" property="transactionAmount" />
+		<result column="TRANSACTIONNUMBER" property="transactionNumber" />
+		<result column="TOTALFEE" property="totalFee" />
+		<result column="ACOUNTDATE" property="acountDate" />
+	</resultMap>
+
+	<insert id="insert" parameterType="OnlineMemberReport" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, REALNAME, LONGINNAME, TRXTYPE, TRANSACTIONAMOUNT, TRANSACTIONNUMBER, TOTALFEE, ACOUNTDATE)
+		values (0, #{createTime}, #{realName}, #{longinName}, #{trxType}, #{transactionAmount}, #{transactionNumber}, #{totalFee}, #{acountDate})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="realName != null and realName != ''"> and REALNAME LIKE CONCAT(CONCAT('%',#{realName}), '%')</if>
+		<if test="longinName != null and longinName != ''"> and LONGINNAME like CONCAT(CONCAT('%',#{longinName}), '%')</if>
+		<if test="trxType != null and trxType != ''"> and TRXTYPE = #{trxType} </if>
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and ACOUNTDATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

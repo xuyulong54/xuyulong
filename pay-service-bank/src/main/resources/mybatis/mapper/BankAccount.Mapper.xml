@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.bank.dao.impl.BankAccountDaoImpl">
+
+	<sql id="table"> TBL_BANK_BANKACCOUNT </sql>
+
+	<resultMap type="BankAccount" id="beanMap">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="openBank" column="OPENBANK" />
+		<result property="openBankAddress" column="OPENBANKADDRESS" />
+		<result property="opendate" column="OPENDATE" />
+		<result property="bankAccount" column="BANKACCOUNT" />
+		<result property="bankNo" column="BANKNO" />
+		<result property="userName" column="USERNAME" />
+		<result property="operator" column="OPERATOR" />
+		<result property="cooperationWay" column="COOPERATIONWAY" />
+		<result property="accountNature" column="ACCOUNTNATURE" />
+		<result property="accountStatus" column="ACCOUNTSTATUS" />
+		<result property="accountType" column="ACCOUNTTYPE" />
+		<result property="onlineBankFee" column="ONLINEBANKFEE" />
+		<result property="accountMngFee" column="ACCOUNTMNGFEE" />
+		<result property="isOnlineBank" column="ISONLINEBANK" />
+		<result property="receiptForm" column="RECEIPTFORM" />
+		<result property="reserveSeal" column="RESERVESEAL" />
+		<result property="proposer" column="PROPOSER" />
+		<result property="linkMan" column="LINKMAN" />
+		<result property="openAccountObligate" column="OPENACCOUNTOBLIGATE" />
+		<result property="onlineBankObligate" column="ONLINEBANKOBLIGATE" />
+		<result property="bigAmounttransferObligate" column="BIGAMOUNTTRANSFEROBLIGATE" />
+		<result property="pledgefDeposits" column="PLEDGEFDEPOSITS" />
+		<result property="comments" column="COMMENTS" />
+		<result />
+	</resultMap>
+	<insert id="insert" parameterType="BankAccount" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION , OPENBANK, OPENDATE, BANKACCOUNT,
+		BANKNO, USERNAME, OPENBANKADDRESS, OPERATOR,
+		ACCOUNTNATURE, ACCOUNTSTATUS, ACCOUNTTYPE, ONLINEBANKFEE,
+		ACCOUNTMNGFEE, ISONLINEBANK, COOPERATIONWAY,
+		RECEIPTFORM,
+		RESERVESEAL, PROPOSER, LINKMAN, OPENACCOUNTOBLIGATE,
+		ONLINEBANKOBLIGATE, BIGAMOUNTTRANSFEROBLIGATE, COMMENTS , PLEDGEFDEPOSITS)
+		values (0, #{openBank},#{opendate}, #{bankAccount},
+		#{bankNo}, #{userName},
+		#{openBankAddress}, #{operator}, #{accountNature}, #{accountStatus},
+		#{accountType}, #{onlineBankFee}, #{accountMngFee}, #{isOnlineBank},
+		#{cooperationWay}, #{receiptForm},
+		#{reserveSeal},
+		#{proposer}, #{linkMan}, #{openAccountObligate}, #{onlineBankObligate},
+		#{bigAmounttransferObligate}, #{comments}, #{pledgefDeposits})
+	</insert>
+
+	<update id="update" parameterType="BankAccount">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			OPENBANK = #{openBank},
+			OPENDATE = #{opendate},
+			BANKACCOUNT = #{bankAccount},
+			BANKNO = #{bankNo},
+			USERNAME = #{userName},
+			OPENBANKADDRESS = #{openBankAddress},
+			OPERATOR =
+			#{operator},
+			ACCOUNTNATURE = #{accountNature},
+			ACCOUNTSTATUS = #{accountStatus},
+			ACCOUNTTYPE = #{accountType},
+			ONLINEBANKFEE = #{onlineBankFee},
+			ACCOUNTMNGFEE = #{accountMngFee},
+			ISONLINEBANK =
+			#{isOnlineBank},
+			COOPERATIONWAY = #{cooperationWay},
+			RECEIPTFORM = #{receiptForm},
+			RESERVESEAL = #{reserveSeal},
+			PROPOSER = #{proposer},
+			LINKMAN = #{linkMan},
+			OPENACCOUNTOBLIGATE =
+			#{openAccountObligate},
+			ONLINEBANKOBLIGATE = #{onlineBankObligate},
+			BIGAMOUNTTRANSFEROBLIGATE = #{bigAmounttransferObligate},
+			COMMENTS = #{comments},
+			PLEDGEFDEPOSITS = #{pledgefDeposits}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<if test="openBank != null and openBank != ''"> and OPENBANK = #{openBank}</if>
+		<if test="opendate != null and opendate != ''"> and OPENDATE = #{opendate}</if>
+		<if test="bankAccount != null and bankAccount != ''"> and BANKACCOUNT = #{bankAccount}</if>
+		<if test="bankNo != null and bankNo != ''"> and BANKNO = #{bankNo}</if>
+		<if test="userName != null and userName != ''"> and USERNAME = #{userName}</if>
+		<if test="openBankAddress != null and openBankAddress != ''"> and OPENBANKADDRESS = #{openBankAddress}</if>
+		<if test="operator != null and operator != ''"> and OPERATOR = #{operator}</if>
+		<if test="accountNature != null and accountNature != ''"> and ACCOUNTNATURE = #{accountNature}</if>
+		<if test="accountStatus != null and accountStatus != ''"> and ACCOUNTSTATUS = #{accountStatus}</if>
+		<if test="accountType != null and accountType != ''"> and ACCOUNTTYPE = #{accountType}</if>
+		<if test="onlineBankFee != null and onlineBankFee != ''"> and ONLINEBANKFEE = #{onlineBankFee}</if>
+		<if test="accountMngFee != null and accountMngFee != ''"> and ACCOUNTMNGFEE = #{accountMngFee}</if>
+		<if test="isOnlineBank != null and isOnlineBank != ''"> and ISONLINEBANK = #{isOnlineBank}</if>
+		<if test="cooperationWay != null and cooperationWay != ''"> and COOPERATIONWAY = #{cooperationWay}</if>
+		<if test="receiptForm != null and receiptForm != ''"> and RECEIPTFORM = #{receiptForm}</if>
+		<if test="reserveSeal != null and reserveSeal != ''"> and RESERVESEAL = #{reserveSeal}</if>
+		<if test="proposer != null and proposer != ''"> and PROPOSER = #{proposer}</if>
+		<if test="linkMan != null and linkMan != ''"> and LINKMAN = #{linkMan}</if>
+		<if test="openAccountObligate != null and openAccountObligate != ''"> and OPENACCOUNTOBLIGATE = #{openAccountObligate}</if>
+		<if test="onlineBankObligate != null and onlineBankObligate != ''"> and ONLINEBANKOBLIGATE = #{onlineBankObligate}</if>
+		<if test="bigAmounttransferObligate != null and bigAmounttransferObligate != ''"> and BIGAMOUNTTRANSFEROBLIGATE = #{bigAmounttransferObligate}
+		</if>
+		<if test="comments != null and comments != ''"> and COMMENTS = #{comments}</if>
+		<if test="pledgefDeposits != null and pledgefDeposits != ''"> and PLEDGEFDEPOSITS = #{pledgefDeposits}</if>
+		<if test="bankAccountKey != null and bankAccountKey != ''"> and BANKACCOUNT LIKE CONCAT('%' ,CONCAT(#{bankAccountKey},'%'))</if>
+	</sql>
+
+	<delete id="delete" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		<where>
+			ID = #{id}
+		</where>
+	</delete>
+
+	<select id="getById" parameterType="string" resultMap="beanMap">
+		SELECT * FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="likeBy" parameterType="java.util.Map" resultType="java.util.Map">
+		select BANKACCOUNT as "code", BANKACCOUNT as "name", USERNAME as "desc" from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

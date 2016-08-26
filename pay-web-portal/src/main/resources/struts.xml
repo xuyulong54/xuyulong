@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+	<!-- 设置Action请求后缀 value="action,," -->
+	<constant name="struts.action.extension" value="action" />
+	<!-- 设置浏览器是否缓存静态内容,默认值为true(生产环境下使用),开发阶段最好关闭 -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<!-- 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用),开发阶段最好打开 -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
+	<constant name="struts.devMode" value="false" />
+	<!-- 使用spring的工厂去替换struts2的默认工厂,也就是Action由spring来创建和维护 -->
+	<!-- constant name="struts.objectFactory" value="spring" / -->
+	<!-- 使用spring自动注入总是有效 -->
+	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect"
+		value="true" />
+	<constant name="struts.multipart.saveDir" value="/tmp" />
+	<constant name="struts.multipart.maxSize" value="20480000" />
+	<package name="base" namespace="/" extends="struts-default">
+		<interceptors>
+			<!--定义属性驱动的拦截器 -->
+			<interceptor name="params"
+				class="com.opensymphony.xwork2.interceptor.ParametersInterceptor"></interceptor>
+			<!--定义模型驱动的拦截器 -->
+			<interceptor name="model-driven"
+				class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"></interceptor>
+			<!-- 定义操作员登录拦截器 -->
+			<interceptor name="operatorLoginCheckInterceptor"
+				class="wusc.edu.pay.web.portal.interceptor.OperatorLoginCheckInterceptor"></interceptor>
+			<!-- 定义会员登录拦截器 -->
+			<interceptor name="memberLoginCheckInterceptor"
+				class="wusc.edu.pay.web.portal.interceptor.MemberLoginCheckInterceptor"></interceptor>
+			<!-- 定义上传文件拦截器 -->
+			<interceptor name="fileUpload"
+				class="org.apache.struts2.interceptor.FileUploadInterceptor">
+				<param name="maximumSize">20480000</param>
+			</interceptor>
+			<!-- 定义业务异常拦截器 -->
+			<interceptor name="exceptionInterceptor"
+				class="wusc.edu.pay.web.portal.interceptor.ExceptionInterceptor"></interceptor>
+
+			<!-- 加载拦截器至stack -->
+			<interceptor-stack name="defaultInterceptorStack">
+				<interceptor-ref name="model-driven" />
+				<interceptor-ref name="params" />
+				<interceptor-ref name="exceptionInterceptor" />
+			</interceptor-stack>
+			<!-- 上传文件:加载拦截器至stack -->
+			<interceptor-stack name="fileUploadStack">
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="defaultInterceptorStack" />
+			</interceptor-stack>
+			<!-- 操作员登录:加载拦截器至stack -->
+			<interceptor-stack name="operatorLoginStack">
+				<interceptor-ref name="defaultInterceptorStack" />
+				<interceptor-ref name="operatorLoginCheckInterceptor">
+				<param name="excludeMethods">bindingActivationEmail,unbundlingActivationEmail,editTradePwdUI,editTradePwd</param>
+				</interceptor-ref>
+			</interceptor-stack>
+			<!-- 会员登录:加载拦截器至stack -->
+			<interceptor-stack name="memberLoginStack">
+				<interceptor-ref name="defaultInterceptorStack" />
+				<interceptor-ref name="memberLoginCheckInterceptor">
+					<param name="excludeMethods">bindingActivationEmail,unbundlingActivationEmail,editTradePwdUI,editTradePwd</param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 设置系统默认拦截器 -->
+		<default-interceptor-ref name="defaultInterceptorStack"></default-interceptor-ref>
+		<global-results>
+			<result name="login">login_loginUI.action</result>
+			<result name="permissionError">page/error/permissionError.jsp</result>
+			<result name="error">page/error/error_exception.jsp</result>
+			<result name="exception">page/error/error_exception.jsp</result>
+			<result name="bizException">page/error/error_bizException.jsp</result>
+			<result name="ACTION_ERROR_ADD">page/error/error_verifyParam.jsp</result>
+		</global-results>
+	</package>
+	<!-- Struts2配置文件分模块引用 -->
+	<include file="struts/struts-nologin.xml" />
+	<include file="struts/struts-member-login.xml" />
+	<include file="struts/struts-merchant-login.xml" />
+	
+</struts>

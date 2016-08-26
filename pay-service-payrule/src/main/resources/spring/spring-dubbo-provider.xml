@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="pay-service-payrule" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+
+	<dubbo:protocol name="dubbo" port="20811" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+	
+	<!-- 当ProtocolConfig和ServiceConfig某属性没有配置时,采用此缺省值 -->
+	<dubbo:provider timeout="10000" threadpool="fixed" threads="100" accepts="1000" />
+	<!-- 对外公布接口 -->
+	<!-- 支付渠道 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.payrule.service.FrpFacade" ref="frpFacade" />
+	<!-- 银行分流 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.payrule.service.BankBranchFacade" ref="bankBranchFacade" />
+	<!-- rule -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.payrule.service.PayRuleFacade" ref="payRuleFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.payrule.service.PayWayFacade" ref="payWayFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.payrule.service.PayProductFacade" ref="payProductFacade" />
+	
+</beans>  

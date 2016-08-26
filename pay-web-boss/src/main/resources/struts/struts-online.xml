@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<!-- 在线支付运营管理包 -->
+	<package name="onlinePackage" extends="loginPackage">
+
+	</package>
+	
+	<!-- Struts2配置文件分模块引用 -->
+	<include file="struts/online/struts-accountBank.xml" />
+	<include file="struts/online/struts-article.xml" />
+	<include file="struts/online/struts-bank.xml" />
+	<include file="struts/online/struts-bordereaux.xml" />
+	<include file="struts/online/struts-calCost.xml" />
+	<include file="struts/online/struts-cardBin.xml" />
+	<include file="struts/online/struts-fee.xml" />
+	<include file="struts/online/struts-globalSet.xml" />
+	<include file="struts/online/struts-limit.xml" />
+	<include file="struts/online/struts-member.xml" />
+	<include file="struts/online/struts-merchant.xml" />
+	<include file="struts/online/struts-notify.xml" />
+	<include file="struts/online/struts-paymentRecord.xml" />
+	<include file="struts/online/struts-paymentRecordStat.xml" />
+	<include file="struts/online/struts-payrule.xml" />
+	<include file="struts/online/struts-remit.xml" />
+	<include file="struts/online/struts-sales.xml" />
+	<include file="struts/online/struts-sett.xml" />
+	
+</struts>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<package name="memberPackage" extends="loginPackage">
+
+		<!-- 会员Action -->
+		<action name="memberInfo_*" class="wusc.edu.pay.web.boss.action.MemberInfoAction" method="{1}">
+			<result name="listMemberInfo">page/member/memberInfoList.jsp</result>
+			<result name="exportCustomers" type="stream">
+				<param name="contentType">application/octet-stream;charset=UTF-8</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+			</result>
+			<!-- 会员详细信息显示页面 -->
+			<result name="viewMemberInfo">page/member/memberInfoView.jsp</result>
+			<result name="memberStatusUI">/page/member/changeMemberStatusUI.jsp</result>
+			<result name="listMemberStatus">/page/member/memberStatusList.jsp</result>
+			<result name="auditMemberview">/page/member/auditMemberview.jsp</result>
+		</action>
+		
+		<!-- 会员交易列表 -->
+		<action name="memberRecord_*" class="wusc.edu.pay.web.boss.action.MemberRecordAction" method="{1}">
+			<result name="listMemberRecord">page/memberRecord/MemberRecordList.jsp</result>
+			<result name="viewMemberRecordUI">page/memberRecord/MemberRecordView.jsp</result>
+			<result name="listWithdrawRecord">page/memberRecord/listWithdrawRecord.jsp</result>
+			<result name="reviewWithDrawRecord">page/memberRecord/reviewWithDrawRecord.jsp</result>
+		</action>
+		
+		<!-- 会员实名认证  -->
+		<action name="memberAudit_*" class="wusc.edu.pay.web.boss.action.MemberRealNameAduitAction" method="{1}">
+			<result name="auditMemberList">page/memberAudit/auditMemberList.jsp</result>
+			<result name="auditMember">page/memberAudit/auditMember.jsp</result>
+		</action>
+		
+		<!-- 会员销户审核  -->
+		<action name="memberCancel_*" class="wusc.edu.pay.web.boss.action.MemberCancelAduitAction" method="{1}">
+			<result name="auditMemberCancelList">page/memberCancelAudit/auditMemberCancelList.jsp</result>
+			<result name="auditMemberCancel">page/memberCancelAudit/auditMemberCancel.jsp</result>
+		</action>
+		
+	</package>
+</struts>

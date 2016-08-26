@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.fee.dao.impl.FeePrepaidFlowInfoDaoImpl">
+
+	<sql id="table"> TBL_FEE_PREPAID_FLOW_INFO </sql>
+
+	<resultMap id="beanMap" type="FeePrepaidFlowInfo">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="feeCalWayId" column="FEE_CAL_WAY_ID" />
+		<result property="amount" column="AMOUNT" />
+		<result property="quantity" column="QUANTITY" />
+		<result property="flowType" column="FLOW_TYPE" />
+		<result property="cycleType" column="CYCLE_TYPE" />
+		<result property="customizeCycleType" column="CUSTOMIZE_CYCLE_TYPE" />
+		<result property="customizeDay" column="CUSTOMIZE_DAY" />
+		<result property="prepaidAmount" column="PREPAID_AMOUNT" />
+	</resultMap>
+
+	<insert id="insert" parameterType="FeePrepaidFlowInfo" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, FEE_CAL_WAY_ID, AMOUNT, QUANTITY,
+		FLOW_TYPE, CYCLE_TYPE, CUSTOMIZE_CYCLE_TYPE, CUSTOMIZE_DAY, PREPAID_AMOUNT)
+		VALUES(0,
+		FUN_NOW(),#{feeCalWayId},#{amount},#{quantity},
+		#{flowType},#{cycleType},#{customizeCycleType},#{customizeDay},
+		#{prepaidAmount})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="FeePrepaidFlowInfo">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			FEE_CAL_WAY_ID = #{feeCalWayId},
+			AMOUNT = #{amount},
+			QUANTITY = #{quantity},
+			FLOW_TYPE = #{flowType},
+			CYCLE_TYPE = #{cycleType},
+			CUSTOMIZE_CYCLE_TYPE = #{customizeCycleType},
+			CUSTOMIZE_DAY = #{customizeDay},
+			PREPAID_AMOUNT = #{prepaidAmount}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<if test="feeCalWayId != null and feeCalWayId != ''"> and FEE_CAL_WAY_ID = #{feeCalWayId}</if>
+	</sql>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+</mapper>

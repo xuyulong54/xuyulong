@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.MerchantActionDaoImpl">
+
+	<sql id="table"> TBL_PORTAL_MERCHANT_ACTION </sql>
+
+	<resultMap id="beanMap" type="MerchantAction">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="ACTIONNAME" property="actionName" />
+		<result column="ACTION" property="action" />
+		<result column="REMARK" property="remark" />
+		<result column="MERCHANTBUSTYPE" property="merchantBusType" />
+	</resultMap>
+
+	<insert id="insert" parameterType="MerchantAction" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, ACTIONNAME,
+		ACTION, REMARK,MERCHANTBUSTYPE)
+		values (0, #{createTime}, #{actionName}, #{action}, #{remark}, #{merchantBusType})
+	</insert>
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="MerchantAction">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			ACTIONNAME = #{actionName},
+			ACTION = #{action},
+			REMARK = #{remark},
+			MERCHANTBUSTYPE = #{merchantBusType}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="deleteById" parameterType="long" resultType="int">
+		delete from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="action != null and action != ''"> and ACTION = #{action}</if>
+		<if test="actionName != null and actionName !=''"> and ACTIONNAME like CONCAT(#{actionName}, '%')</if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="merchantBusTypes != null and merchantBusTypes != ''">
+			and MERCHANTBUSTYPE in
+			<foreach item="item" index="index" collection="merchantBusTypes" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		<if test="merType != null and merType !=''"> and MERCHANTBUSTYPE like CONCAT(CONCAT('%',#{merType}), '%')</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="findByIds" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">#{item}</foreach>
+	</select>
+
+	<select id="listMerActionByMerType" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.PortalCADaoImpl">
+
+	<sql id="table"> TBL_PORTAL_CA </sql>
+
+	<resultMap id="beanMap" type="PortalCA">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="USERID" property="userId" />
+		<result column="USERTYPE" property="userType" />
+		<result column="ADDRID" property="addrId" />
+		<result column="DN" property="dn" />
+		<result column="SN" property="sn" />
+		<result column="STATUS" property="status" />
+		<result column="UPDATETIME" property="updateTime" />
+		<result column="USERNO" property="userNo" />
+	</resultMap>
+
+	<insert id="insert" parameterType="PortalCa" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME,USERID, USERTYPE,
+		ADDRID, DN, SN, STATUS, UPDATETIME,USERNO)
+		values (0, #{createTime}, #{userId}, #{userType},
+		#{addrId}, #{dn}, #{sn}, #{status}, #{updateTime},#{userNo})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="PortalCa">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			USERID = #{userId},
+			USERTYPE = #{userType},
+			ADDRID = #{addrId},
+			DN = #{dn},
+			SN = #{sn},
+			STATUS = #{status},
+			UPDATETIME = #{updateTime},
+			USERNO = #{userNo}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="userNo != null and userNo != ''"> and USERNO = #{userNo}</if>
+		<if test="userId != null and userId != ''"> and USERID = #{userId}</if>
+		<if test="userType != null and userType != ''"> and USERTYPE = #{userType}</if>
+		<if test="sn != null and sn != ''"> and SN = #{sn} </if>
+		<if test="status != null and status != ''"> and STATUS = #{status} </if>
+		<if test="dn != null and dn != ''"> and DN = #{dn} </if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	<select id="deleteById" parameterType="long" resultType="long">
+		delete from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+</mapper>

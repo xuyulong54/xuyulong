@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.cost.dao.impl.CalCostOrderDaoImpl">
+	<sql id="table"> TBL_CAL_COST_ORDER </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.cost.entity.CalCostOrder">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="MERCHANT_NO" property="merchantNo" jdbcType="VARCHAR" />
+		<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
+		<result column="FROM_SYSTEM" property="fromSystem" jdbcType="SMALLINT" />
+		<result column="FEE_WAY_ID" property="feeWayId" jdbcType="BIGINT" />
+		<result column="MERCHANT_ORDER_NO" property="merchantOrderNo" jdbcType="VARCHAR" />
+		<result column="TRX_NO" property="trxNo" jdbcType="VARCHAR" />
+		<result column="BANK_ORDER_NO" property="bankOrderNo" jdbcType="VARCHAR" />
+		<result column="CAL_INTERFACE" property="calInterface" jdbcType="VARCHAR" />
+		<result column="CAL_EXPRESSION" property="calExpression" jdbcType="VARCHAR" />
+		<result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+		<result column="FEE" property="fee" jdbcType="DECIMAL" />
+		<result column="TRX_TIME" property="trxTime" jdbcType="TIMESTAMP" />
+		<result column="COST_ITEM" property="costItem" jdbcType="SMALLINT" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="FAILED_REASON" property="failedReason" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="CAL_END_TIME" property="calEndTime" jdbcType="TIMESTAMP" />
+		<result column="CAL_ORDER_TYPE" property="calOrderType" jdbcType="SMALLINT" />
+		<result column="MCC" property="mcc" jdbcType="VARCHAR" />
+		<result column="ORG_TRX_NO" property="orgTrxNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANT_NO = #{merchantNo}</if>
+		<if test="orgTrxNo != null and orgTrxNo != ''"> and ORG_TRX_NO = #{orgTrxNo}</if>
+		<if test="merchantName != null and merchantName != ''"> and MERCHANT_NAME like CONCAT('%', CONCAT(#{merchantName}, '%')) </if>
+		<if test="fromSystem != null and fromSystem != ''"> and FROM_SYSTEM = #{fromSystem}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="calOrderType != null and calOrderType != ''"> and CAL_ORDER_TYPE = #{calOrderType}</if>
+		<if test="trxNo != null and trxNo != ''"> and TRX_NO = #{trxNo}</if>
+		<if test="costItem != null and costItem != ''"> and COST_ITEM = #{costItem}</if>
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''"> and TRX_TIME between #{beginDate } AND CONCAT(#{endDate},' 23:59:59')</if>
+		<if test="calInterface != null and calInterface != ''"> and CAL_INTERFACE = #{calInterface}</if>
+		<if test="bankOrderNo != null and bankOrderNo != ''"> and BANK_ORDER_NO = #{bankOrderNo}</if>
+	</sql>
+
+
+	<sql id="Base_Column_List">
+		ID, VERSION, MERCHANT_NO, MERCHANT_NAME, FROM_SYSTEM, FEE_WAY_ID,
+		MERCHANT_ORDER_NO, TRX_NO, BANK_ORDER_NO, CAL_INTERFACE, CAL_EXPRESSION, AMOUNT, FEE,
+		TRX_TIME, COST_ITEM, STATUS, FAILED_REASON, CREATE_TIME, CAL_END_TIME, CAL_ORDER_TYPE,
+		MCC,ORG_TRX_NO
+	</sql>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from TBL_CAL_COST_ORDER
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from TBL_CAL_COST_ORDER
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.cost.entity.CalCostOrder">
+		insert into TBL_CAL_COST_ORDER (VERSION, MERCHANT_NO,
+		MERCHANT_NAME, FROM_SYSTEM,
+		FEE_WAY_ID, MERCHANT_ORDER_NO, TRX_NO,
+		BANK_ORDER_NO, CAL_INTERFACE, CAL_EXPRESSION,
+		AMOUNT, FEE, TRX_TIME,
+		COST_ITEM, STATUS, FAILED_REASON,
+		CREATE_TIME, CAL_END_TIME, CAL_ORDER_TYPE,
+		MCC,ORG_TRX_NO)
+		values (0, #{merchantNo,jdbcType=VARCHAR},
+		#{merchantName,jdbcType=VARCHAR}, #{fromSystem,jdbcType=SMALLINT},
+		#{feeWayId,jdbcType=BIGINT}, #{merchantOrderNo,jdbcType=VARCHAR}, #{trxNo,jdbcType=VARCHAR},
+		#{bankOrderNo,jdbcType=VARCHAR}, #{calInterface,jdbcType=VARCHAR}, #{calExpression,jdbcType=VARCHAR},
+		#{amount,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, #{trxTime,jdbcType=TIMESTAMP},
+		#{costItem,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT}, #{failedReason,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{calEndTime,jdbcType=TIMESTAMP}, #{calOrderType,jdbcType=SMALLINT},
+		#{mcc,jdbcType=VARCHAR}, #{orgTrxNo,jdbcType=VARCHAR})
+	</insert>
+
+
+	<update id="update" parameterType="wusc.edu.pay.facade.cost.entity.CalCostOrder">
+		update TBL_CAL_COST_ORDER
+		<set>
+			VERSION = #{version}+1 ,
+			<if test="merchantNo != null">
+				MERCHANT_NO = #{merchantNo,jdbcType=VARCHAR},
+			</if>
+			<if test="merchantName != null">
+				MERCHANT_NAME = #{merchantName,jdbcType=VARCHAR},
+			</if>
+			<if test="fromSystem != null">
+				FROM_SYSTEM = #{fromSystem,jdbcType=SMALLINT},
+			</if>
+			<if test="feeWayId != null">
+				FEE_WAY_ID = #{feeWayId,jdbcType=BIGINT},
+			</if>
+			<if test="merchantOrderNo != null">
+				MERCHANT_ORDER_NO = #{merchantOrderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="trxNo != null">
+				TRX_NO = #{trxNo,jdbcType=VARCHAR},
+			</if>
+			<if test="bankOrderNo != null">
+				BANK_ORDER_NO = #{bankOrderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="calInterface != null">
+				CAL_INTERFACE = #{calInterface,jdbcType=VARCHAR},
+			</if>
+			<if test="calExpression != null">
+				CAL_EXPRESSION = #{calExpression,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				AMOUNT = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="fee != null">
+				FEE = #{fee,jdbcType=DECIMAL},
+			</if>
+			<if test="trxTime != null">
+				TRX_TIME = #{trxTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="trxType != null">
+				COST_ITEM = #{costItem,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=SMALLINT},
+			</if>
+			<if test="failedReason != null">
+				FAILED_REASON = #{failedReason,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="calEndTime != null">
+				CAL_END_TIME = #{calEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="calOrderType != null">
+				CAL_ORDER_TYPE = #{calOrderType,jdbcType=SMALLINT},
+			</if>
+			<if test="mcc != null">
+				MCC = #{mcc,jdbcType=VARCHAR},
+			</if>
+			<if test="orgTrxNo != null">
+				MCC = #{orgTrxNo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

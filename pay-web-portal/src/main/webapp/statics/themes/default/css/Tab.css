@@ -1,0 +1,82 @@
+﻿ul
+{
+    list-style: none;
+}
+.cont
+{
+    clear: both;
+    padding: 8px 0px 8px 0px;
+    text-align: center;
+    font-size: 12px;
+}
+
+
+
+#Tab
+{
+    text-align: left;
+    width: 800px;
+}
+.Mu1box
+{
+    position: relative;
+    overflow: hidden;
+    height: 38px;
+    _height: 22px;
+    width: 900px;
+    text-align: left;
+}
+#Mu1
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+#Mu1 li
+{
+    float: left;
+    display: block;
+    cursor: pointer;
+    width: 100px;
+    height: 25px;
+    text-align: center;
+    line-height: 25px;
+    background-image: url('../images/tab01.jpg');
+}
+
+#Mu1 li.hover
+{
+    background: #fff;
+   
+    width: 100px;
+    height: 25px;
+    background-image: url('../images/tab02.jpg');
+}
+.Contbox
+{
+    clear: both;
+    margin-top: -12px;
+    _margin-top: 0px;
+   border-top: 2px solid #D5D6D9;
+    width: 900px;
+}
+#cont1 ul
+{
+    display: none;
+}
+#cont1 ul.block
+{
+    display: block;
+}
+
+.cont .QueryHead{ width:900px; font-size:12px; border-collapse:collapse; border-bottom:2px solid #E77B33; }
+.cont .QueryHead .lf{ height:30px; line-height:30px; text-align:right;  padding-right:5px; font-weight:bold;}
+
+.cont .Download_resaul{width:900px; height :1px;_height :50px; line-height:30px; margin-top:30px; text-align:right; font-weight:bold;}
+.cont .Download_resaul a{ color:Blue;}
+.cont .Noresaul{ height:30px; line-height:30px;border: 1px solid #F8BE8A; background-color: #F6F2D6; margin-top:30px;}
+.cont li{ float:left;}
+
+.cont .contW{ height:30px; line-height:30px; margin-left:50px;}
+.cont .contW span{ font-size:14px; font-weight:bold;}

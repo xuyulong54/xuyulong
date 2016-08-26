@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">       
+    
+    
+    <!-- 银行成本计费服务 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.cost.service.CalCostOrderFacade" id="calCostOrderFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.cost.service.CalDimensionFacade" id="calDimensionFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.cost.service.CalFeeRateFormulaFacade" id="calFeeRateFormulaFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.cost.service.CalFeeWayFacade" id="calFeeWayFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.cost.service.CalCostInterfaceFacade" id="calCostInterfaceFacade" check="false"/>
+</beans>  

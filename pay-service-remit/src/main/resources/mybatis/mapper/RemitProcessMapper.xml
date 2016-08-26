@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitProcessDaoImpl">
+
+	<sql id="table"> TBL_REMIT_PROCESS </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitProcess">
+	
+		<result column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="REQUEST_NO" property="requestNo" jdbcType="VARCHAR" />
+		<result column="FLOW_NO" property="flowNo" jdbcType="VARCHAR" />
+		<result column="CHANNEL_CODE" property="channelCode" jdbcType="VARCHAR" />
+		<result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+		<result column="TRADE_INITIATOR" property="tradeInitiator" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_TYPE" property="accountType" jdbcType="SMALLINT" />
+		<result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_NO" property="accountNo" jdbcType="VARCHAR" />
+		<result column="BANK_CHANNEL_NO" property="bankChannelNo" jdbcType="VARCHAR" />
+		<result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+		<result column="CLEAR_BANK_NAME" jdbcType="VARCHAR" property="clearBankName" />
+		<result column="CLEAR_BANK_CHANNEL_NO" jdbcType="VARCHAR" property="clearBankChannelNo" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="IS_AUTO_PROCESS" property="isAutoProcess" jdbcType="SMALLINT" />
+		<result column="IS_URGENT" property="isUrgent" jdbcType="SMALLINT" />
+		<result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="CAL_COST" property="calCost" jdbcType="DECIMAL" />
+		<result column="IS_RECONCILED" property="isReconciled" jdbcType="SMALLINT" />
+		<result column="USER_NO" jdbcType="VARCHAR" property="userNo" />
+		<result column="BUSINESS_TYPE" jdbcType="SMALLINT" property="businessType" />
+		<result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="CONFIRM" jdbcType="VARCHAR" property="confirm" />
+		<result column="CONFIRM_DATE" jdbcType="TIMESTAMP" property="confirmDate" />
+		<result column="PROCESS_DATE" property="processDate" jdbcType="TIMESTAMP" />
+		<result column="REASON" property="reason" jdbcType="VARCHAR" />
+		<result column="BANK_REMARK" property="bankRemark" jdbcType="VARCHAR" />
+		<result column="EXPORT_BATCH_NO" property="exportBatchNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		R.ID, R.VERSION, R.REQUEST_NO, R.FLOW_NO, R.CHANNEL_CODE, R.BATCH_NO,
+		R.TRADE_INITIATOR, R.ACCOUNT_TYPE,
+		R.ACCOUNT_NAME, R.ACCOUNT_NO,
+		R.BANK_CHANNEL_NO, R.BANK_NAME, R.PROVINCE, R.CITY, R.CURRENCY, R.CLEAR_BANK_NAME,
+		R.CLEAR_BANK_CHANNEL_NO,R.STATUS, R.IS_AUTO_PROCESS, R.IS_URGENT, AMOUNT,
+		R.ORDER_ID, R.CAL_COST, R.IS_RECONCILED, R.USER_NO, R.BUSINESS_TYPE, R.CREATOR,
+		R.CREATE_DATE,
+		R.CONFIRM, R.CONFIRM_DATE, R.PROCESS_DATE, R.REASON, R.BANK_REMARK, R.EXPORT_BATCH_NO
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="requestNo != null and requestNo != ''"> and R.REQUEST_NO = #{requestNo}</if>
+		<if test="flowNo != null and flowNo != ''"> and R.FLOW_NO = #{flowNo}</if>
+		<if test="tradeInitiator != null and tradeInitiator != ''"> and R.TRADE_INITIATOR = #{tradeInitiator}</if>
+		<if test="batchNo != null and batchNo != ''"> and R.BATCH_NO = #{batchNo}</if>
+		<if test="status != null and status != ''"> and R.STATUS = #{status}</if>
+		<if test="isAutoProcess != null and isAutoProcess != ''"> and R.IS_AUTO_PROCESS = #{isAutoProcess}</if>
+		<if test="channelCode != null and channelCode != ''"> and R.CHANNEL_CODE = #{channelCode}</if>
+		<if test="exportBatchNo != null and exportBatchNo != ''"> and R.EXPORT_BATCH_NO = #{exportBatchNo}</if>
+		<if test="accountName != null and accountName != ''"> and R.ACCOUNT_NAME like CONCAT(CONCAT('%', #{accountName}), '%')</if>
+		<if test="bankName != null and bankName != ''"> and R.BANK_NAME like CONCAT(CONCAT('%', #{bankName}), '%')
+		</if>
+		<if test="accountNo != null and accountNo != ''"> and R.ACCOUNT_NO like CONCAT(CONCAT('%', #{accountNo}), '%')</if>
+		<if test="bankChannelNo != null and bankChannelNo != ''"> and R.BANK_CHANNEL_NO like CONCAT(CONCAT('%', #{bankChannelNo}), '%')</if>
+		
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="ids != null and ids != ''">
+			and R.ID in
+			<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		<!--创建时间 -->
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and R.CREATE_DATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<!-- 审核时间 -->
+		<if test="beginDate1 != null and endDate1 != null and endDate1 !='' and beginDate1 != ''">
+			and R.CONFIRM_DATE between #{beginDate1} AND CONCAT(#{endDate1},' 23:59:59')
+		</if>
+		<!-- 打款处理时间 -->
+		<if test="processBeginDate != null and processEndDate != null and processEndDate !='' and processBeginDate != ''">
+			and R.PROCESS_DATE between #{processBeginDate} AND CONCAT(#{processEndDate},' 23:59:59')
+		</if>
+		<!-- 差错天数 -->
+		<if test="wrongDay != null and wrongDay != ''">
+			and (DATEDIFF(R.PROCESS_DATE,FUN_NOW())) > #{wrongDay}
+		</if>
+		<if test="ebankRemit != null and ebankRemit != ''">
+			and R.CHANNEL_CODE in(select CHANNEL_CODE from
+			TBL_REMIT_CHANNEL where IS_AUTO_REMIT=101 )
+		</if>
+
+		<!-- 非待审核状态 -->
+		<if test="notEqStatus !=null and notEqStatus!=''">
+			and R.STATUS != #{notEqStatus}
+		</if>
+		
+		<if test="userType !=null and userType!=''">
+			and U.USERTYPE = #{userType}
+		</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitProcess" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, REQUEST_NO,
+		FLOW_NO, CHANNEL_CODE, BATCH_NO,
+		TRADE_INITIATOR,
+		ACCOUNT_TYPE, ACCOUNT_NAME,
+		ACCOUNT_NO, BANK_CHANNEL_NO, BANK_NAME,
+		PROVINCE, CITY, CURRENCY, CLEAR_BANK_NAME, CLEAR_BANK_CHANNEL_NO,
+		STATUS, IS_AUTO_PROCESS, IS_URGENT,
+		AMOUNT, ORDER_ID, CAL_COST,
+		IS_RECONCILED,
+		USER_NO, BUSINESS_TYPE, CREATOR,
+		CREATE_DATE, CONFIRM,
+		CONFIRM_DATE, PROCESS_DATE, REASON,
+		BANK_REMARK,EXPORT_BATCH_NO)
+		values (0,
+		#{requestNo},
+		#{flowNo}, #{channelCode}, #{batchNo},
+		#{tradeInitiator},
+		#{accountType}, #{accountName},
+		#{accountNo}, #{bankChannelNo},
+		#{bankName},
+		#{province}, #{city}, #{currency},
+		#{clearBankName},
+		#{clearBankChannelNo}, #{status}, #{isAutoProcess}, #{isUrgent},
+		#{amount}, #{orderId}, #{calCost}, #{isReconciled},
+		#{userNo},
+		#{businessType}, #{creator},
+		FUN_NOW(), #{confirm}, #{confirmDate},
+		#{processDate}, #{reason},
+		#{bankRemark},#{exportBatchNo})
+	</insert>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		insert into
+		<include refid="table" />
+		(VERSION, REQUEST_NO,
+		FLOW_NO, CHANNEL_CODE, BATCH_NO,
+		TRADE_INITIATOR,
+		ACCOUNT_TYPE, ACCOUNT_NAME,
+		ACCOUNT_NO, BANK_CHANNEL_NO, BANK_NAME,
+		PROVINCE, CITY, CURRENCY, CLEAR_BANK_NAME, CLEAR_BANK_CHANNEL_NO,
+		STATUS, IS_AUTO_PROCESS, IS_URGENT,
+		AMOUNT, ORDER_ID, IS_RECONCILED,
+		USER_NO, BUSINESS_TYPE, CREATOR,
+		CREATE_DATE, CONFIRM, CONFIRM_DATE,
+		PROCESS_DATE, REASON,
+		BANK_REMARK,EXPORT_BATCH_NO)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(0, #{item.requestNo},
+			#{item.flowNo}, #{item.channelCode},
+			#{item.batchNo},
+			#{item.tradeInitiator}, #{item.accountType},
+			#{item.accountName},
+			#{item.accountNo}, #{item.bankChannelNo},
+			#{item.bankName},
+			#{item.province}, #{item.city}, #{item.currency},
+			#{item.clearBankName}, #{item.clearBankChannelNo}, #{item.status},
+			#{item.isAutoProcess}, #{item.isUrgent},
+			#{item.amount},
+			#{item.orderId}, #{item.isReconciled},
+			#{item.userNo},
+			#{item.businessType}, #{item.creator},
+			FUN_NOW(), #{item.confirm},
+			#{item.confirmDate}, #{item.processDate}, #{item.reason},
+			#{item.bankRemark},#{item.exportBatchNo})
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitProcess">
+		update
+		<include refid="table" />
+		set VERSION = #{version}+1,
+		FLOW_NO = #{flowNo},
+		BATCH_NO = #{batchNo},
+		CHANNEL_CODE = #{channelCode},
+		CLEAR_BANK_NAME = #{clearBankName},
+		CLEAR_BANK_CHANNEL_NO =#{clearBankChannelNo},
+		STATUS = #{status},
+		ORDER_ID = #{orderId},
+		CAL_COST = #{calCost},
+		IS_RECONCILED = #{isReconciled},
+		CONFIRM =#{confirm},
+		CONFIRM_DATE = #{confirmDate},
+		PROCESS_DATE =#{processDate},
+		REASON = #{reason},
+		BANK_REMARK = #{bankRemark},
+		EXPORT_BATCH_NO = #{exportBatchNo}
+		where ID= #{id} and VERSION = #{version}
+	</update>
+		
+	<update id="batchUpdateProcessStatus" parameterType="java.util.Map">
+		update
+		<include refid="table" />
+		set STATUS = #{status}
+		<where>
+			ID in(
+			<foreach collection="lists" item="item" index="index"
+				separator=",">
+				#{item.id}
+			</foreach>
+			)
+		</where>
+	</update>
+	
+	
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" /> R 
+		where R.ID = #{id}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id}
+	</delete>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" /> R left join TBL_USER_INFO U ON R.USER_NO=U.USERNO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select R.* from
+		<include refid="table" /> R left join TBL_USER_INFO U ON R.USER_NO=U.USERNO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" /> R left join TBL_USER_INFO U ON R.USER_NO=U.USERNO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="countByPageParam" parameterType="java.util.Map" resultType="hashmap">
+		select 
+			sum(R.amount) as "totalAmount"
+		from 
+		<include refid="table" /> R left join TBL_USER_INFO U ON R.USER_NO=U.USERNO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="getAmountByChannelCodeAndBatchNos" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		sum(AMOUNT) as "amountSum"
+		FROM
+		TBL_REMIT_PROCESS
+		WHERE
+		CHANNEL_CODE = #{channelCode}
+		AND BATCH_NO in(${batchNos})
+		AND STATUS =
+		1
+	</select>
+
+	<select id="getAmountByChannelCodeAndRequestNos" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		sum(AMOUNT) as "amountSum"
+		FROM
+		TBL_REMIT_PROCESS
+		WHERE
+		CHANNEL_CODE = #{channelCode}
+		AND REQUEST_NO in(${requestNos})
+	</select>
+
+	<select id="getByChannelCodeAndBatchNo" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		TBL_REMIT_PROCESS
+		WHERE
+		CHANNEL_CODE =
+		#{channelCode}
+		AND BATCH_NO = #{batchNo}
+		AND STATUS = 1
+	</select>
+
+
+	<select id="getChannelCodesByBatchNo" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		DISTINCT(CHANNEL_CODE) AS CHANNEL_CODE
+		FROM
+		TBL_REMIT_PROCESS
+		WHERE
+		BATCH_NO = #{batchNo}
+		AND STATUS = 1
+	</select>
+
+	<select id="getChannelCodesByRequestNos" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		DISTINCT(CHANNEL_CODE) AS CHANNEL_CODE
+		FROM
+		TBL_REMIT_PROCESS
+		WHERE
+		REQUEST_NO in(${requestNos})
+	</select>
+	
+	<select id="getChannelCodesByMap" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		DISTINCT(R.CHANNEL_CODE) AS CHANNEL_CODE
+		FROM
+		TBL_REMIT_PROCESS R  left join TBL_USER_INFO U ON R.USER_NO=U.USERNO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

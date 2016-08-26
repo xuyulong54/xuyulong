@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">       
+    
+    <!-- 运营子系统对外服务接口 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.boss.service.GlobalSetFacade"  id="globalSetFacade" check="false" />
+    <dubbo:reference interface="wusc.edu.pay.facade.boss.service.EmailFacade"  id="emailFacade" check="false" />
+    <dubbo:reference interface="wusc.edu.pay.facade.boss.service.SalesFacade"  id="salesFacade" check="false" />
+    <dubbo:reference interface="wusc.edu.pay.facade.boss.service.ProvinceFacade"  id="provinceFacade" check="false" />
+    <dubbo:reference interface="wusc.edu.pay.facade.boss.service.ArticleFacade"  id="articleFacade" check="false" />		
+    <dubbo:reference interface="wusc.edu.pay.facade.boss.service.ContractManagementFacade"  id="ContractManagementFacade" check="false" />
+    <dubbo:reference interface="wusc.edu.pay.facade.boss.service.MerchantSalesFacade"  id="merchantSalesFacade" check="false" />	
+    	
+</beans>  

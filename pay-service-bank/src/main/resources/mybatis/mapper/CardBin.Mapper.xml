@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.bank.dao.impl.CardBinDaoImpl">
+
+	<sql id="table"> TBL_BANK_CARDBIN </sql>
+
+	<resultMap type="CardBin" id="beanMap">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="cardBin" column="CARDBIN" />
+		<result property="bankCode" column="BANKCODE" />
+		<result property="bankName" column="BANKNAME" />
+		<result property="cardName" column="CARDNAME" />
+		<result property="cardKind" column="CARDKIND" />
+		<result property="cardLength" column="CARDLENGTH" />
+		<result property="status" column="STATUS" />
+		<result property="lastUpdatorId" column="LASTUPDATORID" />
+		<result property="lastUpdateTime" column="LASTUPDATETIME" />
+		<result property="lastUpdatorName" column="LASTUPDATORNAME" />
+	</resultMap>
+
+	<insert id="insert" parameterType="CardBin" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CARDBIN, BANKCODE, BANKNAME, CARDNAME,
+		CARDKIND, CARDLENGTH, STATUS, LASTUPDATORID, LASTUPDATETIME,LASTUPDATORNAME)
+		values (0, #{cardBin}, #{bankCode}, #{bankName},
+		#{cardName}, #{cardKind},
+		#{cardLength}, #{status}, #{lastUpdatorId}, #{lastUpdateTime},#{lastUpdatorName})
+	</insert>
+
+	<update id="update" parameterType="CardBin">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version} + 1 ,
+			CARDBIN = #{cardBin},
+			BANKCODE = #{bankCode},
+			BANKNAME = #{bankName},
+			CARDNAME =#{cardName},
+			CARDKIND =#{cardKind},
+			CARDLENGTH = #{cardLength},
+			STATUS = #{status},
+			LASTUPDATORID = #{lastUpdatorId},
+			LASTUPDATETIME = FUN_NOW(),
+			LASTUPDATORNAME = #{lastUpdatorName}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<if test="cardBin != null and cardBin != ''">and CARDBIN like CONCAT(CONCAT('%',#{cardBin}), '%')</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="bankName != null and bankName != ''">and BANKNAME like CONCAT(CONCAT('%',#{bankName}), '%')</if>
+		<if test="cardName != null and cardName != ''">and CARDNAME like CONCAT(CONCAT('%',#{cardName}), '%')</if>
+		<if test="cardKind != null and cardKind != ''"> and CARDKIND = #{cardKind}</if>
+		<if test="lastUpdatorName != null and lastUpdatorName != ''"> and LASTUPDATORNAME = #{lastUpdatorName}</if>
+	</sql>
+
+	<delete id="delete" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		<where>
+			ID = #{id}
+		</where>
+	</delete>
+
+	<select id="getById" parameterType="string" resultMap="beanMap">
+		SELECT * FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from <include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by bankName desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM <include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+</mapper>

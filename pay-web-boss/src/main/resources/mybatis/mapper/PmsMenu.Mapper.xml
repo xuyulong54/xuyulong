@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.web.permission.dao.impl.PmsMenuDaoImpl">
+
+	<sql id="pms_menu"> TBL_BOSS_PMS_MENU </sql>
+	<sql id="pms_role"> TBL_BOSS_PMS_ROLE </sql>
+	<sql id="pms_role_menu"> TBL_BOSS_PMS_ROLE_MENU </sql>
+	
+	<insert id="insert" parameterType="PmsMenu" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_menu"/>
+		( VERSION,
+		NAME,
+		URL,
+		PARENTID,
+		CREATETIME,
+		NUMBER,
+		ISLEAF,
+		LEVEL,
+		TARGETNAME
+		) values
+		( 0,
+		#{name,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{parent.id,jdbcType=VARCHAR},
+		FUN_NOW(),
+		#{number,jdbcType=VARCHAR},
+		#{isLeaf,jdbcType=BOOLEAN},
+		#{level,jdbcType=INTEGER},
+		#{targetName,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="PmsMenu">
+		update <include refid="pms_menu"/>
+		<set>
+			VERSION = #{version}+1,
+			NAME = #{name,jdbcType=VARCHAR},
+			URL = #{url,jdbcType=VARCHAR},
+			PARENTID = #{parent.id,jdbcType=VARCHAR},
+			NUMBER = #{number,jdbcType=VARCHAR},
+			ISLEAF = #{isLeaf,jdbcType=BOOLEAN},
+			LEVEL =#{level,jdbcType=INTEGER},
+			TARGETNAME = #{targetName,jdbcType=VARCHAR}
+		</set>
+		where ID = #{id} and VERSION = #{version}
+	</update>
+
+	<delete id="deleteById" parameterType="long">
+		delete from <include refid="pms_menu"/> where ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="string" resultType="PmsMenu">
+		select
+		D.ID AS "id",
+		D.VERSION AS "version",
+		D.NAME AS "name",
+		D.URL AS "url",
+		D.PARENTID AS "parent.id",
+		PARENT.NAME AS "parent.name",
+		D.CREATETIME AS "createTime",
+		D.NUMBER AS "number",
+		D.ISLEAF AS "isLeaf",
+		D.LEVEL AS "level",
+		D.TARGETNAME AS "targetName"
+		FROM <include refid="pms_menu"/> D
+		LEFT JOIN <include refid="pms_menu"/> PARENT
+		ON D.PARENTID = PARENT.ID
+		WHERE D.ID = #{id}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultType="PmsMenu">
+		select  D.ID AS "id",
+				D.VERSION AS "version",
+				D.NAME AS "name",
+				D.URL AS "url",
+				D.PARENTID AS "parent.id",
+				D.CREATETIME AS	"createTime",
+				D.NUMBER AS "number",
+				D.ISLEAF AS "isLeaf"，
+				D.LEVEL AS "level",
+				D.TARGETNAME AS "targetName"
+			from <include refid="pms_menu"/> as D
+		  
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from <include refid="pms_menu"/> D
+	</select>
+
+	<sql id="condition_sql">
+		<if test="isLeaf != null and isLeaf != ''"> and ISLEAF = #{isLeaf}</if>
+		<if test="name != null and name != ''"> and NAME = #{name}</if>
+		<if test="parentId != null and parentId != ''"> and PARENTID = #{parentId}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultType="PmsMenu">
+		select * from <include refid="pms_menu"/> 
+		<where>
+			<include refid="condition_sql"/>
+		</where>
+	</select>
+
+	<select id="listByParent" parameterType="string" resultType="java.util.Map">
+		select 
+			M.ID AS "id", 
+			M.VERSION AS "version", 
+			M.PARENTID AS "pId", 
+			M.NAME as "name", 
+			M.ISLEAF AS "isLeaf", 
+			M.LEVEL AS "level", 
+			M.TARGETNAME AS "targetName" 
+		FROM <include refid="pms_menu"/> M
+		<where>
+			<if test="parentId!=null and parentId!=''">
+				And M.PARENTID = #{parentId}
+			</if>
+		</where>
+		ORDER BY M.NUMBER ASC
+	</select>
+
+	<select id="listByParentId" parameterType="long" resultType="PmsMenu">
+		SELECT
+		ID AS "id" ,
+		VERSION AS "version",
+		PARENTID AS "parent.id",
+		NAME as "name",
+		ISLEAF AS "isLeaf",
+		LEVEL AS "level",
+		TARGETNAME AS
+		"targetName"
+		FROM <include refid="pms_menu"/> where PARENTID = #{parentId}
+	</select>
+
+	<select id="listByRoleIds" parameterType="string" resultType="java.util.Map">
+		SELECT DISTINCT * FROM (
+			SELECT 
+				M.ID AS "id", 
+				M.VERSION AS "version", 
+				M.PARENTID AS "pId", 
+				M.NAME as "name", 
+				M.ISLEAF AS "isLeaf",
+				M.LEVEL AS "level",
+				M.URL as "url",
+				M.TARGETNAME AS "targetName",
+				M.NUMBER as number
+			FROM <include refid="pms_role"/> R
+			LEFT JOIN
+			<include refid="pms_role_menu"/> RM
+			ON R.ID = RM.ROLEID
+			LEFT JOIN <include refid="pms_menu"/> M
+			ON RM.MENUID = M.ID
+			WHERE R.ID in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">#{item}</foreach>
+		) AS MT ORDER BY MT.number ASC
+	</select>
+
+</mapper>

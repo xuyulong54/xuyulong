@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.MerchantOnlineDaoImpl">
+
+	<sql id="table"> TBL_USER_MERCHANT_ONLINE </sql>
+	
+	<resultMap id="beanMap" type="wusc.edu.pay.facade.user.entity.MerchantOnline" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="VERSION" property="version" jdbcType="SMALLINT" />
+    <result column="CREATETIME" property="createTime" />
+    <result column="MERCHANTNO" property="merchantNo" jdbcType="CHAR" />
+    <result column="STATUS" property="status" jdbcType="SMALLINT" />
+    <result column="MERCHANTTYPE" property="merchantType" jdbcType="SMALLINT" />
+    <result column="MERCHANTKEY" property="merchantKey" jdbcType="VARCHAR" />
+    <result column="SHORTNAME" property="shortName" jdbcType="VARCHAR" />
+    <result column="FULLNAME" property="fullName" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="ICP" property="icp" jdbcType="VARCHAR" />
+    <result column="LEGALPERSON" property="legalPerson" jdbcType="VARCHAR" />
+    <result column="CARDNO" property="cardNo" jdbcType="VARCHAR" />
+    <result column="CERTIFICATEEXPIRY" property="certificateExpiry" jdbcType="VARCHAR" />
+    <result column="SCOPE" property="scope" jdbcType="VARCHAR" />
+    <result column="LICENSENO" property="licenseNo" jdbcType="VARCHAR" />
+    <result column="LICENSEEXPIRY" property="licenseExpiry" jdbcType="VARCHAR" />
+    <result column="LICENSENOVALID" property="licenseNoValid" />
+    <result column="ORGCODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="NATIONALTAX" property="nationalTax" jdbcType="VARCHAR" />
+    <result column="LANDTAX" property="landTax" jdbcType="VARCHAR" />
+    <result column="SIGNTIME" property="signTime" />
+    <result column="CONTRACTVALID" property="contractValid" />
+    <result column="BUSICONTACTNAME" property="busiContactName" jdbcType="VARCHAR" />
+    <result column="BUSICONTACTMOBILENO" property="busiContactMobileNo" jdbcType="VARCHAR" />
+    <result column="BUSICONTACTEMAIL" property="busiContactEmail" jdbcType="VARCHAR" />
+    <result column="BUSICONTACTQQ" property="busiContactQq" jdbcType="VARCHAR" />
+    <result column="TECHCONTACTNAME" property="techContactName" jdbcType="VARCHAR" />
+    <result column="TECHCONTACTMOBILENO" property="techContactMobileNo" jdbcType="VARCHAR" />
+    <result column="TECHCONTACTEMAIL" property="techContactEmail" jdbcType="VARCHAR" />
+    <result column="TECHCONTACTQQ" property="techContactQq" jdbcType="VARCHAR" />
+    <result column="FAX" property="fax" jdbcType="VARCHAR" />
+    <result column="IPSEG" property="ipSeg" jdbcType="VARCHAR" />
+    <result column="ACCOUNTNO" property="accountNo" jdbcType="VARCHAR" />
+    <result column="MCC" property="mcc" jdbcType="VARCHAR" />
+    <result column="USER_TYPE" property="userType" jdbcType="BIGINT" />
+    <result column="REGISTERMONEY" property="registerMoney" jdbcType="DECIMAL" />
+    <result column="DEPOSIT" property="deposit" jdbcType="DECIMAL" />
+    
+    <result column="PARENT_USER_NO" property="parentUserNo" jdbcType="VARCHAR" />
+    
+     <result column="ZIPCODE" property="zipCode" jdbcType="VARCHAR" />
+     <result column="TELEPHONENUM" property="telephoneNum" jdbcType="VARCHAR" />
+     <result column="BUSINESSAREA" property="businessArea" jdbcType="BIGINT" />
+     <result column="EMPNUM" property="empNum" jdbcType="BIGINT" />
+     <result column="CARDNO_ADDRESS" property="cardnoAddress" jdbcType="VARCHAR" />
+     <result column="LICENSEEXPIRYFORM" property="licenseExpiryForm" />
+     
+     
+     
+  </resultMap>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.user.entity.MerchantOnline" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO
+		<include refid="table" />
+		( VERSION,
+		CREATETIME,
+		MERCHANTNO,
+		ACCOUNTNO,
+		STATUS,
+		MERCHANTTYPE,
+		MERCHANTKEY,
+		SHORTNAME,
+		FULLNAME,
+		ADDRESS,
+		URL,
+		ICP,
+		LEGALPERSON,
+		CARDNO,
+		CERTIFICATEEXPIRY,
+		SCOPE,
+		LICENSENO,
+		LICENSEEXPIRY,
+		LICENSENOVALID,
+		ORGCODE,
+		NATIONALTAX,
+		LANDTAX,
+		SIGNTIME,
+		CONTRACTVALID,
+		BUSICONTACTNAME,
+		BUSICONTACTMOBILENO,
+		BUSICONTACTEMAIL,
+		BUSICONTACTQQ,
+		TECHCONTACTNAME,
+		TECHCONTACTMOBILENO,
+		TECHCONTACTEMAIL,
+		TECHCONTACTQQ,
+		FAX,
+		IPSEG,
+		MCC,USER_TYPE, REGISTERMONEY,PREAUTHORIZATION,DEPOSIT,
+		ZIPCODE,
+		TELEPHONENUM,
+		BUSINESSAREA,
+		EMPNUM,
+		CARDNO_ADDRESS,
+		LICENSEEXPIRYFORM
+		) VALUES
+		( 0,
+		FUN_NOW(),
+		#{merchantNo,jdbcType=VARCHAR},
+		#{accountNo,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER},
+		#{merchantType,jdbcType=INTEGER},
+		#{merchantKey,jdbcType=VARCHAR},
+		#{shortName,jdbcType=VARCHAR},
+		#{fullName,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{icp,jdbcType=VARCHAR},
+		#{legalPerson,jdbcType=VARCHAR},
+		#{cardNo,jdbcType=VARCHAR},
+		#{certificateExpiry,jdbcType=VARCHAR},
+		#{scope,jdbcType=VARCHAR},
+		#{licenseNo,jdbcType=VARCHAR},
+		#{licenseExpiry,jdbcType=VARCHAR},
+		#{licenseNoValid,jdbcType=TIMESTAMP},
+		#{orgCode,jdbcType=VARCHAR},
+		#{nationalTax,jdbcType=VARCHAR},
+		#{landTax,jdbcType=VARCHAR},
+		#{signTime,jdbcType=TIMESTAMP},
+		#{contractValid,jdbcType=TIMESTAMP},
+		#{busiContactName,jdbcType=VARCHAR},
+		#{busiContactMobileNo,jdbcType=VARCHAR},
+		#{busiContactEmail,jdbcType=VARCHAR},
+		#{busiContactQq,jdbcType=VARCHAR},
+		#{techContactName,jdbcType=VARCHAR},
+		#{techContactMobileNo,jdbcType=VARCHAR},
+		#{techContactEmail,jdbcType=VARCHAR},
+		#{techContactQq,jdbcType=VARCHAR},
+		#{fax,jdbcType=VARCHAR},
+		#{ipSeg,jdbcType=VARCHAR},
+		#{mcc},
+		#{userType},
+		#{registerMoney},
+		#{preauthorization},
+		#{deposit},
+		#{zipCode},
+		#{telephoneNum},
+		#{businessArea},
+		#{empNum},
+		#{cardnoAddress},
+		#{licenseExpiryForm}
+		)
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.user.entity.MerchantOnline">
+		UPDATE
+		<include refid="table" />
+		<set>
+			VERSION = VERSION+1,
+			STATUS = #{status,jdbcType=INTEGER},
+			MERCHANTNO = #{merchantNo,jdbcType=VARCHAR},
+			MERCHANTTYPE = #{merchantType,jdbcType=INTEGER},
+			MERCHANTKEY = #{merchantKey,jdbcType=VARCHAR},
+			SHORTNAME = #{shortName,jdbcType=VARCHAR},
+			FULLNAME = #{fullName,jdbcType=VARCHAR},
+			ADDRESS = #{address,jdbcType=VARCHAR},
+			URL = #{url,jdbcType=VARCHAR},
+			ICP =
+			#{icp,jdbcType=VARCHAR},
+			LEGALPERSON = #{legalPerson,jdbcType=VARCHAR},
+			CARDNO = #{cardNo,jdbcType=VARCHAR},
+			CERTIFICATEEXPIRY = #{certificateExpiry,jdbcType=VARCHAR},
+			SCOPE =
+			#{scope,jdbcType=VARCHAR},
+			LICENSENO = #{licenseNo,jdbcType=VARCHAR},
+			LICENSEEXPIRY = #{licenseExpiry,jdbcType=VARCHAR},
+			LICENSENOVALID = #{licenseNoValid,jdbcType=TIMESTAMP},
+			ORGCODE =
+			#{orgCode,jdbcType=VARCHAR},
+			NATIONALTAX = #{nationalTax,jdbcType=VARCHAR},
+			LANDTAX = #{landTax,jdbcType=VARCHAR},
+			SIGNTIME = #{signTime,jdbcType=TIMESTAMP},
+			CONTRACTVALID =
+			#{contractValid,jdbcType=TIMESTAMP},
+			BUSICONTACTNAME = #{busiContactName,jdbcType=VARCHAR},
+			BUSICONTACTMOBILENO = #{busiContactMobileNo,jdbcType=VARCHAR},
+			BUSICONTACTEMAIL =
+			#{busiContactEmail,jdbcType=VARCHAR},
+			BUSICONTACTQQ = #{busiContactQq,jdbcType=VARCHAR},
+			TECHCONTACTNAME = #{techContactName,jdbcType=VARCHAR},
+			TECHCONTACTMOBILENO =
+			#{techContactMobileNo,jdbcType=VARCHAR},
+			TECHCONTACTEMAIL = #{techContactEmail,jdbcType=VARCHAR},
+			TECHCONTACTQQ = #{techContactQq,jdbcType=VARCHAR},
+			FAX = #{fax,jdbcType=VARCHAR},
+			IPSEG =
+			#{ipSeg,jdbcType=VARCHAR},
+			MCC = #{mcc},
+			USER_TYPE = #{userType},
+			REGISTERMONEY = #{registerMoney},
+			PREAUTHORIZATION = #{preauthorization},
+			DEPOSIT = #{deposit},
+			ZIPCODE = #{zipCode},
+			TELEPHONENUM = #{telephoneNum},
+			BUSINESSAREA = #{businessArea},
+			EMPNUM = #{empNum},
+			CARDNO_ADDRESS = #{cardnoAddress},
+			LICENSEEXPIRYFORM= #{licenseExpiryForm}
+			
+		</set>
+		WHERE ID = #{id} AND VERSION= #{version}
+	</update>
+
+	<delete id="delete" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="string" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		SELECT A.* , B.PARENT_USER_NO FROM
+		<include refid="table" />
+		AS A LEFT JOIN TBL_USER_RELATION AS B
+		ON A.MERCHANTNO = B.CHILD_USER_NO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="countByPageParam" parameterType="java.util.Map" resultType="hashmap">
+		select count(1) as "alls",
+
+		(select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and STATUS = 104
+		</where>
+		)as "reging", <!--104注册中的商户个数 -->
+
+		(select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and STATUS = 103
+		</where>
+		)as "noPass",<!--103审核不通过的商户个数 -->
+
+		(select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and STATUS = 102
+		</where>
+		)as "merchants",<!--102创建的的商户个数 -->
+
+		(select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and STATUS = 101
+		</where>
+		)as "inActive",<!--101冻结的商户个数 -->
+
+		(select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and STATUS = 105
+		</where>
+		)as "cell",<!--105已销户的商户个数 -->
+
+		(select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and STATUS = 106
+		</where>
+		)as "wait_audit",<!--106待审核的商户个数 -->
+
+		(select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and STATUS = 107
+		</where>
+		)as "wait_cell",<!--107待销户的商户个数 -->
+
+
+		(select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and STATUS = 100
+		</where>
+		)as "active"<!--100激活的商户个数 -->
+
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<sql id="condition_sql">
+		<if test="merchantNo != null and merchantNo != ''"> AND MERCHANTNO = #{merchantNo}</if>
+		<if test="status != null and status != ''"> AND STATUS = #{status}</if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="inStatus != null and inStatus != ''">
+			and STATUS in
+			<foreach item="item" index="index" collection="inStatus" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		<if test="merchantType != null and merchantType != ''"> AND MERCHANTTYPE = #{merchantType}</if>
+		<if test="shortName != null and shortName != ''"> AND SHORTNAME LIKE CONCAT('%' ,CONCAT(#{shortName},'%'))</if>
+		<if test="cardNo != null and cardNo != ''"> AND CARDNO = #{cardNo}</if>
+		<if test="accountNo != null and accountNo != ''"> AND ACCOUNTNO = #{accountNo}</if>
+		<if test="fullName != null and fullName != ''"> AND FULLNAME LIKE CONCAT('%' ,CONCAT(#{fullName},'%'))</if>
+		<if test="allName != null and allName != ''"> AND FULLNAME = #{allName}</if>
+		<if test="beginDate != null and beginDate != null and endDate != '' and endDate != ''">
+			and CREATETIME between #{beginDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+		<if test="mcc != null and mcc != ''"> AND mcc = #{mcc}</if>
+		<if test="parentUserNo != null and parentUserNo != ''"> AND PARENT_USER_NO = #{parentUserNo}</if>
+		
+		<!-- 营业执照号 -->
+		<if test="licenseNo != null and licenseNo != ''"> AND LICENSENO = #{licenseNo}</if>
+		
+		<if test="userType != null and userType != ''"> AND USER_TYPE = #{userType}</if>
+		
+		<if test="level != null and level != ''"> AND MERCHANTNO in (SELECT AGENT_NO FROM TBL_AGENT_RELATION WHERE LEVEL =#{level} ) </if>
+		<!-- 运营的直属商户 -->
+		<if test="bossMerchant != null and bossMerchant != ''"> AND MERCHANTNO in (select MERCHANT_NO from TBL_AGENT_MERCHANT_RELATION where FIRST_AGENT_NO IS NULL  OR  FIRST_AGENT_NO='') </if>
+		
+		
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="sumFreezeList" parameterType="java.util.List" resultType="java.util.Map">
+		select MERCHANTTYPE,
+		SUM(CASE WHEN MERCHANTTYPE=12 THEN 1 ELSE 0 END)
+		AS "enterpriseSum",
+		SUM(CASE WHEN MERCHANTTYPE=11 THEN 1 ELSE 0 END) AS
+		"individualSum",
+		SUM(CASE WHEN MERCHANTTYPE=10 THEN 1 ELSE 0 END) AS
+		"memberSum"
+		from TBL_USER_MERCHANT_ONLINE
+		where MERCHANTNO IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">#{item}</foreach>
+		GROUP BY MERCHANTTYPE
+	</select>
+	
+	<select id="sumBlackList" parameterType="java.util.List" resultType="java.util.Map">
+		select MERCHANTTYPE,
+		SUM(CASE WHEN MERCHANTTYPE=12 THEN 1 ELSE 0 END)
+		AS "enterpriseSum",
+		SUM(CASE WHEN MERCHANTTYPE=11 THEN 1 ELSE 0 END) AS
+		"individualSum",
+		SUM(CASE WHEN MERCHANTTYPE=10 THEN 1 ELSE 0 END) AS
+		"memberSum"
+		from TBL_USER_MERCHANT_ONLINE
+		where MERCHANTNO IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">#{item}</foreach>
+		GROUP BY MERCHANTTYPE
+	</select>
+	
+	<select id="agentMerchantStautsSummReport" parameterType="java.util.Map" resultType="hashMap">
+		SELECT 
+			CASE WHEN LENGTH(R.THIRD_AGENT_NO) = 15 THEN  R.THIRD_AGENT_NO 
+				   WHEN LENGTH(R.SECOND_AGENT_NO) = 15 THEN R.SECOND_AGENT_NO
+				   ELSE R.FIRST_AGENT_NO END AS AGENT_NO,
+			CASE WHEN LENGTH(R.THIRD_AGENT_NO) = 15 THEN  R.THIRD_AGENT_NAME
+					 WHEN LENGTH(R.SECOND_AGENT_NO) = 15 THEN R.SECOND_AGENT_NAME
+					 ELSE R.FIRST_AGENT_NAME END AS AGENT_NAME,
+		 	sum(CASE WHEN (T.STATUS =102) THEN 1 ELSE 0 END )AS  CREATED,
+			sum(CASE WHEN (T.STATUS =106) THEN 1 ELSE 0 END )AS  FIRSTPASS,
+			sum(CASE WHEN (T.STATUS =103) THEN 1 ELSE 0 END )AS  NOPASS,
+			sum(CASE WHEN (T.STATUS =100) THEN 1 ELSE 0 END )AS  ACTIVE,
+			sum(CASE WHEN (T.STATUS =101) THEN 1 ELSE 0 END )AS  INACTIVE,
+			sum(CASE WHEN (T.STATUS =105) THEN 1 ELSE 0 END )AS  CLOSE
+		FROM 
+			TBL_USER_MERCHANT_ONLINE T,TBL_AGENT_MERCHANT_RELATION R
+		WHERE  
+			T.MERCHANTNO = R.MERCHANT_NO
+			AND (R.FIRST_AGENT_NO = #{agentNo}  
+			OR R.SECOND_AGENT_NO = #{agentNo}  
+			OR R.THIRD_AGENT_NO = #{agentNo} )
+		GROUP BY 
+			CASE 
+				WHEN LENGTH(R.THIRD_AGENT_NO) = 15 THEN  R.THIRD_AGENT_NO 
+				WHEN LENGTH(R.SECOND_AGENT_NO) = 15 THEN R.SECOND_AGENT_NO
+				ELSE R.FIRST_AGENT_NO END
+	</select>
+</mapper>

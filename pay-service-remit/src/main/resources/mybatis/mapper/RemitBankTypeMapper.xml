@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitBankTypeDaoImpl">
+	<sql id="table"> TBL_REMIT_BANK_TYPE </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitBankType">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="TYPE_CODE" property="typeCode" jdbcType="VARCHAR" />
+		<result column="TYPE_NAME" property="typeName" jdbcType="VARCHAR" />
+		<result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR" />
+		<result column="CATEGORY" property="category" jdbcType="SMALLINT" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, TYPE_CODE, TYPE_NAME, BANK_CODE , CATEGORY, STATUS
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="typeCode != null and typeCode != ''"> and TYPE_CODE = #{typeCode}</if>
+		<if test="typeName != null and typeName != ''"> and TYPENAME = #{typeName}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="bankCode != null and bankCode != ''"> and BANKCODE = #{bankCode}</if>
+		<if test="category != null and category != ''"> and CATEGORY = #{category}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitBankType" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, TYPE_CODE,
+		TYPE_NAME, BANK_CODE , CATEGORY, STATUS)
+		values (0, #{typeCode,jdbcType=VARCHAR},
+		#{typeName,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, #{category,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitBankType">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=SMALLINT}+1,
+		TYPE_CODE = #{typeCode,jdbcType=VARCHAR},
+		TYPE_NAME = #{typeName,jdbcType=VARCHAR},
+		BANK_CODE = #{bankCode,jdbcType=VARCHAR},
+		CATEGORY = #{category,jdbcType=SMALLINT},
+		STATUS = #{status,jdbcType=SMALLINT}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="getByTypeCode" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where TYPE_CODE = #{typeCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getByBankCode" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where BANK_CODE = #{bankCode,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listActiveBankByIn" parameterType="java.util.List" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			STATUS = 100 and
+			BANK_CODE in(
+			<foreach collection="list" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			)
+		</where>
+	</select>
+
+	<select id="listActiveBankByNotIn" parameterType="java.util.List" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			STATUS = 100 and
+			BANK_CODE not in(
+			<foreach collection="list" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			)
+		</where>
+	</select>
+
+</mapper>

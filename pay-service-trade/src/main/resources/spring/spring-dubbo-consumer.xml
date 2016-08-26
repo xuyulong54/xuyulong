@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 调用账户服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountTransactionFacade" id="accountTransactionFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountQueryFacade" id="accountQueryFacade" check="false" />
+
+	<!-- 调用商户服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserQueryFacade" id="userQueryFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantOnlineFacade" id="merchantOnlineFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserBankAccountFacade" id="userBankAccountFacade" check="false" />
+
+	<dubbo:reference interface="wusc.edu.pay.facade.agent.service.AgentMerchantRelationFacade" id="agentMerchantRelationFacade" check="false" />
+
+	<!-- 调用银行接口服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.banklink.netpay.service.BankFacade" id="bankFacade" check="false" />
+
+	<!-- 调用用商户计费服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.fee.service.CalculateFeeFacade" id="calculateFeeFacade" check="false" />
+
+	<!-- 调用用成本计费服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.cost.service.CalCostOrderFacade" id="calCostOrderFacade" check="false" />
+
+	<!-- 调用用商户计费服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.fee.service.FeeQueryFacade" id="feeQueryFacade" check="false" />
+
+	<!-- 调用限制服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.limit.service.TradeLimitFacade" id="tradeLimitFacade" check="false" />
+
+	<!-- 通知接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.notify.service.NotifyFacade" id="notifyFacade" check="false" />
+
+	<!-- 通知结算服务 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.settlement.service.SettQueryFacade" id="settQueryFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.settlement.service.SettBusinessFacade" id="settBusinessFacade" check="false" />
+</beans>  

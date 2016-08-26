@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.web.permission.dao.impl.PmsActionDaoImpl">
+
+	<sql id="pms_action"> TBL_BOSS_PMS_ACTION </sql>
+	<sql id="pms_menu"> TBL_BOSS_PMS_MENU </sql>
+    
+	<insert id="insert" parameterType="PmsAction" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="pms_action"/>  (VERSION, ACTIONNAME, ACTION, REMARK, CREATETIME, MENUID) 
+		values (0, #{actionName}, #{action}, #{remark}, FUN_NOW(), #{menu.id})
+	</insert>
+	
+	<update id="update" parameterType="PmsAction">
+		update <include refid="pms_action"/>
+		<set>
+		VERSION = #{version}+1,
+		ACTIONNAME = #{actionName},
+		ACTION = #{action},
+		REMARK = #{remark},
+		MENUID = #{menu.id}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+	
+	<select id="findByIds" resultType="PmsAction">
+    	select  
+    		D.ID AS "id",
+			D.VERSION AS "version",
+			D.ACTIONNAME AS "actionName",
+			D.ACTION AS "action",
+			D.REMARK AS "remark",
+			D.CREATETIME AS "createTime",
+			D.MENUID AS "menu.id",
+			M.NAME AS "menu.name"
+    	 from <include refid="pms_action"/> D left join <include refid="pms_menu"/> M on D.MENUID = M.ID  where D.ID in 
+    	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">#{item}</foreach>
+  	</select>
+  	
+  	<select id="getById" parameterType="long" resultType="PmsAction">
+    	select  
+    		D.ID AS "id",
+			D.VERSION AS "version",
+			D.ACTIONNAME AS "actionName",
+			D.ACTION AS "action",
+			D.REMARK AS "remark",
+			D.CREATETIME AS "createTime",
+			D.MENUID AS "menu.id",
+			M.NAME AS "menu.name"
+    	 from <include refid="pms_action"/> D left join <include refid="pms_menu"/> M on D.MENUID = M.ID 
+    	where D.ID = #{id}
+  	</select>
+  	
+  	<select id="getByActionName" parameterType="string" resultType="PmsAction">
+    	SELECT  
+    		ID AS "id",
+			VERSION AS "version",
+			ACTIONNAME AS "actionName",
+			ACTION AS "action",
+			REMARK AS "remark",
+			CREATETIME AS "createTime"
+    	FROM <include refid="pms_action"/> where ACTIONNAME = #{actionName}
+  	</select>
+  	
+  	<select id="getByAction" parameterType="string" resultType="PmsAction">
+    	SELECT  
+    		ID AS "id",
+			VERSION AS "version",
+			ACTIONNAME AS "actionName",
+			ACTION AS "action",
+			REMARK AS "remark",
+			CREATETIME AS "createTime"
+    	FROM <include refid="pms_action"/> where ACTION = #{action}
+  	</select>
+  	
+  	<select id="getByActionNameNotEqId" parameterType="java.util.Map" resultType="PmsAction">
+    	SELECT  
+    		ID AS "id",
+			VERSION AS "version",
+			ACTIONNAME AS "actionName",
+			ACTION AS "action",
+			REMARK AS "remark",
+			CREATETIME AS "createTime"
+    	FROM <include refid="pms_action"/> where ACTIONNAME = #{actionName} and ID != #{id}
+  	</select>
+  	
+  	<select id="getByActionNotEqId" parameterType="java.util.Map" resultType="PmsAction">
+    	SELECT  
+    		ID AS "id",
+			VERSION AS "version",
+			ACTIONNAME AS "actionName",
+			ACTION AS "action",
+			REMARK AS "remark",
+			CREATETIME AS "createTime"
+    	FROM <include refid="pms_action"/> where ACTION = #{action} and ID != #{id}
+  	</select>
+  	
+  	<select id="listAllByMenuId" parameterType="java.util.Map" resultType="PmsAction">
+    	select  
+    		D.ID AS "id",
+			D.VERSION AS "version",
+			D.ACTIONNAME AS "actionName",
+			D.ACTION AS "action",
+			D.REMARK AS "remark",
+			D.CREATETIME AS "createTime",
+			D.MENUID AS "menu.id",
+			M.NAME AS "menu.name"
+    	from <include refid="pms_action"/> D LEFT JOIN <include refid="pms_menu"/> M on D.MENUID = M.ID 
+    	where 1=1
+    	<if test="menuId!=null and menuId!=''">
+    	    and  D.MENUID = #{menuId}
+    	</if>
+  	</select>
+  	
+  	<select id="listByMenuId" parameterType="long" resultType="PmsAction">
+    	SELECT  
+    		ID AS "id",
+			VERSION AS "version",
+			ACTIONNAME AS "actionName",
+			ACTION AS "action",
+			REMARK AS "remark",
+			CREATETIME AS "createTime",
+			MENUID AS "menuId"
+    	FROM <include refid="pms_action"/> where MENUID = #{menuId}
+  	</select>
+  	
+  	<delete id="deleteById" parameterType="long">
+    	delete from <include refid="pms_action"/> where ID = #{id}
+  	</delete>
+  	
+  	<!-- 动态组装复合查询条件 -->
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="action != null and action != ''"> and action= #{action}</if>
+		<!-- Like query -->
+		<if test="actionName != null and actionName != ''"> and actionName like CONCAT(CONCAT('%', #{actionName}), '%')</if>		
+	</sql>
+	
+	<!-- 分页查询 -->
+	<select id="listPage" parameterType="java.util.Map"  resultType="PmsAction">
+		select  D.ID AS "id",
+				D.VERSION AS "version",
+				D.ACTIONNAME AS "actionName",
+				D.ACTION AS "action",
+				D.REMARK AS "remark",
+				D.CREATETIME AS "createTime",
+				D.MENUID AS "menu.id",
+				M.NAME AS "menu.name"
+				FROM <include refid="pms_action"/> D LEFT JOIN <include refid="pms_menu"/> M ON D.MENUID = M.ID 
+				<where>
+					<include refid="condition_sql"/>
+				</where>
+			  
+	</select>
+	
+	<!-- 分页查询时要用到的总数统计 -->
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from <include refid="pms_action"/>
+		<where>
+			<include refid="condition_sql"/>
+		</where>
+	</select>
+	
+	
+</mapper>

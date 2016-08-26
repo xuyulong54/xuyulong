@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.payrule.dao.impl.PayRuleDaoImpl">
+	<!-- 启用缓存 -->
+	<!-- <cache eviction="LRU" type="wusc.edu.pay.common.core.mybatis.cache.redis.MybatiesRedisCache" /> -->
+	<sql id="table"> TBL_RULE_PAY_RULE </sql>
+
+	<resultMap id="BaseResultMap" type="PayRule">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="RULE_NAME" property="ruleName" jdbcType="VARCHAR" />
+		<result column="RULE_TYPE" property="ruleType" jdbcType="SMALLINT" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, MODIFY_TIME, RULE_NAME, RULE_TYPE, DESCRIPTION
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="ruleName != null and ruleName != ''"> and RULE_NAME = #{ruleName,jdbcType=VARCHAR}</if>
+		<if test="ruleType != null and ruleType != ''"> and RULE_TYPE = #{ruleType,jdbcType=SMALLINT}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="PayRule">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		MODIFY_TIME, RULE_NAME, RULE_TYPE,
+		DESCRIPTION)
+		values (0, #{createTime},
+		#{modifyTime,jdbcType=TIMESTAMP}, #{ruleName,jdbcType=VARCHAR}, #{ruleType,jdbcType=SMALLINT},
+		#{description,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="PayRule">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		MODIFY_TIME = FUN_NOW(),
+		RULE_NAME = #{ruleName,jdbcType=VARCHAR},
+		RULE_TYPE = #{ruleType,jdbcType=SMALLINT},
+		DESCRIPTION = #{description,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="getByRuleName" parameterType="string" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where RULE_NAME = #{ruleName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getByRuleNameNotEqualsRuleId" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where RULE_NAME = #{ruleName,jdbcType=VARCHAR} and ID != #{ruleId,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="listProductByRuleId" parameterType="java.lang.Long" resultType="wusc.edu.pay.facade.payrule.entity.vo.BindSwitchVo">
+		SELECT A.PAY_PRODUCT_CODE as "payProductCode" , B.PAY_PRODUCT_NAME as "payProductName",
+		PAY_WAY_CODE as "payWayCode"
+		FROM TBL_RULE_PAY_WAY_SWITCH A, TBL_RULE_PAY_PRODUCT B
+		WHERE A.PAY_PRODUCT_CODE = B.PAY_PRODUCT_CODE
+		AND PAY_RULE_ID=#{ruleId}
+	</select>
+
+</mapper>

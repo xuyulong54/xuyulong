@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="pay-service-limit" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+
+	<dubbo:protocol name="dubbo" port="20809" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+
+	<!-- 当ProtocolConfig和ServiceConfig某属性没有配置时,采用此缺省值 -->
+	<dubbo:provider timeout="10000" threadpool="fixed" threads="100" accepts="1000" />
+
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.SwitchLimitPackFacade" ref="switchLimitPackFacade" />
+
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.PayProductSwitchFacade" ref="payProductSwitchFacade" />
+
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.PayWaySwitchFacade" ref="payWaySwitchFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.AmountLimitManagementFacade" ref="amountLimitManagementFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.BizFunctionSwitchFacade" ref="bizFunctionSwitchFacade" />
+
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.MerchantCustomPayInterfaceFacade" ref="merchantCustomPayInterfaceFacade" />
+
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.BizFunctionParamConfigFacade" ref="bizFunctionParamConfigFacade" />
+
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.TradeLimitRouterFacade" ref="tradeLimitRouterFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.LimitSwitchFacade" ref="limitSwitchFacade" />
+	
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.limit.service.TradeLimitFacade" ref="tradeLimitFacade" />
+	
+	
+	
+</beans>  

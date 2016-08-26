@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.account.dao.impl.AccountHistoryDaoImpl">
+
+	<sql id="table"> TBL_ACCOUNT_ACCOUNTHISTORY </sql>
+
+	<resultMap id="beanMap" type="AccountHistory">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="requestNo" column="REQUESTNO" />
+		<result property="accountNo" column="ACCOUNTNO" />
+		<result property="amount" column="AMOUNT" />
+		<result property="fee" column="FEE" />
+		<result property="balance" column="BALANCE" />
+		<result property="remark" column="REMARK" />
+		<result property="fundDirection" column="FUNDDIRECTION" />
+		<result property="isAllowSett" column="ISALLOWSETT" />
+		<result property="isCompleteSett" column="ISCOMPLETESETT" />
+		<result property="trxType" column="TRXTYPE" />
+		<result property="riskDay" column="RISK_DAY" />
+	</resultMap>
+
+	<insert id="insert" parameterType="AccountHistory" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, REQUESTNO, ACCOUNTNO,
+		AMOUNT, FEE, BALANCE, REMARK,
+		FUNDDIRECTION,ISALLOWSETT,ISCOMPLETESETT,TRXTYPE, RISK_DAY)
+		values (0, #{createTime}, #{requestNo}, #{accountNo}, #{amount},
+		#{fee},
+		#{balance}, #{remark}, #{fundDirection}, #{isAllowSett}, #{isCompleteSett}, #{trxType}, #{riskDay})
+	</insert>
+
+	<insert id="batchInsert" parameterType="AccountHistory">
+		insert into	<include refid="table" />
+		(VERSION, CREATETIME, REQUESTNO, ACCOUNTNO,
+		AMOUNT, FEE, BALANCE, REMARK,
+		FUNDDIRECTION,ISALLOWSETT,ISCOMPLETESETT,TRXTYPE, RISK_DAY)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(0, #{item.createTime}, #{item.requestNo}, #{item.accountNo},#{item.amount},
+			#{item.fee}, #{item.balance}, #{item.remark},
+			#{item.fundDirection}, #{item.isAllowSett}, #{item.isCompleteSett}, #{item.trxType}, #{item.riskDay})
+		</foreach>
+	</insert>
+	
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate !=''">
+			and CREATETIME between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="requestNo != null and requestNo !='' "> and REQUESTNO = #{requestNo}</if>
+		<if test="accountNo != null and accountNo !='' "> and ACCOUNTNO = #{accountNo}</if>
+		<if test="isAllowSett != null and isAllowSett !=''"> and ISALLOWSETT = #{isAllowSett}</if>
+		<if test="isCompleteSett != null and isCompleteSett != ''"> and ISCOMPLETESETT = #{isCompleteSett}</if>
+		<if test="trxType != null and trxType !=''"> and TRXTYPE =#{trxType} </if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="trxTypes != null and  trxTypes !=''">
+			and TRXTYPE in
+			<foreach collection="trxTypes" index="index" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		<if test="fundDirection != null and  fundDirection !=''"> and FUNDDIRECTION = #{fundDirection}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="countByPageParam" parameterType="java.util.Map" resultType="hashmap">
+		select sum(AMOUNT) as "income",
+		(select sum(AMOUNT) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			<![CDATA[ and FUNDDIRECTION != 123]]>
+		</where>
+		)as "pay"
+		from <include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+			and FUNDDIRECTION = 123
+		</where>
+	</select>
+
+	<!-- 更新账户风险预存期外的账户历史记录记为结算完成 -->
+	<update id="updateCompleteSettTo100" parameterType="java.util.Map">
+		update <include refid="table" />
+			set ISCOMPLETESETT = 100, VERSION = VERSION + 1
+		where
+			ACCOUNTNO = #{accountNo}
+			and ISCOMPLETESETT = 101
+			and ISALLOWSETT = 100
+			and (
+			<![CDATA[date(CREATETIME) <= FUN_DATE_ADD(#{statDate}, -RISK_DAY)]]>
+			and RISK_DAY is not null
+			or
+			<![CDATA[ date(CREATETIME) <= FUN_DATE_ADD(#{statDate}, -#{riskDay})]]>
+			and RISK_DAY is null
+			)
+	</update>
+	
+	<!-- 更新账户历史记录记为结算完成_针对单笔交易T+0 -->
+	<update id="updateCompleteSettTo100_t0" parameterType="java.util.Map">
+		update <include refid="table" />
+			set ISCOMPLETESETT = 100, VERSION = VERSION + 1
+		where
+			REQUESTNO = #{requestNo}
+			and ACCOUNTNO = #{accountNo}
+			and ISCOMPLETESETT = 101
+			and ISALLOWSETT = 100
+			and TRXTYPE = 6006
+	</update>
+	
+	<!-- 日汇总账户待结算金额  -->
+	<select id="listDailyCollectAccountHistoryVo" parameterType="java.util.Map" resultType="DailyCollectAccountHistoryVo">
+		select
+			ACCOUNTNO as "accountNo",
+			sum(case when FUNDDIRECTION = 123 then AMOUNT else -AMOUNT end) as "totalAmount",
+			count(1) as "totalNum",
+			CONCAT(#{statDate},'') as "collectDate",
+			max(id) as "lastId",
+			RISK_DAY as "riskDay"
+		from <include refid="table" />
+		where
+			ACCOUNTNO = #{accountNo}
+			and ISCOMPLETESETT = 101
+			and ISALLOWSETT = 100
+			<if test="fundDirection != null and fundDirection !=''"> and FUNDDIRECTION = #{fundDirection} </if>
+			and (
+			<![CDATA[date(CREATETIME) <= FUN_DATE_ADD(#{statDate}, -RISK_DAY)]]>
+			and RISK_DAY is not null
+			or
+			<![CDATA[date(CREATETIME) <= FUN_DATE_ADD(#{statDate}, -#{riskDay})]]>
+			and RISK_DAY is null
+			)
+		group by ACCOUNTNO, RISK_DAY
+	</select>
+
+	<!-- 日汇总账户待结算金额_针对单笔交易T+0  -->
+	<select id="listDailyCollectAccountHistoryVo_t0" parameterType="java.util.Map" resultType="DailyCollectAccountHistoryVo">
+		select
+			ACCOUNTNO as "accountNo",
+			sum(case when FUNDDIRECTION = 123 then AMOUNT else -AMOUNT end) as "totalAmount",
+			count(1) as "totalNum",
+			date(CREATETIME) as "collectDate",
+			max(id) as "lastId",
+			RISK_DAY as "riskDay"
+		from <include refid="table" />
+		where
+			REQUESTNO = #{requestNo}
+			and ACCOUNTNO = #{accountNo}
+			and ISCOMPLETESETT = 101
+			and ISALLOWSETT = 100
+			and TRXTYPE = 6006
+			<if test="fundDirection != null and fundDirection !=''"> and FUNDDIRECTION = #{fundDirection} </if>
+		group by ACCOUNTNO, RISK_DAY, CREATETIME
+	</select>
+	
+	<!-- 更新账户历史记录记为结算完成 -->
+	<update id="updateCompleteSettTo100LastId" parameterType="java.util.Map">
+		update <include refid="table" />
+			set ISCOMPLETESETT=100, VERSION = VERSION + 1
+		where
+			ACCOUNTNO = #{accountNo}
+			and ISCOMPLETESETT = 101
+			and ISALLOWSETT = 100
+			and FUNDDIRECTION = 321
+			<![CDATA[ and ID <= #{lastId} ]]>
+	</update>
+</mapper>

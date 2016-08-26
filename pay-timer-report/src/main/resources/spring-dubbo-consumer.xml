@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="pay-timer-report" />
+	<!-- 使用zookeeper注册中心暴露发现服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+	
+	<dubbo:consumer timeout="8000" retries="0" />
+	
+	<!-- 用户对外服务接口-->   
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.UserQueryFacade" id="userQueryFacade" check="false"/>
+	<!-- 会员子系统对外服务接口-->   
+    <dubbo:reference interface="wusc.edu.pay.facade.user.service.MemberInfoFacade" id="memberInfoFacade" check="false"/>
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantOnlineFacade" id="merchantOnlineFacade" check="false"/>  
+	 <!-- 账户子系统对外服务接口 --> 
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountQueryFacade" id="accountQueryFacade" check="false"/>
+    <!--银行系统对外服务接口 -->  
+    <dubbo:reference interface="wusc.edu.pay.facade.bank.service.BankAgreementFacade"  id="bankAgreementFacade" check="false" />
+    <!-- 结算系统对外服务接口 -->
+	 <dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitProcessFacade" id="remitProcessFacade"  check="false"/>
+	<!-- 订单子系统对外服务接口-->      
+    <dubbo:reference interface="wusc.edu.pay.facade.trade.service.PaymentQueryFacade" id="paymentQueryFacade" check="false"/> 
+	<dubbo:reference interface="wusc.edu.pay.facade.trade.service.PaymentFacade" id="paymentFacade" check="false"/> 
+	<dubbo:reference interface="wusc.edu.pay.facade.trade.service.TransferFacade" id="transferFacade" check="false"/>
+    
+    <dubbo:reference interface="wusc.edu.pay.facade.bank.service.BankChannelFacade"  id="bankChannelFacade" check="false" />
+    
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.AccountingUserReportFacade" id="accountingUserReportFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.CommonMerchanReportFacade" id="commonMerchanReportFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.MemberReportFacade" id="memberReportFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.OnlineBankReportFacade" id="onlineBankReportFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.OnlineMemberReportFacade" id="onlineMemberReportFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.OnlineMerchantReportFacade" id="onlineMerchantReportFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.PosBankReportFacade" id="posBankReportFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.PosMerchantReportFacade" id="posMerchantReportFacade" check="false"/>
+    
+     <dubbo:reference interface="wusc.edu.pay.facade.report.service.AccountingReservesBankReportFacade" id="accountingReservesBankReportFacade" check="false"/>
+
+    <dubbo:reference interface="wusc.edu.pay.facade.bank.service.BankAccountFacade" id="bankAccountFacade" check="false"/>
+    <!-- 成本计费接口 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.cost.service.CalCostOrderFacade" id="calCostOrderFacade" check="false"/>
+    
+    <!-- pos业务信息报表 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.report.service.PosReportFacade" id="posReportFacade" check="false"/>
+	
+</beans>  

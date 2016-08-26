@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.fee.dao.impl.FeeRuleHistoryDaoImpl">
+
+	<sql id="table"> TBL_FEE_RULE_HISTORY </sql>
+
+	<resultMap id="beanMap" type="FeeRuleHistory">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="userNo" column="USER_NO" />
+		<result property="userName" column="USER_NAME" />
+		<result property="userType" column="USER_TYPE" />
+		<result property="calFeeItem" column="CAL_FEE_ITEM" />
+		<result property="payProduct" column="PAY_PRODUCT" />
+		<result property="frpCode" column="FRP_CODE" />
+		<result property="effectiveStart" column="EFFECTIVE_START" />
+		<result property="effectiveEnd" column="EFFECTIVE_END" />
+		<result property="createRule" column="CREATE_RULE" />
+		<result property="feeRule" column="FEE_RULE" />
+	</resultMap>
+
+	<insert id="insert" parameterType="FeeRuleHistory" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, USER_NO, USER_NAME, USER_TYPE, CAL_FEE_ITEM, PAY_PRODUCT, FRP_CODE,
+		EFFECTIVE_START,EFFECTIVE_END,CREATE_RULE,FEE_RULE)
+		values (0, #{createTime}, #{userNo}, #{userName},
+		#{userType}, #{calFeeItem},
+		#{payProduct}, #{frpCode},
+		#{effectiveStart},
+		#{effectiveEnd}, #{createRule}, #{feeRule})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="FeeRuleHistory">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			USER_NO = #{userNo},
+			USER_NAME = #{userName},
+			USER_TYPE = #{userType},
+			CAL_FEE_ITEM = #{calFeeItem},
+			PAY_PRODUCT = #{payProduct},
+			FRP_CODE = #{frpCode},
+			EFFECTIVE_START =
+			#{effectiveStart},
+			EFFECTIVE_END = #{effectiveEnd},
+			CREATE_RULE =
+			#{createRule},
+			FEE_RULE = #{feeRule}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="queryFeeRuleHistory" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			USER_NO = #{userNo}
+			AND
+			USER_TYPE = #{userType}
+			AND
+			CAL_FEE_ITEM = #{calculateFeeItem}
+			<if test="payProduct == null">and PAY_PRODUCT is null</if>
+			<if test="payProduct != null">and PAY_PRODUCT = #{payProduct}</if>
+			<if test="frpCode == null">and FRP_CODE is null</if>
+			<if test="frpCode != null">and FRP_CODE = #{frpCode}</if>
+			<if test="end != null">and EFFECTIVE_START = #{start} and EFFECTIVE_END = #{end}</if>
+			<if test="end == null"><![CDATA[and EFFECTIVE_START <= #{start, jdbcType=TIMESTAMP} and EFFECTIVE_END >= #{start, jdbcType=TIMESTAMP}]]></if>
+		</where>
+	</select>
+
+</mapper>

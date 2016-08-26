@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.MerchTradeSummaryDaoImpl">
+
+	<sql id="table"> TBL_REPORT_DAY </sql>
+	
+	<sql id="agent_relation"> TBL_AGENT_RELATION </sql>
+
+	<resultMap id="beanMap" type="MerchTradeSummary">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATE_TIME" property="createTime" />
+		
+		<result column="REPORT_TYPE" property="reportType" />
+		<result column="STAT_DATE" property="statDate" />
+		<result column="TRX_DATE" property="trxDate" />
+		<result column="VAR_1" property="merchantNo" />
+		<result column="VAR_2" property="merchantName" />
+		
+		<result column="VAR_3" property="firstAgentNo" />
+		<result column="VAR_4" property="firstAgentName" />
+		<result column="VAR_5" property="secondAgentNo" />
+		<result column="VAR_6" property="secondAgentName" />
+		<result column="VAR_7" property="thirdAgentNo" />
+		<result column="VAR_8" property="thirdAgentName" />
+		
+		<result column="INT_1" property="debitCount" />
+		<result column="DEC_1" property="debitAmount" />
+		<result column="INT_2" property="creditCount" />
+		<result column="DEC_2" property="debitAmount" />
+		
+		<result column="INT_3" property="totalCount" />
+		<result column="DEC_3" property="totalAmount" />
+		<result column="DEC_11" property="totalFee" />
+		<result column="DEC_12" property="settAmount" />
+		<result column="DEC_13" property="bankCost" />
+		
+		<result column="DEC_14" property="platProfit" />
+		<result column="DEC_15" property="agentProfit" />
+		<result column="DEC_16" property="firstAgentCost" />
+		<result column="DEC_17" property="firstAgentProfit" />
+		<result column="DEC_18" property="secondAgentProfit" />
+		<result column="DEC_19" property="thridAgentProfit" />
+		
+		<result column="DEC_20" property="t0Fee" />
+		<result column="INT_4" property="settType" />
+		
+		<result column="VAR_9" property="bankAccountNo" />
+		<result column="VAR_10" property="bankAccountName" />
+		<result column="VAR_11" property="bankChannelNo" />
+		<result column="VAR_12" property="bankName" />
+		<result column="VAR_13" property="channelNo" />
+		<result column="VAR_14" property="channelName" />
+		
+		<result column="income" property="income" />
+		<result column="expend" property="expend" />
+		<result column="profit" property="profit" />
+		
+		<result column="SALES_NO" property="salesNo" />
+		<result column="SALES_NAME" property="salesName" />
+		<result column="agentNum" property="agentNum" />
+		<result column="agentLevel" property="agentLevel" />
+		<result column="parentAgentNo" property="parentAgentNo" />
+		<result column="parentAgentName" property="parentAgentName" />
+		<result column="parentUpAgentNo" property="parentUpAgentNo" />
+		<result column="parentUpAgentName" property="parentUpAgentName" />
+		
+		
+	</resultMap>
+
+	<insert id="insert" parameterType="MerchTradeSummary" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, REPORT_TYPE, STAT_DATE, TRX_DATE, VAR_1, VAR_2, 
+		VAR_3, VAR_4, VAR_5, VAR_6, VAR_7, VAR_8, INT_1, DEC_1, INT_2, DEC_2,
+		INT_3, DEC_3, DEC_11, DEC_12, DEC_13, 
+		DEC_14, DEC_15, DEC_16 , DEC_17, DEC_18, DEC_19, 
+		VAR_9, VAR_10, VAR_11, VAR_12 , DEC_20)
+		values (0, #{createTime}, #{reportType} , #{statDate}, #{trxDate}, #{merchantNo}, #{merchantName}, 
+		#{firstAgentNo}, #{firstAgentName}, #{secondAgentNo}, #{secondAgentName}, #{thirdAgentNo}, #{thirdAgentName},
+		#{debitCount}, #{debitAmount}, #{creditCount}, #{debitAmount}, 
+		#{totalCount}, #{totalAmount}, #{totalFee}, #{settAmount}, #{bankCost}, 
+		#{platProfit}, #{agentProfit}, #{firstAgentCost}, #{firstAgentProfit}, #{secondAgentProfit}, #{thridAgentProfit}, 
+		#{bankAccountNo}, #{bankAccountName}, #{bankChannelNo}, #{bankName} ,#{t0Fee})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select temp.* from (
+		select 
+			ID,
+			VAR_3 as "firstAgentNo",
+			VAR_4 as "firstAgentName",
+			sum(dec_17 + dec_18 + dec_19) as "income" , 
+			sum(dec_18 + dec_19) as "expend" ,
+			sum(dec_17 + dec_18 + dec_19) - sum(dec_18 + dec_19) as "profit"
+		 from <include refid="table" /> 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		GROUP BY VAR_3
+		) as temp
+		<![CDATA[ order by temp.ID desc ]]> 
+	</select>
+	
+	<select id="getCount_listPage_agent_profit" parameterType="java.util.Map" resultType="hashmap">
+	select sum(t.income) as "totalIncome",
+		   sum(t.expend) as "totalExpend",
+		   sum(t.profit) as "totalProfit"
+	  from (
+		select temp.* from (
+		select 
+			ID,
+			VAR_3 as "firstAgentNo",
+			VAR_4 as "firstAgentName",
+			sum(dec_17 + dec_18 + dec_19) as "income" , 
+			sum(dec_18 + dec_19) as "expend" ,
+			sum(dec_17 + dec_18 + dec_19) - sum(dec_18 + dec_19) as "profit"
+		 from <include refid="table" /> 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		GROUP BY VAR_3
+		) as temp
+		<![CDATA[ order by temp.ID desc ]]> 
+		) t
+	</select>
+	
+	
+	<!-- 代理商分润明细报表 -->
+	<select id="listPage_Agent_Profit_Detail" parameterType="java.util.Map" resultMap="beanMap">
+		select temp.* from (
+			select ID,1 as "agentLevel", '0000' as "parentUpAgentNo",'运营平台' as "parentUpAgentName", '0000' as "parentAgentNo",'运营平台' as "parentAgentName", VAR_3 as "firstAgentNo", VAR_4 AS "firstAgentName", sum(dec_17) as "profit" from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			GROUP BY VAR_3
+			UNION
+			select ID,2 as "agentLevel", '0000' as "parentUpAgentNo",'运营平台' as "parentUpAgentName",VAR_3 as "parentAgentNo",VAR_4 as "parentAgentName", VAR_5 as "firstAgentNo", VAR_6 AS "firstAgentName", sum(dec_18) as "profit" from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			GROUP BY VAR_5
+			UNION
+			select ID, 3 as "agentLevel",VAR_3 as "parentUpAgentNo",VAR_4 as "parentUpAgentName",  VAR_5 as "parentAgentNo",VAR_6 as "parentAgentName", VAR_7 as "firstAgentNo", VAR_8 AS "firstAgentName", sum(dec_19) as "profit" from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			GROUP BY VAR_7
+		) as temp 
+		where temp.firstAgentNo != '' 
+		<if test="agentNo != '' and agentNo != null"> and temp.firstAgentNo = #{agentNo} </if>
+		<if test="agentName != '' and agentName != null"> and temp.firstAgentName like  '%${agentName}%' </if>
+		<if test="agentLevel != '' and agentLevel != null"> and temp.agentLevel = #{agentLevel} </if>
+		<if test="parentAgentNo != '' and parentAgentNo != null"> and (temp.parentAgentNo = #{parentAgentNo} or temp.parentUpAgentNo = #{parentAgentNo}) </if>
+		<if test="parentAgentName != '' and parentAgentName != null"> and (temp.parentAgentName like  '%${parentAgentName}%' or temp.parentUpAgentName like  '%${parentAgentName}%') </if>
+		
+		<![CDATA[ order by temp.agentLevel asc ]]> 
+	</select>
+	
+	<!-- 代理商分润明细报表统计 -->
+	<select id="getCount_listPage_Agent_Profit_Detail" parameterType="java.util.Map" resultType="hashmap">
+	select  sum(t.profit) as "totalProfit" from (
+		select temp.* from (
+			select ID,1 as "agentLevel", '0000' as "parentUpAgentNo",'运营平台' as "parentUpAgentName", '0000' as "parentAgentNo",'运营平台' as "parentAgentName", VAR_3 as "firstAgentNo", VAR_4 AS "firstAgentName", sum(dec_17) as "profit" from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			GROUP BY VAR_3
+			UNION
+			select ID,2 as "agentLevel", '0000' as "parentUpAgentNo",'运营平台' as "parentUpAgentName",VAR_3 as "parentAgentNo",VAR_4 as "parentAgentName", VAR_5 as "firstAgentNo", VAR_6 AS "firstAgentName", sum(dec_18) as "profit" from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			GROUP BY VAR_5
+			UNION
+			select ID, 3 as "agentLevel",VAR_3 as "parentUpAgentNo",VAR_4 as "parentUpAgentName",  VAR_5 as "parentAgentNo",VAR_6 as "parentAgentName", VAR_7 as "firstAgentNo", VAR_8 AS "firstAgentName", sum(dec_19) as "profit" from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			GROUP BY VAR_7
+		) as temp 
+		where temp.firstAgentNo != '' 
+		<if test="agentNo != '' and agentNo != null"> and temp.firstAgentNo = #{agentNo} </if>
+		<if test="agentName != '' and agentName != null"> and temp.firstAgentName like  '%${agentName}%' </if>
+		<if test="agentLevel != '' and agentLevel != null"> and temp.agentLevel = #{agentLevel} </if>
+		<if test="parentAgentNo != '' and parentAgentNo != null"> and (temp.parentAgentNo = #{parentAgentNo} or temp.parentUpAgentNo = #{parentAgentNo}) </if>
+		<if test="parentAgentName != '' and parentAgentName != null"> and (temp.parentAgentName like  '%${parentAgentName}%' or temp.parentUpAgentName like  '%${parentAgentName}%') </if>
+		<![CDATA[ order by temp.ID asc ]]> 
+		)t
+		
+	</select>
+	
+	
+	
+	<!-- 收益统计报表 -->
+	<select id="listPage_Profit_Count_Report" parameterType="java.util.Map" resultMap="beanMap">
+		select temp.* from (
+			select 
+				ID, 
+				TRX_DATE as "trxDate", 
+				sum(INT_3) as "totalCount" ,
+				sum(DEC_3) as "totalAmount" , 
+				sum(DEC_11) as "totalFee",
+				sum(DEC_13) as "bankCost", 
+				sum(DEC_14) as "platProfit",
+				sum(DEC_17) as "firstAgentProfit" , 
+				sum(DEC_18) as "secondAgentProfit",
+				sum(DEC_19) as "thridAgentProfit",
+				sum(DEC_20) as "t0Fee" 
+			from <include refid="table" /> 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+			GROUP BY TRX_DATE 
+		) as temp 
+		ORDER BY temp.trxDate DESC
+	</select>
+	
+	<!-- 收益统计报表 -->
+	<select id="getCount_listPage_profit_count_report" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+				sum(INT_3) as "totalCount" ,
+				sum(DEC_3) as "totalAmount" , 
+				sum(DEC_11) as "totalFee",
+				sum(DEC_13) as "bankCost", 
+				sum(DEC_14) as "platProfit",
+				sum(DEC_17) as "firstAgentProfit" , 
+				sum(DEC_18) as "secondAgentProfit",
+				sum(DEC_19) as "thridAgentProfit",
+				sum(DEC_20) as "t0Fee" 
+		from <include refid="table" /> 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	
+	<!-- pos交易汇总报表 -->
+	<select id="posTransSumReport" parameterType="java.util.Map" resultMap="beanMap">
+		select VAR_1 as "merchantNo", VAR_2 AS "merchantName",
+		sum(INT_1) as "debitCount",sum(DEC_1) as "debitAmount",sum(INT_2) as "creditCount",
+		sum(DEC_2) as "creditAmount", 
+		sum(INT_3) as "totalCount",sum(DEC_3) as "totalAmount",
+		sum(DEC_20) as "t0Fee", INT_4 as "settType"
+		from <include refid="table" /> 
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		 group by VAR_1 , INT_4
+		 order by totalAmount desc 
+		 <if test="beginAmount !=null and beginAmount!='' and endAmount !=null and endAmount!=''">
+			 HAVING totalAmount &gt;=#{beginAmount,jdbcType=NUMERIC} and totalAmount &lt;=#{endAmount,jdbcType=NUMERIC}
+		 </if>
+		 
+		 <if test="(beginAmount !=null and beginAmount!='') and (endAmount ==null or endAmount =='')">HAVING totalAmount &gt;=#{beginAmount,jdbcType=NUMERIC}</if>
+		 <if test="(endAmount !=null and endAmount!='') and (beginAmount ==null or beginAmount =='') ">HAVING totalAmount &lt;=#{endAmount,jdbcType=NUMERIC}</if>
+	</select>
+	
+	<!-- pos交易汇总报表统计 -->
+	<select id="getposTransSumReportCount" parameterType="java.util.Map" resultType="hashmap">
+		select VAR_1 as "merchantNo", 
+			VAR_2 AS "merchantName",
+			INT_4 as "settType",
+			sum(DEC_20) as "t0Fee",
+			sum(INT_3) as "totalCount",
+			sum(DEC_3) as "totalAmount"
+			from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			 group by INT_4
+			 <if test="beginAmount !=null and beginAmount!='' and endAmount !=null and endAmount!=''">
+				 HAVING totalAmount &gt;=#{beginAmount,jdbcType=NUMERIC} and totalAmount &lt;=#{endAmount,jdbcType=NUMERIC}
+			 </if>
+			 
+			 <if test="(beginAmount !=null and beginAmount!='') and (endAmount ==null or endAmount =='')">HAVING totalAmount &gt;=#{beginAmount,jdbcType=NUMERIC}</if>
+			 <if test="(endAmount !=null and endAmount!='') and (beginAmount ==null or beginAmount =='') ">HAVING totalAmount &lt;=#{endAmount,jdbcType=NUMERIC}</if>
+			 
+	</select>
+	
+	
+	<!-- 商户清算报表 -->
+	<select id="listPage_merchant_sett_report" parameterType="java.util.Map" resultMap="beanMap">
+		select T.ID as "id",
+		T.TRX_DATE as "trxDate", 
+		T.VAR_1 as "merchantNo", 
+		T.VAR_2 as "merchantName", 
+		T.INT_3 as "totalCount", 
+		T.DEC_3 as "totalAmount", 
+		T.DEC_11 as "totalFee", 
+		T.DEC_12 as "settAmount", 
+		T.VAR_9 as "bankAccountNo",	
+		T.VAR_10 as "bankAccountName",	
+		T.VAR_11 as "bankChannelNo",
+		T.VAR_12 as "bankName",
+		U.BANKACCOUNTTYPE as "bankAccountType",
+		T.INT_4 AS "settType",
+		T.DEC_20 AS "t0Fee",
+		T.VAR_13 AS "channelNo",
+		T.VAR_14 AS "channelName"
+		from <include refid="table" /> T left join TBL_USER_BANK_ACCOUNT U ON T.VAR_1=U.USERNO
+		<where>
+			<if test="merchantName != null and merchantName != '' ">
+			and T.VAR_2 like '%${merchantName}%'
+			</if>
+			<if test="merchantNo != null and merchantNo != '' ">
+			and T.VAR_1 = #{merchantNo}
+			</if>
+			<if test="channelNo != null and channelNo != '' ">
+			and T.VAR_13 = #{channelNo}
+			</if>
+			
+			<include refid="condition_sql" />
+		</where>
+		order by TRX_DATE  desc, DEC_3 desc
+	</select>
+	
+	<!-- 统计 -->
+	<select id="getCount_listPage_merchant_sett_report" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			sum(T.INT_3) AS "totalCount",
+			sum(T.DEC_3) AS "totalAmount",
+			sum(T.DEC_11) AS "totalFee",
+			sum(T.DEC_12) AS "settAmount",
+			sum(case 
+				when T.INT_4 = 1 then T.DEC_20
+				when T.INT_4 != 1 then 0
+				else T.INT_4 
+			end) as "t0Fee"
+			
+		from <include refid="table" /> T left join TBL_USER_BANK_ACCOUNT U ON T.VAR_1=U.USERNO
+		<where>
+			<if test="merchantName != null and merchantName != '' ">
+			and T.VAR_2 like '%${merchantName}%'
+			</if>
+			<if test="merchantNo != null and merchantNo != '' ">
+			and T.VAR_1 = #{merchantNo}
+			</if>
+			<if test="channelNo != null and channelNo != '' ">
+			and T.VAR_13 = #{channelNo}
+			</if>
+			<include refid="condition_sql" /> 
+		</where>
+	</select>
+	
+	
+	<!-- 代理商系统的 收益统计报表 -->
+	<select id="listPage_agent_plat_profit_report" parameterType="java.util.Map" resultMap="beanMap">
+		select temp.* from (
+			select 
+			TRX_DATE as "trxDate", sum(INT_3) as "totalCount", sum(DEC_3) as "totalAmount",
+			sum(DEC_11) as "totalFee" 
+			<if test="firstAgentNo != null and firstAgentNo != '' ">
+				<!-- 一级代理商 收入等于  1+2+3 -->
+				, sum(DEC_17 + DEC_18 + DEC_19) as "income",
+				sum(DEC_18 + DEC_19) as "expend",
+				(sum(DEC_17 + DEC_18 + DEC_19) - sum(DEC_18 + DEC_19)) as "profit"
+			</if>
+			
+			<if test="secondAgentNo != null and secondAgentNo != '' ">
+				<!-- 2级代理商 收入等于  2+3 -->
+				, sum(DEC_18 + DEC_19) as "income",
+				sum(DEC_19) as "expend",
+				(sum(DEC_18 + DEC_19) - sum(DEC_19))  as "profit"
+			</if>
+			
+			<if test="thirdAgentNo != null and thirdAgentNo != '' ">
+				, sum(DEC_19) as "income",
+				0 as "expend",
+				sum(DEC_19) as "profit"
+			</if>
+			from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			GROUP BY TRX_DATE
+		) temp 
+		
+		order by trxDate desc
+		
+	</select>
+	
+	<!-- 收益统计报表的统计功能 -->
+	<select id="count_agent_plat_profit_report" parameterType="java.util.Map" resultType="java.util.Map">
+		select sum(temp.totalCount) as "totalCount", sum(temp.totalAmount) as "totalAmount",sum(temp.totalFee) as "totalFee",
+			sum(temp.income) as "totalIncome", sum(temp.expend) as "totalExpend", sum(temp.profit) as "totalProfit"
+		  from (
+			select 
+			TRX_DATE as "trxDate", sum(INT_3) as "totalCount", sum(DEC_3) as "totalAmount",
+			sum(DEC_11) as "totalFee" 
+			<if test="firstAgentNo != null and firstAgentNo != '' ">
+				<!-- 一级代理商 收入等于  1+2+3 -->
+				, sum(DEC_17 + DEC_18 + DEC_19) as "income",
+				sum(DEC_18 + DEC_19) as "expend",
+				(sum(DEC_17 + DEC_18 + DEC_19) - sum(DEC_18 + DEC_19)) as "profit"
+			</if>
+			
+			<if test="secondAgentNo != null and secondAgentNo != '' ">
+				<!-- 2级代理商 收入等于  2+3 -->
+				, sum(sum(DEC_18 + sum(DEC_19,)) as "income",
+				sum(DEC_19) as "expend",
+				(sum(sum(DEC_18 + sum(DEC_19) - sum(sum(DEC_19))  as "profit"
+			</if>
+			
+			<if test="thirdAgentNo != null and thirdAgentNo != '' ">
+				, sum(sum(DEC_19) as "income",
+				0 as "expend",
+				sum(sum(DEC_19) as "profit"
+			</if>
+			from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			GROUP BY TRX_DATE
+		) temp 
+		
+		order by trxDate desc
+	</select>
+	
+	<!-- 代理商系统的 商户交易统计报表 -->
+	<select id="listPage_merchant_trade_report" parameterType="java.util.Map" resultMap="beanMap">
+		select temp.* from ( 
+			select 
+			TRX_DATE as "trxDate",  VAR_1 as "merchantNo", VAR_2 as "merchantName",
+			VAR_3 as "firstAgentNo", VAR_5 as "secondAgentNo", VAR_7 as "thirdAgentNo",
+			VAR_4 as "firstAgentName", VAR_6 as "secondAgentName", VAR_8 as "thirdAgentName",
+			sum(sum(INT_3) as "totalCount", sum(sum(DEC_3) as "totalAmount"
+			from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			 GROUP BY TRX_DATE , VAR_1
+			)  temp 
+			<where>
+				<if test="merchantNo != null and merchantNo != '' ">
+					temp.merchantNo = #{merchantNo}
+				</if>
+			</where>
+			order by trxDate desc  
+	</select>
+	
+	<!-- 代理商系统的 商户交易统计报表 汇总 -->
+	<select id="count_merchant_trade_report" parameterType="java.util.Map" resultType="java.util.Map">
+		select sum(temp.totalCount) as "totalCount", SUM(temp.totalAmount) as "totalAmount" from ( 
+			select 
+			TRX_DATE as "trxDate",  VAR_1 as "merchantNo", VAR_2 as "merchantName",
+			VAR_3 as "firstAgentNo", VAR_5 as "secondAgentNo", VAR_7 as "thirdAgentNo",
+			VAR_4 as "firstAgentName", VAR_6 as "secondAgentName", VAR_8 as "thirdAgentName",
+			sum(sum(INT_3) as "totalCount", sum(sum(DEC_3) as "totalAmount"
+			from <include refid="table" /> 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			 GROUP BY TRX_DATE , VAR_1
+			)  temp 
+			<where>
+				<if test="merchantNo != null and merchantNo != '' ">
+					temp.merchantNo = #{merchantNo}
+				</if>
+			</where>
+	</select>
+	
+	
+	<!-- 代理商系统的 代理商分润统计报表 -->
+	<select id="listPage_profit_by_agent_report" parameterType="java.util.Map" resultMap="beanMap">
+		
+		select A.agentNo as "firstAgentNo", A.agentName as "firstAgentName", A.profit from (
+		<if test="secondAgentNo != null and secondAgentNo != ''">
+			select VAR_7 as agentNo , VAR_8 as "agentName" ,sum(sum(DEC_19) as "profit" from 
+			TBL_REPORT_DAY 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			group by VAR_7
+		</if>
+		<if test="firstAgentNo != null and firstAgentNo != ''">
+			select VAR_7 as agentNo, VAR_8 as "agentName" ,sum(sum(DEC_19) as "profit" 
+			from TBL_REPORT_DAY 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			group by VAR_7
+			union select VAR_5 as agentNo, VAR_6 as "agentName" ,sum(sum(DEC_18) as "profit" 
+			from TBL_REPORT_DAY 
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			group by VAR_5 
+		</if>
+		) as A
+		
+	</select>
+	
+	<!-- 统计销售人员拓展的商户个数,以及交易量 -->
+	<select id="listPage_sales_report" parameterType="java.util.Map" resultMap="beanMap">
+		select t1.*,t2.totalCount,t2.totalAmount,t2.totalFee,t2.platProfit 
+		from 
+			(select SALES_NO as "salesNo" ,SALES_NAME as "salesName" ,count(1) as "agentNum"  
+			 from <include refid="agent_relation" /> 
+			 <where>
+				and SALES_NO is not null and SALES_NO!=''  and `LEVEL`=1
+				<if test="salesNo != null and salesNo != ''"> and SALES_NO = #{salesNo} </if>
+			</where> 
+			 GROUP BY SALES_NO)t1
+		left join 
+			(select SALES_NO  , SALES_NAME , sum(INT_3) as "totalCount", sum(DEC_3) as "totalAmount", sum(DEC_11) as "totalFee" , sum(DEC_14) as "platProfit" 
+			 from <include refid="agent_relation" /> a 
+			 left join  <include refid="table" />  b on a.AGENT_NO = b.VAR_3
+			<where>
+				<if test="reportType != null and reportType != ''"> and REPORT_TYPE = #{reportType} </if>
+			</where> 
+			 GROUP BY a.SALES_NO
+			)t2
+		on t1.salesNo=t2.SALES_NO
+	</select>
+	
+	
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and STAT_DATE between #{beginDate} AND #{endDate}
+		</if>
+		
+		<!-- 交易时间 -->
+		<if test="trxBeginDate != null and trxBeginDate != ''">
+			and TRX_DATE >= #{trxBeginDate}
+		</if>
+		<if test="trxEndDate != null and trxEndDate != ''">
+			and TRX_DATE &lt;= #{trxEndDate}
+		</if>
+		
+		<if test="reportType != null and reportType != ''"> and REPORT_TYPE = #{reportType} </if>
+		<if test="merchantNo != null and merchantNo != ''"> and VAR_1 = #{merchantNo} </if>
+		<if test="merchantName != null and merchantName != ''"> and VAR_2 like '%${merchantName}%' </if>
+		<if test="firstAgentNo != null and firstAgentNo != ''"> and VAR_3 = #{firstAgentNo} </if>
+		<if test="secondAgentNo != null and secondAgentNo != ''"> and VAR_5 = #{secondAgentNo} </if>
+		<if test="thirdAgentNo != null and thirdAgentNo != ''"> and VAR_7 = #{thirdAgentNo} </if>
+		
+		<if test="salesNo != null and salesNo != ''"> and SALES_NO = #{salesNo} </if>
+		<if test="firstAgentName != null and firstAgentName != ''"> and VAR_4 like '%${firstAgentName}%' </if>
+		
+		<if test="settType != null and settType != ''"> and INT_4 = #{settType} </if>
+	</sql>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	<!--  
+		创建商户交易汇总的明细数据
+	-->
+	<insert 
+		id="createMerchTransSummary"
+		parameterType="java.util.Map">
+		insert into 
+			<include refid="table" /> (
+				VERSION, CREATE_TIME, REPORT_TYPE, STAT_DATE, TRX_DATE,
+				VAR_1, VAR_2, VAR_3, VAR_4, VAR_5,
+				VAR_6, VAR_7, VAR_8, VAR_9, VAR_10,
+				VAR_11, VAR_12, INT_1, DEC_1, INT_2,
+				DEC_2, INT_3, DEC_3, DEC_11, DEC_12,
+				DEC_13, DEC_14, DEC_15, DEC_16, DEC_17,
+				DEC_18, DEC_19, DEC_20, INT_4,VAR_13,VAR_14
+			)
+		select 
+			0, #{dateTime}, #{reportType}, #{statDate}, #{transDate},
+			t.merchantno, t.merchantname, t.first_agent_no, t.first_agent_name, t.second_agent_no,
+			t.second_agent_name, t.third_agent_no, t.third_agent_name, a.bankaccountno, 
+			a.bankaccountname, a.bankchannelno, bankname, sum(2 - t.debitflag ), sum(t.amount*(2 - t.debitflag)),
+			sum(t.debitflag - 1), sum(t.amount*(t.debitflag - 1)), count(t.channelno), sum(t.amount*(3 - 2 * t.debitflag)), sum(t.merchantfee),
+			sum(t.amount*(3 - 2 * t.debitflag)) - sum(t.merchantfee), sum(t.bankfee), sum(t.instfee), sum(t.agentfee), 0 , sum(t.first_agent_fee),
+			sum(t.second_agent_fee), sum(t.third_agent_fee),
+			sum( CASE WHEN CONCAT(t.SETTLE_TYPE, t.T0_PROCESS_STATUS) = '1100' then (t.amount * 0.002) else 0 end ),
+			(case 
+				when t.SETTLE_TYPE = 1 and t.T0_PROCESS_STATUS = 100 then 1
+				when t.SETTLE_TYPE = 1 and t.T0_PROCESS_STATUS != 100 then 2
+				else t.SETTLE_TYPE
+				end) as sett_type,
+				t.channelno,
+				c.channel_name
+		from  
+			POS_PP_TRANS t,TBL_USER_BANK_ACCOUNT a,POS_PB_CHANNEL_INFO c
+		where 
+			t.channelno = c.channel_code  
+			and t.merchantno = a.userno
+			and t.respcode = '00' 
+			and t.debitflag in (1,2) 
+			and t.settledate = #{fieldDate}
+		group by 
+			t.merchantno,t.settledate, sett_type,t.channelno
+	</insert>
+	
+	
+	<delete 
+		id="deleteSummaryByDate" 
+		parameterType="String">
+		delete from 
+			<include refid="table" />
+		where
+			TRX_DATE = #{date}
+	</delete>
+</mapper>

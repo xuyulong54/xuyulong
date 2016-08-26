@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.payrule.dao.impl.UserPayRuleSettingDaoImpl">
+
+	<sql id="table"> TBL_RULE_USER_PAY_RULE_SETTING </sql>
+
+	<resultMap id="BaseResultMap" type="UserPayRuleSetting">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="USER_NO" property="userNo" jdbcType="VARCHAR" />
+		<result column="PAY_RULE_ID" property="payRuleId" jdbcType="BIGINT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, MODIFY_TIME, USER_NO, PAY_RULE_ID
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="userNo != null and userNo != ''"> and USER_NO = #{userNo}</if>
+		<if test="payRuleId != null and payRuleId != ''"> and PAY_RULE_ID = #{payRuleId}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="UserPayRuleSetting">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, MODIFY_TIME, USER_NO, PAY_RULE_ID)
+		values (0, #{createTime}, #{modifyTime,jdbcType=TIMESTAMP}, #{userNo,jdbcType=VARCHAR}, #{payRuleId,jdbcType=BIGINT})
+	</insert>
+
+	<update id="update" parameterType="UserPayRuleSetting">
+		update
+		<include refid="table" />
+		set VERSION = #{version} + 1,
+		MODIFY_TIME = FUN_NOW(),
+		USER_NO = #{userNo},
+		PAY_RULE_ID = #{payRuleId}
+		where ID = #{id} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

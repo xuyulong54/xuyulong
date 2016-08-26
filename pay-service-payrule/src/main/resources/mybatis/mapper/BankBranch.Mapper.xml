@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.payrule.dao.impl.BankBranchDaoImpl">
+    <!-- 启用缓存 -->  
+	<sql id="table"> TBL_RULE_BANK_BRANCH </sql>
+
+	<resultMap id="BaseResultMap" type="BankBranch" >
+		<id column="ID" property="id" jdbcType="BIGINT" />
+	    <result column="VERSION" property="version" jdbcType="SMALLINT" />
+	    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="LAST_TIME" property="lastTime" jdbcType="TIMESTAMP" />
+	    <result column="FRP_CODE" property="frpCode" jdbcType="VARCHAR" />
+	    <result column="DEFAULT_BANK_CHANNEL_CODE" property="defaultBankChannelCode" jdbcType="VARCHAR" />
+	    <result column="SPARE_BANK_CHANNEL_CODE" property="spareBankChannelCode" jdbcType="VARCHAR" />
+	    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List" >
+    	ID, VERSION, CREATE_TIME, LAST_TIME, FRP_CODE, DEFAULT_BANK_CHANNEL_CODE, SPARE_BANK_CHANNEL_CODE,REMARK
+  	</sql>
+  	
+  	<sql id="condition_sql">
+		<if test="frpCode != null and frpCode != ''"> and FRP_CODE = #{frpCode,jdbcType=VARCHAR}</if>
+		<if test="defaultBankChannelCode != null and defaultBankChannelCode != ''"> and DEFAULT_BANK_CHANNEL_CODE = #{defaultBankChannelCode,jdbcType=VARCHAR}</if>
+		<if test="spareBankChannelCode != null and spareBankChannelCode != ''"> and SPARE_BANK_CHANNEL_CODE = #{spareBankChannelCode,jdbcType=VARCHAR}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="BankBranch" >
+	  insert into <include refid="table" /> (VERSION, CREATE_TIME, 
+      	LAST_TIME, FRP_CODE, DEFAULT_BANK_CHANNEL_CODE, 
+      	SPARE_BANK_CHANNEL_CODE, REMARK)
+      values (0, #{createTime}, 
+        #{lastTime,jdbcType=TIMESTAMP}, #{frpCode,jdbcType=VARCHAR}, #{defaultBankChannelCode,jdbcType=VARCHAR}, 
+        #{spareBankChannelCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="BankBranch">
+		update <include refid="table" />
+	    set VERSION = #{version,jdbcType=SMALLINT} + 1,
+	      LAST_TIME = FUN_NOW(),
+	      FRP_CODE = #{frpCode,jdbcType=VARCHAR},
+	      DEFAULT_BANK_CHANNEL_CODE = #{defaultBankChannelCode,jdbcType=VARCHAR},
+	      SPARE_BANK_CHANNEL_CODE = #{spareBankChannelCode,jdbcType=VARCHAR},
+	      REMARK = #{remark,jdbcType=VARCHAR}
+	    where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=SMALLINT}
+	</update>
+
+	<select id="getById" parameterType="string" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> from <include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> from <include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from <include refid="table" />
+		<where>
+			<include refid="condition_sql"/>
+		</where>
+	</select>
+	
+</mapper>

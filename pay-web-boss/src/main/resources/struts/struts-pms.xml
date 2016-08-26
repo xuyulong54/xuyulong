@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<!-- 权限管理 permission -->
+	<package name="pms" extends="loginPackage">
+	
+		<!-- 权限管理，包括权限点、角色、操作员和管理 -->
+		<action name="pms_*" class="wusc.edu.pay.web.permission.action.PmsPermissionAction" method="{1}">
+			<result name="PmsActionList">page/pms/PmsActionList.jsp</result>
+			<result name="PmsActionAdd">page/pms/PmsActionAdd.jsp</result>
+			<result name="PmsActionEdit">page/pms/PmsActionEdit.jsp</result>
+			<result name="PmsRoleList">page/pms/PmsRoleList.jsp</result>
+			<result name="PmsRoleAdd">page/pms/PmsRoleAdd.jsp</result>
+			<result name="PmsRoleEdit">page/pms/PmsRoleEdit.jsp</result>
+			<result name="PmsOperatorList">page/pms/PmsOperatorList.jsp</result>
+			<result name="PmsOperatorView">page/pms/PmsOperatorView.jsp</result>
+			<result name="PmsOperatorViewOwnInfo">page/pms/PmsOperatorViewOwnInfo.jsp</result>
+			<result name="PmsOperatorAdd">page/pms/PmsOperatorAdd.jsp</result>
+			<result name="PmsOperatorEdit">page/pms/PmsOperatorEdit.jsp</result>
+			<result name="PmsOperatorResetPwd">page/pms/PmsOperatorResetPwd.jsp</result>
+			<result name="PmsOperatorChangeOwnPwd">page/pms/PmsOperatorChangeOwnPwd.jsp</result>
+			<result name="assignPermissionUI">page/pms/assignPermissionUI.jsp</result>
+			<result name="PmsMenuLookUp">page/pms/PmsMenuLookUp.jsp</result>
+		</action>
+		
+		<!-- 权限菜单管理 -->
+		<action name="pmsMenu_*" class="wusc.edu.pay.web.permission.action.PmsMenuAction" method="{1}">
+			<result name="PmsMenuList">page/pms/PmsMenuList.jsp</result>
+			<result name="PmsMenuAdd">page/pms/PmsMenuAdd.jsp</result>
+			<result name="PmsMenuEdit">page/pms/PmsMenuEdit.jsp</result>
+		</action>
+		
+		<!-- 操作员操作日志管理（以后有可能会独立出来） -->
+		<action name="pmsOperatorLog_*" class="wusc.edu.pay.web.permission.action.PmsOperatorLogAction" method="{1}">
+			<result name="PmsOperatorLogList">page/pms/PmsOperatorLogList.jsp</result>
+			<result name="PmsOperatorLogView">page/pms/PmsOperatorLogView.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>

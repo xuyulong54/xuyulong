@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">       
+    
+    <!-- 银行对外子系统对外服务接口 -->
+    
+    <dubbo:reference interface="wusc.edu.pay.facade.bank.service.BankAgreementFacade"  id="bankAgreementFacade"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.bank.service.BankChannelFacade"  id="bankChannelFacade"  />
+    <dubbo:reference interface="wusc.edu.pay.facade.bank.service.CardBinFacade"  id="cardBinFacade"  />
+    
+    <dubbo:reference interface="wusc.edu.pay.facade.banklink.enterprise.service.BankEnterpriseInterlinkFacade " id="bankEnterpriseInterlinkFacade " />
+    <dubbo:reference interface="wusc.edu.pay.facade.banklink.authentication.service.BankAuthenticationFacade " id="bankAuthenticationFacade " />
+    <dubbo:reference interface="wusc.edu.pay.facade.banklink.netpay.service.BankFacade" id="bankFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.banklink.fastpay.service.BankFastPayFacade" id="bankFastPayFacade" />
+    
+    
+</beans>  

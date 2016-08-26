@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.limit.dao.impl.AmountLimitDaoImpl">
+	<!-- 表名 -->
+	<sql id="table"> TBL_LIMIT_AMOUNT_LIMIT </sql>
+	
+	
+	<resultMap id="beanMap" type="wusc.edu.pay.facade.limit.entity.AmountLimit">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="amountLimitPackId" column="AMOUNT_LIMIT_PACK_ID" />
+		<result property="bizFunction" column="BIZ_FUNCTION" />
+		<result property="payProduct" column="PAY_PRODUCT" />
+		<result property="cardType" column="CARD_TYPE" />
+		<result property="limitType" column="LIMIT_TYPE" />
+		<result property="minAmount" column="MIN_AMOUNT" />
+		<result property="maxAmount" column="MAX_AMOUNT" />
+		<result property="expression" column="EXPRESSION" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+		
+	</resultMap>
+	
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.limit.entity.AmountLimit" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO
+		<include refid="table" />
+		(
+		VERSION,
+		AMOUNT_LIMIT_PACK_ID,
+		BIZ_FUNCTION,
+		PAY_PRODUCT,
+		PAY_WAY,
+		CARD_TYPE,
+		LIMIT_TYPE,
+		MIN_AMOUNT,
+		MAX_AMOUNT,
+		EXPRESSION,
+		CREATE_TIME,
+		LAST_MODIFY_TIME
+		) VALUES
+		(
+		0,
+		#{amountLimitPackId},
+		#{bizFunction},
+		#{payProduct},
+		#{payWay},
+		#{cardType},
+		#{limitType},
+		#{minAmount},
+		#{maxAmount},
+		#{expression},
+		FUN_NOW(),
+		FUN_NOW()
+		)
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.limit.entity.AmountLimit">
+		UPDATE
+		<include refid="table" />
+		<set>
+			VERSION = #{version,jdbcType=INTEGER} + 1,
+			AMOUNT_LIMIT_PACK_ID = #{amountLimitPackId},
+			BIZ_FUNCTION = #{bizFunction},
+			PAY_PRODUCT = #{payProduct},
+			PAY_WAY = #{payWay},
+			CARD_TYPE = #{cardType},
+			LIMIT_TYPE = #{limitType},
+			MIN_AMOUNT = #{minAmount},
+			MAX_AMOUNT = #{maxAmount},
+			EXPRESSION = #{expression},
+			LAST_MODIFY_TIME = FUN_NOW()
+		</set>
+		WHERE ID = #{id} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteById" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="string" resultType="wusc.edu.pay.facade.limit.entity.AmountLimit">
+		SELECT ID as "id",
+    VERSION as "version",
+		AMOUNT_LIMIT_PACK_ID as "amountLimitPackId",
+		BIZ_FUNCTION as "bizFunction",
+		PAY_PRODUCT as "payProduct",
+		PAY_WAY as "payWay",
+		CARD_TYPE as "cardType",
+		LIMIT_TYPE as "limitType",
+		MIN_AMOUNT as "minAmount",
+		MAX_AMOUNT as
+		"maxAmount",
+		EXPRESSION as "expression",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime"
+		FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<sql id="condition_sql">
+		<if test="name != null and name != ''"> and NAME like CONCAT(CONCAT('%', #{name}), '%')</if>
+		<if test="expression != null and expression != ''"> and EXPRESSION like CONCAT(CONCAT('%', #{expression}), '%')</if>
+		<if test="amountLimitPackId != null and amountLimitPackId != ''"> and AMOUNT_LIMIT_PACK_ID = #{amountLimitPackId}</if>
+		<if test="bizFunction != null and bizFunction != ''"> and BIZ_FUNCTION = #{bizFunction}</if>
+		<if test="payProduct != null and payProduct != ''"> and PAY_PRODUCT = #{payProduct}</if>
+		<if test="payWay != null and payWay != ''"> and PAY_WAY = #{payWay}</if>
+		<if test="cardType != null and cardType != ''"> and CARD_TYPE = #{cardType}</if>
+		<if test="limitType != null and limitType != ''"> and LIMIT_TYPE = #{limitType}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.limit.entity.AmountLimit">
+		select
+		ID as "id",
+    VERSION as "version",
+		AMOUNT_LIMIT_PACK_ID as "amountLimitPackId",
+		BIZ_FUNCTION as "bizFunction",
+		PAY_PRODUCT as "payProduct",
+		PAY_WAY as "payWay",
+		CARD_TYPE as "cardType",
+		LIMIT_TYPE as "limitType",
+		MIN_AMOUNT as "minAmount",
+		MAX_AMOUNT as
+		"maxAmount",
+		EXPRESSION as "expression",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime"
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="getAmountLimitByMerchantNo" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.limit.entity.AmountLimit">
+		select
+		ID as "id",
+    VERSION as "version",
+		AMOUNT_LIMIT_PACK_ID as "amountLimitPackId",
+		BIZ_FUNCTION as "bizFunction",
+		PAY_PRODUCT as "payProduct",
+		PAY_WAY as "payWay",
+		CARD_TYPE as "cardType",
+		LIMIT_TYPE as "limitType",
+		MIN_AMOUNT as "minAmount",
+		MAX_AMOUNT as
+		"maxAmount",
+		EXPRESSION as "expression",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime"
+		from
+		<include refid="table" />
+		where AMOUNT_LIMIT_PACK_ID in (select AMOUNT_LIMIT_PACK_ID from TBL_LIMIT_TRADE_LIMIT_ROUTER where merchant_no = #{merchantNo})
+	</select>
+</mapper>

@@ -1,0 +1,25 @@
+@charset "utf-8";
+/* CSS Document */
+body,h3,p{margin:0px;padding:0px;color:#535353;}
+.alertMask{background:black;filter:alpha(opacity=20);opacity:0.2;position:absolute;z-index:9000;top:0px; left:0px;}
+.alertBoxheader{height:30px;}
+.alertBox,.alertBox1{position:fixed;_position:absolute;;z-index:10001;;-moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px;background-color: #fff;box-shadow: 0px 3px 5px rgba(34,25,25,.4);
+-moz-box-shadow: 0 3px 5px rgba(34,25,25,.4);-webkit-box-shadow: 0:20px;}
+.alertImg{float:right; cursor:pointer;margin:10px 10px 0px 0px;display 3px 5px rgba(34,25,25,.4);}
+.alertTextWrap{margin:25px auto;}
+.alertText{font-size:12px;padding:0px 30px;color:#535353;line-height:block;}
+.butWrap{float:right; margin:30px 0px;}
+.alertBox .markRed{font-size:16px;color:red;font-weight:bold;padding:10px;}
+.alertBtnYes,.alertBtnNo{border: none;float: left;cursor: pointer;width: 90px;height: 35px;line-height:35px;font-size: 13px;color:#fff;overflow: hidden;background: #e02327;}
+.alertBtnNo{background:#dcdcdc;color:#4D4B4B;margin:0px 30px!important;}
+
+.customInputWrap{ }
+.customInput p{ width:500px;*zoom:1; margin-bottom:10px;padding-right:30px;}
+.customInput p:after{display:block; content:"clear"; height:0; clear:both; overflow:hidden; visibility:hidden;}
+.customInput p strong{width:100px; float:left; text-align: right; padding-right: 3px; line-height:35px; font-size:14px;}
+.customInput p input,.customInput p select{ width:240px;background: #fff;border: 1px solid #DDD;padding: 5px 8px;font-size: 14px;line-height: 16px;border-radius: 1px;box-shadow: inset 0 1px 2px rgba(0,0,0,.06); }
+.customInput p input[type=text]:focus, .customInput p input[type=password]:focus, .customInput p textarea:focus{
+transition: border linear .2s,box-shadow linear .5s;-moz-transition: border linear .2s,-moz-box-shadow linear .5s;-webkit-transition: border linear .2s,-webkit-box-shadow linear .5s;outline: none;border-color: rgba(160,228,228,.75);box-shadow: 0 0 3px rgba(188,232,232,.5);-moz-box-shadow: 0 0 3px rgba(188,232,232,.5);-webkit-box-shadow: 0 0 3px rgba(188,232,232,3);
+}
+.customInput p .textarea{ width:250px; height:100px;}
+.customInput p select{ width:256px;}

@@ -1,0 +1,40 @@
+﻿body
+{
+	height:100%;color:#333; font-family:Microsoft YaHei, arial; font-size: 14px;margin:0 auto; _width:980px; min-width:980px; width: expression((documentElement.clientWidth < 1024) ? "980px" : "auto" );
+}
+html,ul,li,dl,dt,dd,ol,th,td,form,h1,h2,h3,h4,h5,h6,img,p{margin:0;padding:0;border:none;}
+img{vertical-align:top;border:none;}
+button,select,textarea{outline:none}
+textarea{resize:none}
+
+a{color:#0000ff;text-decoration:none;outline:none; cursor:pointer;}
+a:hover{text-decoration:none;}
+/*去掉a标签超链接访问过后出现的虚线框*/
+a:active{star:expression(this.onFocus=this.blur());}
+
+
+h1,h2,h3,h4{display: block;font-weight: 500; line-height:1.2; color:#333; font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;}
+h1{ font-size:36px;}
+h2{ font-size:30px;}
+h3{font-size:24px;}
+h4{font-size:18px;}
+
+h1 small,h2 small,h3 small,h4 small{font-weight: normal; line-height:1;color:#999;font-size: 12PX;}
+
+/*小号文本*/
+small, .small{ font-size:12px;color:#A3A3A3;}
+
+/*对齐*/
+.text-left{ text-align:left;}
+.text-center{ text-align:center;}
+.text-right{ text-align:right;}
+
+/*颜色强调*/
+.text-muted{color:#999;}
+.text-primary{color:#1294e5;}
+.text-success{color:#86b12e;}
+.text-warning{ color:#e60707;}
+.link-color{color:#08c;}
+
+/*红色数字*/
+.num-red{font-size: 22px;color:#e60707;}

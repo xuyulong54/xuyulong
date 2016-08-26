@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.ChannelTradeSummaryDaoImpl">
+	
+	<sql id="tableConditions"> TBL_REPORT_DAY</sql>
+	
+	<resultMap id="beanMap" type="ChannelTradeSummary">
+		<id column="ID" property="id" />
+		<result column="REPORT_TYPE" property="reportType" /> 
+		<result column="TRX_DATE" property="trxDate" /> 
+		<result column="VAR_1" property="channelCode" /> 
+		<result column="VAR_2" property="channelName" /> 
+		<result column="VAR_3" property="channelMerchNo" />
+		<result column="VAR_4" property="channelMerchName" />
+		<result column="INT_1" property="debitCount" />
+		<result column="DEC_1" property="debitAmount" />
+		<result column="INT_2" property="creditCount" />
+		<result column="DEC_2" property="creditAmount" />
+		<result column="INT_3" property="totalCount" />
+		<result column="DEC_3" property="totalAmount" />
+		<result column="DEC_11" property="channelCost" />
+		<result column="DEC_12" property="platProfit" />
+		<result column="DEC_13" property="agentProfit" />
+		<result column="DEC_14" property="totalFee" />
+	</resultMap>
+	
+	<sql id="condition_sql">
+		REPORT_TYPE = 101
+		<if test="startDate != null and startDate != ''">
+			and TRX_DATE >= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			and TRX_DATE &lt;= #{endDate}
+		</if>     
+		<if test="channelMerchName != null and  channelMerchName !=''"> and VAR_4 like CONCAT(CONCAT('%', #{channelMerchName}), '%')</if>
+		<if test="channelMerchNo != null and  channelMerchNo !=''"> and VAR_3 = #{channelMerchNo} </if>
+		<if test="channelCode != null and  channelCode !=''"> and VAR_1 = #{channelCode} </if>
+	</sql>
+	
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select *
+		from
+			<include refid="tableConditions"/>
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by TRX_DATE desc]]>
+	</select>
+	
+	<select id="countTableConditions" parameterType="java.util.Map" resultMap="beanMap">
+		select 
+			sum(INT_1) INT_1,
+			sum(DEC_1) DEC_1,
+			sum(INT_2) INT_2,
+			sum(DEC_2) DEC_2,
+			sum(INT_3) INT_3,
+			sum(DEC_3) DEC_3,
+			sum(DEC_11) DEC_11,
+			sum(DEC_12) DEC_12,
+			sum(DEC_13) DEC_13,
+			sum(DEC_14) DEC_14
+		from
+			<include refid="tableConditions"/>
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from <include refid="tableConditions"/>
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	<!--  
+		创建渠道汇总明细表的数据
+	-->
+	<insert 
+		id="createChannelTransSummary"
+		parameterType="java.util.Map">
+		insert into 
+			<include refid="tableConditions"/>(
+				VERSION,CREATE_TIME,REPORT_TYPE,STAT_DATE,TRX_DATE,VAR_1,VAR_2,VAR_3,VAR_4,
+				INT_1,DEC_1,INT_2,DEC_2,INT_3,DEC_3,DEC_11,DEC_12,DEC_13,DEC_14
+			)
+		select 
+			0,#{dateTime},#{reportType},#{statDate},#{transDate},t.channelno,c.channel_name,t.ylmerchantno,m.channel_merch_name,
+			sum(2 - t.debitflag ),sum(t.amount*(2 - t.debitflag)),sum(t.debitflag - 1),sum(t.amount*(t.debitflag - 1)),
+				count(t.channelno), sum(t.amount*(3 - 2 * t.debitflag)),sum(t.bankfee),sum(t.instfee),sum(t.agentfee),sum(t.merchantfee)
+		from  
+			POS_PP_TRANS t,POS_PB_CHANNEL_INFO c,POS_PB_CHANNEL_MERCH_INFO m
+		where 
+			t.channelno = c.channel_code and t.ylmerchantno = m.channel_merchno and t.respcode = '00' 
+			and t.debitflag in (1,2) and length(t.ylmerchantno) = 15 and t.settledate = #{fieldDate}
+		group by 
+			t.channelno,t.ylmerchantno,t.settledate
+	</insert>
+</mapper>

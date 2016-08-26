@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="dubbo-consumer-user-test" />
+
+	<!-- 使用zookeeper注册中心暴露发现服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="192.168.88.106:2181" />
+
+	<!-- 商户子系统对外服务接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantActionFacade" id="merchantActionFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantPermissionFacade" id="merchantPermissionFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantRoleActionFacade" id="merchantRoleActionFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantRoleFacade" id="merchantRoleFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantRoleOperatorFacade" id="merchantRoleOperatorFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantRateFacade" id="merchantRateFacade" />
+
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountManagementFacade" id="accountManagementFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountTransactionFacade" id="accountTransactionFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountQueryFacade" id="accountQueryFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.settlement.service.SettlementFacade" id="settlementFacade" />
+	
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserManagementFacade" id="userManagementFacade" />
+	
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserBankAccountFacade" id="userBankAccountFacade" />
+</beans>  

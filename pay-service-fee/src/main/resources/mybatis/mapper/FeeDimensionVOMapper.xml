@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.fee.dao.impl.FeeDimensionVODaoImpl">
+
+	<resultMap id="beanMap" type="FeeDimensionVO">
+		<!-- 计费节点表 -->
+		<result property="nodeId" column="NODEID" />
+		<result property="calculateFeeItem" column="CALCULATE_FEE_ITEM" />
+		<result property="nodeType" column="NODE_TYPE" />
+		<result property="nodeName" column="NODE_NAME" />
+		<!-- 费率维度表 -->
+		<result property="dimensionId" column="DIMENSIONID" />
+		<result property="payProduct" column="PAY_PRODUCT" />
+		<result property="frpCode" column="FRP_CODE" />
+		<result property="bankChannelCode" column="BANK_CHANNEL_CODE" />
+		<result property="payProductName" column="PAY_PRODUCT_NAME" />
+		<result property="status" column="STATUS" />
+	</resultMap> 
+
+	<select id="getFeeDimensionVOs" parameterType="java.util.Map" resultMap="beanMap">
+		SELECT
+		node.ID as NODEID,
+		node.CALCULATE_FEE_ITEM,
+		node.NODE_TYPE,
+		node.NODE_NAME,
+		dimension.ID as DIMENSIONID,
+		dimension.PAY_PRODUCT,
+		dimension.FRP_CODE,
+		dimension.BANK_CHANNEL_CODE,
+		dimension.PAY_PRODUCT_NAME,
+		dimension.STATUS
+		FROM
+		TBL_FEE_NODE node
+		LEFT JOIN
+		TBL_FEE_DIMENSION dimension
+		ON
+		node.ID=dimension.FEE_NODE_ID
+		<where>
+			node.CALCULATE_FEE_ITEM=#{calFeeItem} and dimension.STATUS = 100
+		</where>
+	</select>
+
+	<sql id="condition_sql">
+		<if test="feeNodeId != null and feeNodeId !='' "> and dimension.FEE_NODE_ID = #{feeNodeId}</if>
+		<if test="status !=null and status!=''"> and dimension.STATUS = #{status} </if>
+		<if test="payProduct !=null and payProduct !=''"> and dimension.PAY_PRODUCT = #{payProduct} </if>
+		<if test="frpCode !=null and frpCode !=''"> and dimension.FRP_CODE = #{frpCode} </if>
+		<if test="feeNodeName !=null and feeNodeName !=''"> and node.NODE_NAME = #{feeNodeName} </if>
+		<if test="payProductName !=null and payProductName !=''"> and dimension.PAY_PRODUCT_NAME = #{payProductName} </if>
+		<if test="feeNodeId !=null and feeNodeId !=''"> and node.ID = #{feeNodeId} </if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="dimensionIds != null and dimensionIds != ''">
+			and dimension.ID in
+			<foreach item="item" index="index" collection="dimensionIds" open="(" separator="," close=")">${item}</foreach>
+		</if>
+	</sql>
+
+	<select id="queryFeeDimensionVOList" parameterType="java.util.Map" resultMap="beanMap">
+		SELECT
+		node.ID as NODE_ID,
+		node.CALCULATE_FEE_ITEM as CALCULATE_FEE_ITEM,
+		node.NODE_TYPE as
+		NODE_TYPE,
+		dimension.ID as DIMENSIONID ,
+		dimension.PAY_PRODUCT as
+		PAY_PRODUCT,
+		dimension.FRP_CODE as FRP_CODE,
+		dimension.BANK_CHANNEL_CODE as BANK_CHANNEL_CODE,
+		dimension.STATUS as
+		STATUS
+		FROM
+		TBL_FEE_NODE node
+		LEFT JOIN
+		TBL_FEE_DIMENSION dimension
+		ON
+		node.ID=dimension.FEE_NODE_ID
+		<where>
+			<include refid="condition_sql" />
+		</where>
+
+	</select>
+
+	<select id="queryFeeDimensionVOListPage" parameterType="java.util.Map" resultMap="beanMap">
+		select
+		node.ID as NODE_ID,
+		node.CALCULATE_FEE_ITEM as CALCULATE_FEE_ITEM,
+		node.NODE_TYPE as
+		NODE_TYPE,
+		node.NODE_NAME as NODE_NAME,
+		dimension.CREATETIME as
+		CREATETIME,
+		dimension.ID as DIMENSIONID ,
+		dimension.PAY_PRODUCT as
+		PAY_PRODUCT,
+		dimension.FRP_CODE as FRP_CODE,
+		dimension.BANK_CHANNEL_CODE as BANK_CHANNEL_CODE,
+		dimension.STATUS as
+		STATUS,
+		dimension.PAY_PRODUCT_NAME AS PAY_PRODUCT_NAME
+		FROM
+		TBL_FEE_NODE
+		node
+		LEFT JOIN
+		TBL_FEE_DIMENSION dimension
+		ON
+		node.ID=dimension.FEE_NODE_ID
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by node.CALCULATE_FEE_ITEM  asc,node.NODE_NAME asc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		TBL_FEE_NODE node
+		LEFT JOIN
+		TBL_FEE_DIMENSION
+		dimension
+		ON
+		node.ID=dimension.FEE_NODE_ID
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

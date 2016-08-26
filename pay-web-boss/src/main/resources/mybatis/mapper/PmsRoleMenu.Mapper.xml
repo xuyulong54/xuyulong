@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.web.permission.dao.impl.PmsRoleMenuDaoImpl">
+
+	<sql id="pms_role_menu"> TBL_BOSS_PMS_ROLE_MENU </sql>
+	
+	<insert id="insert" parameterType="PmsRoleMenu">
+		insert into <include refid="pms_role_menu"/>
+		(
+		ROLEID,
+		MENUID
+		) values
+		(
+		#{roleId,jdbcType=INTEGER},
+		#{menuId,jdbcType=INTEGER}
+		)
+	</insert>
+
+	<delete id="deleteById" parameterType="java.util.Map">
+		delete from <include refid="pms_role_menu"/> where ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="string" resultType="PmsRoleMenu">
+		select
+		D.ID AS "id",
+		D.ROLEID AS "roleId",
+		D.MENUID AS "menuId"
+		from <include refid="pms_role_menu"/> D
+		where D.ID = #{id}
+	</select>
+	
+	<select id="listByRoleId" parameterType="long" resultType="PmsRoleMenu">
+		select * from <include refid="pms_role_menu"/> where ROLEID = #{roleId}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultType="PmsRoleMenu">
+		select  D.ID AS "id",
+				D.ROLEID AS "roleId",
+				D.MENUID AS "menuId"
+			FROM <include refid="pms_role_menu"/> D
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM <include refid="pms_role_menu"/> D
+	</select>
+
+	<delete id="deleteByRoleId" parameterType="long">
+		delete from <include refid="pms_role_menu"/> where ROLEID = #{roleId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.MerchantFileDaoImpl">
+
+	<sql id="table"> TBL_USER_MERCHANT_FILE </sql>
+
+	<resultMap id="beanMap" type="MerchantFile">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="merchantNo" column="MERCHANT_NO" />
+		<result property="tradeLicence" column="TRADE_LICENCE" />
+		<result property="openAccountLicence" column="OPEN_ACCOUNT_LICENCE" />
+		<result property="cardPositive" column="CARD_POSITIVE" />
+		<result property="cardNegative" column="CARD_NEGATIVE" />
+		<result property="handleCard" column="HANDLE_CARD" />
+		<result property="bankCard" column="BANK_CARD" />
+		<result property="bankCardNegative" column="BANK_CARD_NEGATIVE" />
+		<result property="cashier" column="CASHIER" />
+		<result property="tradeAddress" column="TRADE_ADDRESS" />
+		<result property="doorHead" column="DOOR_HEAD" />
+		<result property="other" column="OTHER" />
+	</resultMap>
+
+	<insert id="insert" parameterType="MerchantFile" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, MERCHANT_NO, TRADE_LICENCE , OPEN_ACCOUNT_LICENCE, CARD_POSITIVE, CARD_NEGATIVE, 
+		HANDLE_CARD ,BANK_CARD, BANK_CARD_NEGATIVE, CASHIER , TRADE_ADDRESS , DOOR_HEAD, OTHER )
+		values
+		(0, #{createTime}, #{merchantNo}, #{tradeLicence}, #{openAccountLicence}, #{cardPositive}, #{cardNegative},
+		#{handleCard}, #{bankCard} , #{bankCardNegative}, #{cashier}, #{tradeAddress}, #{doorHead}, #{other})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="MerchantFile">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			MERCHANT_NO = #{merchantNo},
+			TRADE_LICENCE = #{tradeLicence},
+			OPEN_ACCOUNT_LICENCE = #{openAccountLicence},
+			CARD_POSITIVE = #{cardPositive},
+			CARD_NEGATIVE = #{cardNegative},
+			HANDLE_CARD = #{handleCard},
+			BANK_CARD = #{bankCard},
+			BANK_CARD_NEGATIVE = #{bankCardNegative},
+			CASHIER = #{cashier},
+			TRADE_ADDRESS = #{tradeAddress},
+			DOOR_HEAD = #{doorHead},
+			OTHER = #{other}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANT_NO = #{merchantNo}</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc  ]]>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

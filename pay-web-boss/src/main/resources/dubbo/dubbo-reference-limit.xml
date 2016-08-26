@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">       
+    
+    
+    <!-- 开关限制服务 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.SwitchLimitPackFacade" id="switchLimitPackFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.PayProductSwitchFacade" id="payProductSwitchFacade" check="false"/>
+
+    
+    <!-- 支付接口路由服务 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.MerchantCustomPayInterfaceFacade" id="merchantCustomPayInterfaceFacade" check="false"/>
+
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.AmountLimitManagementFacade" id="amountLimitManagementFacade" check="false"/>
+    
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.PayWaySwitchFacade" id="payWaySwitchFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.BizFunctionParamConfigFacade" id="bizFunctionParamConfigFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.BizFunctionSwitchFacade" id="bizFunctionSwitchFacade" check="false"/>
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.TradeLimitRouterFacade" id="tradeLimitRouterFacade" check="false"/>
+    
+    <dubbo:reference interface="wusc.edu.pay.facade.limit.service.LimitSwitchFacade" id="limitSwitchFacade" check="false"/>
+</beans>  

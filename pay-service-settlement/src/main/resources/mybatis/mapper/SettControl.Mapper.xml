@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.settlement.dao.impl.SettControlDaoImpl">
+
+	<sql id="table"> TBL_SETT_CONTROL </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.settlement.entity.SettControl">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="SETT_MODE_TYPE" property="settModeType" jdbcType="SMALLINT" />
+		<result column="BEGIN_TIME" property="beginTime" jdbcType="TIME" />
+		<result column="END_TIME" property="endTime" jdbcType="TIME" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, SETT_MODE_TYPE, BEGIN_TIME, END_TIME
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="settModeType != null and settModeType != ''"> and SETT_MODE_TYPE = #{settModeType,jdbcType=SMALLINT}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="wusc.edu.pay.facade.settlement.entity.SettControl">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		SETT_MODE_TYPE, BEGIN_TIME, END_TIME
+		)
+		values (0, #{createTime},
+		#{settModeType,jdbcType=SMALLINT}, #{beginTime,jdbcType=TIME}, #{endTime,jdbcType=TIME}
+		)
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.settlement.entity.SettControl">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		SETT_MODE_TYPE = #{settModeType,jdbcType=SMALLINT},
+		BEGIN_TIME = #{beginTime,jdbcType=TIME},
+		END_TIME = #{endTime,jdbcType=TIME}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

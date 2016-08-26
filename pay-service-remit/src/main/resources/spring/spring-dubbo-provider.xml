@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="pay-service-remit" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+
+	<dubbo:protocol name="dubbo" port="20813" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+
+	<!-- 当ProtocolConfig和ServiceConfig某属性没有配置时,采用此缺省值 -->
+	<dubbo:provider timeout="10000" threadpool="fixed" threads="100" accepts="1000" />
+	<!-- 结算打款对外服务接口 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitBankAreaFacade" ref="remitBankAreaFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitBankTypeFacade" ref="remitBankTypeFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitBankInfoFacade" ref="remitBankInfoFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitBatchFacade" ref="remitBatchFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitChannelFacade" ref="remitChannelFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitChannelFlowRuleFacade" ref="remitChannelFlowRuleFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitProcessFacade" ref="remitProcessFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitRequestFacade" ref="remitRequestFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitErrorFacade" ref="remitErrorFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.remit.service.RemitFacade" ref="remitFacade" />
+	
+	<!-- 需调用的接口服务 -->
+	
+</beans>  

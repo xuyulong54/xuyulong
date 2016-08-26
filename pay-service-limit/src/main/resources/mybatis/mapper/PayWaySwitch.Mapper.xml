@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.limit.dao.impl.PayWaySwitchDaoImpl">
+	<!-- 表名 -->
+	<sql id="table"> TBL_LIMIT_PAY_WAY_SWITCH </sql>
+
+	<resultMap id="beanMap" type="wusc.edu.pay.facade.limit.entity.PayWaySwitch">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="switchLimitPackId" column="SWITCH_LIMIT_PACK_ID" />
+		<result property="bizFunction" column="BIZ_FUNCTION" />
+		<result property="payProduct" column="PAY_PRODUCT" />
+		<result property="payWay" column="PAY_WAY" />
+		<result property="status" column="STATUS" />
+		<result property="lastModifyTime" column="LAST_MODIFY_TIME" />
+
+	</resultMap>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.limit.entity.PayWaySwitch" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO
+		<include refid="table" />
+		(
+    VERSION,
+		SWITCH_LIMIT_PACK_ID,
+		BIZ_FUNCTION,
+		CREATE_TIME,
+		LAST_MODIFY_TIME,
+		PAY_PRODUCT,
+		STATUS,
+		PAY_WAY
+		) VALUES
+		(
+		0,
+		#{switchLimitPackId},
+		#{bizFunction},
+		FUN_NOW(),
+		FUN_NOW(),
+		#{payProduct},
+		#{status},
+		#{payWay}
+		)
+	</insert>
+	<update id="update" parameterType="wusc.edu.pay.facade.limit.entity.PayWaySwitch">
+		UPDATE
+		<include refid="table" />
+		<set>
+			VERSION = #{version,jdbcType=INTEGER} + 1,
+			SWITCH_LIMIT_PACK_ID = #{switchLimitPackId},
+			BIZ_FUNCTION = #{bizFunction},
+			LAST_MODIFY_TIME = FUN_NOW(),
+			PAY_PRODUCT = #{payProduct},
+			STATUS = #{status},
+			PAY_WAY = #{payWay}
+		</set>
+		WHERE ID = #{id} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+	<delete id="deleteById" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</delete>
+	<select id="getById" parameterType="string" resultType="wusc.edu.pay.facade.limit.entity.PayWaySwitch">
+		SELECT ID as "id",
+		VERSION as "version",
+		SWITCH_LIMIT_PACK_ID as "switchLimitPackId",
+		BIZ_FUNCTION as "bizFunction",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime",
+		PAY_PRODUCT
+		as "payProduct",
+		STATUS as "status",
+		PAY_WAY as "payWay"
+		FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<sql id="condition_sql">
+		<if test="switchLimitPackId != null and switchLimitPackId != ''"> and SWITCH_LIMIT_PACK_ID = #{switchLimitPackId} </if>
+		<if test="payProduct != null and payProduct != ''"> and PAY_PRODUCT = #{payProduct} </if>
+		<if test="payWay != null and payWay != ''"> and PAY_WAY = #{payWay} </if>
+		<if test="status != null and status != ''"> and STATUS = #{status} </if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.limit.entity.PayWaySwitch">
+		select
+		ID as "id",
+    VERSION as "version",
+		SWITCH_LIMIT_PACK_ID as "switchLimitPackId",
+		BIZ_FUNCTION as "bizFunction",
+		CREATE_TIME as "createTime",
+		LAST_MODIFY_TIME as "lastModifyTime",
+		PAY_PRODUCT as
+		"payProduct",
+		STATUS as "status",
+		PAY_WAY as "payWay"
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<delete id="deleteByPackIdAndProductAndWay" parameterType="java.util.Map">
+		DELETE FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</delete>
+</mapper>

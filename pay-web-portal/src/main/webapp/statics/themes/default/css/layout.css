@@ -1,0 +1,81 @@
+﻿body
+{
+}
+
+/*---定位、排列方式---*/
+.h10{ height:10px; clear:both;}
+.h15{ height:15px; clear:both;}
+.fr{ float:right;}
+.fl{ float:left;}
+.mleft10{ margin-left:10px;}
+.mleft15{ margin-left:15px;}
+.mleft30{ margin-left:30px;}
+.mtop10{ margin-top:10px;}
+.mtop15{ margin-top:15px;}
+.mtop20{ margin-top:20px;}
+.mbt10{margin-bottom: 10px;}
+.mbt20{margin-bottom: 20px;}
+.marginL150{margin-left:150px;}
+
+.pst{position: absolute;}
+
+.spacel-tdW{width:76px;} /*表格列数多的可以让时间换行*/
+
+.word-break{word-break: break-all;}
+
+/*----文本框的长度------*/
+.input-w100{ width:100px!important}
+.input-w170{width:171px;*width:160px;}
+.input-w250{ width: 250px;}
+
+
+
+/*注册页面文本框的长度*/
+.reg-inputW input[type=text],.reg-inputW input[type=password],.reg-inputW textarea{width:220px;}
+.reg-inputW select{width:238px;}
+
+/*清楚浮动*/
+.clearfix:after {visibility: hidden;display: block;font-size: 0;content: "\0020";clear: both;height: 0;}
+.clearfix { display: inline-table; }
+/* Hides from IE-mac \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* End hide from IE-mac */
+
+
+
+
+
+
+
+.container{ width:980px; margin:0 auto;}
+.bd-container{width:980px; margin:0 auto;  min-height:390px; _height:390px; margin-top: 10px;}
+
+
+/*----商户、会员首页-------*/
+.greetview .panelbox{ clear:both;}
+.greetview .panelbox-sm{ float:left; width:250px; height:180px;background:#FAF8F8;}
+.greetview .panelbox-mid{ float:right; width:446px; height:180px;}
+.greetview .panelbox-mid .account-fn{ height:180px;background:#FAF8F8;}
+.greetview .panelbox-big{ float:right;width:710px; height:250px;background:#FAF8F8;}
+.greetview .panelbox .minheight{ height:150px;}
+
+/*--------商户、会员首页 结束-------*/
+
+
+
+/*----------充值-------------*/
+.men-recharge{width:980px; margin-top:30px;}
+.men-recharge ul{ list-style:none;}
+.men-recharge ul li{ float:left; display:block;}
+.recharge-foot{width:980px;margin: 30px auto; border-top:1px solid #ddd; background: #eee; }
+.recharge-foot h3{ font-size: 18px; color:#e57d04; margin:10px;}
+/*充值*/
+.help-bg{width:850px; height:123px; background:url('../images/help_procss.png') no-repeat; background-position: 50%; }
+/*转账*/
+.help-transferbg{width:850px; height:123px; background:url('../images/help_transfer.png') no-repeat; background-position: 50%; }
+/*转账*/
+.help-withdrawbg{width:850px; height:123px; background:url('../images/help_withdraw.png') no-repeat; background-position: 50%; }
+
+/*----------充值-------------*/
+

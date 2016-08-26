@@ -1,0 +1,58 @@
+body {
+	background-color: #fff;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.table_title_image {
+    font-size: 12px;
+    background-image: url( ../images/shine.gif );
+    margin-left: 60px;
+    width: 154px;
+    height: 19px;
+}
+
+#datalist {
+    background-color: #E3F1FE;
+    border-top: #88B0E4 1px solid;
+    border-left: #88B0E4 1px solid;
+}
+
+.tabel_list {
+    text-align: center;
+}
+
+.table_list_head_td {
+	font-family: "Courier New", Courier, monospace;
+	font-size: 14px;
+    font-weight: bold;
+    border-right: #88B0E4 1px solid;
+    border-bottom: #88B0E4 1px solid;
+    height: 20px;
+    padding-top: 4px;
+}
+
+.table_list_body_even, .table_list_body_odd, .table_list_body {
+	font-family: "Courier New", Courier, monospace;
+    border-right: #88B0E4 1px solid;
+    border-bottom: #88B0E4 1px solid;
+    font-size: 14px;
+    color: #333333;
+}
+
+.table_list_body_even {
+    background-color: #F6FAFD;
+    height: 20px;
+}
+
+.table_list_body_odd {
+    background-color: #fff;
+    height: 20px;
+}
+.error {
+	color: red;
+	font-weight: bold;
+}
+.warns {
+	color: blue;
+	font-weight: normal;
+}

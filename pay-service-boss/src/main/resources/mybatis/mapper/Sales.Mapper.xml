@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.boss.dao.impl.SalesDaoImpl">
+
+	<sql id="table"> TBL_BOSS_SALES </sql>
+
+	<resultMap id="beanMap" type="Sales">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="SALESNO" property="salesNo" />
+		<result column="SALESNAME" property="salesName" />
+		<result column="MOBILE" property="mobile" />
+		<result column="STATUS" property="status" />
+		<result column="DESCRIPTION" property="description" />
+	</resultMap>
+
+	<insert id="insert" parameterType="Sales" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME,
+		SALESNO, SALESNAME, MOBILE, STATUS, DESCRIPTION)
+		values (0, #{createTime}, #{salesNo}, #{salesName}, #{mobile}, #{status}, #{description})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="Sales">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			MOBILE = #{mobile},
+			DESCRIPTION = #{description},
+			SALESNAME = #{salesName},
+			STATUS = #{status}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="salesNo != null and salesNo != ''"> and SALESNO = #{salesNo}</if>
+		<if test="salesName != null and salesName != ''"> and SALESNAME = #{salesName}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+		<if test="salesId != null and salesId != ''"> and ID != #{salesId}</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

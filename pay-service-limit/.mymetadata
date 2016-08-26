@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="pay-service-limit"
+  id="myeclipse.1380253396050"
+  context-root="/pay-service-limit"
+  j2ee-spec="6.0"
+  archive="pay-service-limit.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

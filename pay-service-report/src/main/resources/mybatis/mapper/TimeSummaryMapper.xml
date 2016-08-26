@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.TimeSummaryDaoImpl">
+
+	<sql id="table"> TBL_REPORT_DAY </sql>
+
+	<resultMap id="beanMap" type="TimeSummary">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="STAT_DATE" property="statDate" />
+		<result column="REPORT_TYPE" property="reportType" />
+		<result column="TRX_DATE" property="trxDate" />
+		<result column="VAR_1" property="timeCode" />
+		<result column="INT_1" property="totalCount" />
+		<result column="DEC_1" property="totalAmount" />
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="reportType != null and reportType !=''"> AND REPORT_TYPE = #{reportType} </if>
+		<if test="startDate != null and startDate != '' and endDate != '' and endDate != null">
+			AND TRX_DATE between #{startDate} and #{endDate}
+		</if>
+	</sql>
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+			(select 
+				VAR_1,
+				sum(INT_1) INT_1,
+				sum(DEC_1) DEC_1
+			from
+			<include refid="table" />
+			<where>
+				<include refid="condition_sql" />
+			</where>
+			group by VAR_1 ) AS temp
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+	<insert id="createTimeSummary" parameterType="java.util.Map">
+		insert into 
+			<include refid="table"/> (
+				VERSION, CREATE_TIME, REPORT_TYPE, STAT_DATE, 
+				TRX_DATE, VAR_1, INT_1, DEC_1
+			)
+		select 
+			0, #{dateTime}, #{reportType}, #{statDate}, #{transDate}, 
+			substr(transtime,1,2), count(respcode), sum(t.amount*(3-2*t.debitflag))
+		from  
+			TBL_USER_INFO u,POS_PP_TRANS t
+		where 
+			u.userno = t.merchantno
+			and t.debitflag in (1,2)
+			and t.respcode = '00'
+			and t.transdate = #{fieldDate}
+		group by 
+			substr(transtime,1,2),transdate
+	</insert>
+	
+</mapper>

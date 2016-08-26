@@ -1,0 +1,109 @@
+﻿
+/*-----------首页页脚-----------------*/
+
+
+body{ height:100%; text-align:center; color:#535353;  font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height:150%;margin:0 auto; _width:980px; min-width:980px; width: expression((documentElement.clientWidth < 1024) ? "980px" : "auto" );}
+a:link, a:visited{ color:#666666; text-decoration:none;}
+a:hover,a:active{ color:#ce484d; text-decoration:none;}
+ul,li,dl,dt,dd,from{ margin:0; padding:0; list-style:none}
+a img{ border:none;}
+#middle{height:100%;}
+.ht{ height:30px; _height:40px;}
+.ht1{ height:150px; _height:160px;}
+.SelW{width:155px;}
+.tit{ text-align:left; font-size:14px; font-weight:bold; text-indent:230px; height:15px;}
+.SearchNoresaul{ clear:left; width:900px; height:30px; line-height:30px; font-weight:bold; text-align:left; text-indent:10px; margin-top:25px; _margin-top:25px;border: 1px solid #F8BE8A; background-color: #F6F2D6;}
+
+
+
+.footer .pic{ height:50px; width:100%; margin:0 auto;  text-align:left; padding-left:0px;}
+.footer .pic img{ border:none; }
+.footer_ico{margin-top: 10px; text-align:center; background-color:#EBEBEB; clear:both;}
+p {
+display: block;
+-webkit-margin-before: 1em;
+-webkit-margin-after: 1em;
+-webkit-margin-start: 0px;
+-webkit-margin-end: 0px;
+}
+.footer_ico a{margin: 8px;vertical-align: middle;}
+.footer_about{text-align:center;background-color:#EBEBEB;}
+
+
+
+/*-----------首页页脚 结束-----------------*/
+
+
+
+
+
+  
+ /*-----------支付成功------------------*/
+ 
+ .tipsTitle{width:900px;height:50px; margin: 0 auto;}
+ .tipsTitle li{float:left;}
+ .tipsTitle .TipsImg{width:60px;height:50px; background:url('../images/ico_Prompt.png'); background-repeat: no-repeat; }
+ .tipsTitle .errorTipsImg{background-position: left bottom;}
+  .tipsTitle .SuccTipsImg{background-position:left top;}
+  .tipsTitle  .tipTxt{font-family: 微软雅黑;font-size: 24px; line-height: 50px;}
+  .markGreen{color:#109405;}
+  
+ .PayState { width:900px; margin:0 auto; height:auto; padding: 80px 0px 10px 0px; }
+  .PayState a{ color:Blue;}
+.PayState span{ font-size:16px; font-weight:bold; color:Red;}
+.PayState .title{ font-size:14px; font-weight:bold;  height:40px; line-height:40px;  text-align: left;}
+.PayState .title2{font-size:24px; font-weight:bold;  }
+
+.PayState li{ height:30px; line-height:30px; text-align: left;}
+.PayState .tip{ margin-top:20px; width:900px; height:auto; line-height:25px; text-indent:30px; border: 1px solid #D83E24; background-color: #F6F2D6; font-size:12px;}
+.PayState .tip li{ height:30px; line-height:30px;}
+
+.PayState .linkTitle{ float:right; background:url('../images/ico_backhome.png'); background-position:left 50%; background-repeat:no-repeat;  text-align: left; text-indent:40px; font-family: 微软雅黑;font-size: 16px; height:50px; line-height: 60px;}
+ .boxProduct{ text-indent:15px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #fbfdff; margin-top: 10px;}
+ 
+  /*-----------支付成功 结束------------------*/
+
+  
+/*-----------通用表格样式 W800-----------*/
+.form{width:800px; text-align:center; border-collapse:collapse;  font-size:12px;}
+.form .form_head{font-weight:bold; background-color:#F6F6F6;}
+.form td{ height:30px; border:1px solid #D5D6D9;}
+.form a{ color:Blue;}
+.form span{color:#B3ADAD;}
+/*-----------通用表格样式  结束-----------*/
+/*支付失败*/
+.bd-container{min-height: 300px;height:auto;}
+.tipFalse{
+	clear:both;
+	width:900px; 
+	margin: 30px auto 0px auto;
+	border:1px solid #e8cec8;
+	background: #fcefe9;
+	padding:20px 15px;
+	font-family: 微软雅黑;
+	font-size: 16px;
+}
+.tipFalse .leftbox{float:left;width:100px;}
+.tipFalse .rightbox{float:left;text-align: left;}
+.tipFalse .rightbox h3{font-size: 18px; margin-bottom: 10px;}
+.tipFalse p{margin: 0px; line-height: 30px;}
+.tipFalse .less{color:#888;}
+.link-color{color:#08c!important; text-decoration: none;} 
+
+.tipFalse .leftbox .iconfont{font-size: 80px;color:#f63a35;line-height: 40px;}
+
+/**--------操作异常----------*/
+.reg_top100{  margin-top:10px; width:100%; height:55px; background-image:url('../images/reg_topbg100.png'); background-repeat:repeat-x;}
+
+.worinfo{width:800px; height:300px; margin:0 auto; font-size:12px; margin-top:40px; text-align:left;}
+.reg_top2{width:800px; height:55px; background-image:url('../images/reg_topbg2.png'); background-repeat:no-repeat; margin:0 auto;}
+.worinfo .lf_td{ width:200px;}
+.reg_top2 .title{ float:left; color:#535353; font-family:微软雅黑; font-size:20px;  line-height:40px; padding-left:300px;}
+.titles{ font-size:10px;}
+.worinfo .title{ font-size:20px; font-weight:bold; height:60px; line-height:60px; text-align:left;}
+.worinfo .intro{ width: 600px; height: 50px; border: 1px solid #D5D6D9;}
+.worinfo .links{height:30px; line-height:30px;}
+/**--------操作异常----------*/
+
+
+

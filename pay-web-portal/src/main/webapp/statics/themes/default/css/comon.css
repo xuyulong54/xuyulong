@@ -1,0 +1,136 @@
+﻿
+body{color:#535353; font-family:'Microsoft YaHei';font-size: 14px; margin:0 auto;min-width:980px;}
+ a{ text-decoration:none; cursor:pointer;}
+ a:hover{text-decoration:none;color:#C70606;}
+ img{ border:none;}
+ ul,li,dl,dt,dd,from{ margin:0; padding:0; list-style:none}
+ p{margin:0; padding:0;}
+
+  input[type="submit"],input[type="button"]
+ {
+ 	margin:0px;
+ 	overflow:visible;
+
+ }
+
+.none {display: none !important;}
+
+.fl{ float:left;}
+ .pageContent{ min-height: 400px; height:auto;  padding-top: 10px; padding-bottom: 10px; } /*页头和页脚之间插入*/
+.clear{display:block;clear:both;height:0px;overflow:hidden;}
+
+.clearfix {
+	*zoom: 1;
+}
+.clearfix:after {
+	height: 0px;
+	display: block;
+	clear: both;
+	visibility: hidden;
+	overflow: hidden;
+	content: "\0020";
+}
+.ht{ height:30px; _height:40px;}
+.ht1{ height:150px; _height:160px;}
+.h10{ height:10px;}
+.w980{width:980px;}
+.w900{width:900px;}
+.w850{width:850px;}
+
+.mAuto{margin: 0 auto;}
+.ml5{margin-left: 5px;}
+.pl5{padding-left: 5px;}
+.mr5{ margin-right: 5px;}
+.pr5{padding-right: 5px;}
+.pt10{padding-top: 10px;}
+.pb10{padding-bottom: 10px;}
+.pt5{padding-top: 5px;}
+.pb5{padding-bottom: 5px;}
+
+/*------公用字体样式------*/
+   h4{ font-size:14px; font-family:微软雅黑;}
+  .numRed{color:#D83E24; font-size:24px; font-weight:bold;}
+  .numGray{color:#535353; font-size:16px; font-weight:bold;}
+  .markRed{ color:#D83E24;}
+
+
+
+
+/*==========提示信息样式==========*/
+.msgTip{display:block; width:500px; background-image:url('../images/tips.png'); background-repeat:no-repeat; background-position:left;  text-align:left;  height:25px; line-height:25px; vertical-align:middle; border: 1px solid #F8BE8A; background-color: #F6F2D6; text-indent:25px;  margin-left:80px; _margin-left:-10px; }
+
+/*------标题样式 开始------*/
+.titleW850{ width:850px; margin: 0 auto; font-weight: 700; font-size: 16px; line-height: 35px;}
+
+.column{ margin:0 auto;height:30px;border-bottom:1px solid #ddd; clear: both;}
+.column .title{height:30px; line-height:30px; border-bottom:1px solid #C70606; float:left; font-size:16px; font-weight:bold;}
+.columnW980{width:980px;}
+.columnW900{width:900px;}
+.columnW850{width:850px;}
+
+
+/*------标题样式 结束------*/
+
+  /*-----------通用表格样式 W800开始-----------*/
+.commonFrm{ background-color:#fff; text-align:center; border-collapse:collapse; line-height:30px;  font-size:12px;}
+.commonFrm th{ background-color:#f6f6f6;border:1px solid #D5D6D9;}
+.commonFrm td{ border:1px solid #D5D6D9;}
+.commonFrm a{ color:Blue;}
+/*-----------通用表格样式 W800 结束-----------*/
+.frmTransverse th{text-align: right; padding-right: 5px;}
+.frmTransverse td{text-align: left; padding-left: 5px;}
+
+.frmW800{width:800px; margin:0 auto;}
+.frmW850{width:850px; margin:0 auto;}
+.frmW900{width:900px; margin:0 auto;}
+
+
+/*-----------通用表格样式  结束-----------*/
+
+  /*------查询结果表格-----*/
+ .searchList{  width: 900px; margin: 0 auto; }
+ .searchList .tbl { border-collapse: collapse; width: 900px; font-size: 12px;margin: 0 auto; border-left: 1px solid #b1b2b0; border-right: 1px solid #b1b2b0; background-color: #fff; }
+ .searchList  th { height: 23px;  background-image: url( '../images/tbl_hd.jpg' ); background-repeat: repeat-x; border-right: 1px solid #b1b2b0; border-left: 1px solid #bbbcbb; }
+ .searchList  td{ height: 28px; line-height: 28px; text-align: center; border: 1px solid #b1b2b0; }
+ .searchList  a { color: #08c; }
+  /*------查询结果表格 结束-----*/
+
+
+  /*----------排版样式-------*/
+  .setting{ margin: 0 auto; height:auto; padding: 10px 0px 10px 0px;}
+  .settingW850{width:850px;}
+  .settingW900{width:900px;}
+  .settingW980{width:980px;}
+  .setting p{clear:both; display:block; margin-bottom:8px;}
+ .setting .btnDiv{ clear:both; display:block; height:auto; margin-bottom:8px;}  /*设置按钮定位*/
+ .setting strong{width:150px; float:left; text-align: right; padding-right: 3px;margin-bottom:8px; }
+ .setting .font{display: block;  margin-bottom:10px;float: left; margin-right: 15px; margin-left:15px; text-align:left;}
+ .setting i{color:Red;}
+
+
+ .setting input[type=text], .setting input[type=password], .setting textarea
+{
+	width: 300px;
+}
+.setting select
+{
+	width: 318px;
+	            height: 30px;
+	            height: 35px\9;
+	             height: 30px\0;
+	             line-height: 45px\9;
+}
+
+ /* 客服中心修改 开始 */
+.service-wrap{padding: 20px; margin-top: 20px; display: inline-block;}
+.service-wrap .icon,.service-wrap .con {float:left;}
+.service-wrap .icon .iconfont{font-size: 64px; color:#08c;}
+.service-wrap .con {float:left; margin-left: 20px;}
+.service-wrap .con h4 {margin-bottom: 10px;}
+.service-wrap .con .blue{color:#08c;}
+/* 客服中心修改 结束 */
+
+ /*----------排版样式 结束-------*/
+
+
+

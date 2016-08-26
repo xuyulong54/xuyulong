@@ -1,0 +1,293 @@
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="merchantLoginPackage" extends="base">
+		<default-interceptor-ref name="operatorLoginStack" />
+		<action name="permission_*" class="wusc.edu.pay.web.portal.action.merchant.PermissionManagerAction" method="{1}">
+			<result name="error">page/request_error.jsp</result>
+			<!-- 权限 -->
+			<result name="addMerchantActionUI">page/merchant/permissionManager/MerchantActionAdd.jsp
+			</result>
+			<result name="editMerchantActionUI">page/merchant/permissionManager/MerchantActionEdit.jsp
+			</result>
+			<result name="listMerchantAction">page/merchant/permissionManager/MerchantActionList.jsp
+			</result>
+			<result name="addMerchantAction">permission_listMerchantAction.action?msg=${msg}
+			</result>
+			<result name="editMerchantAction">permission_listMerchantAction.action?msg=${msg}
+			</result>
+			<result name="deleteMerchantAction">permission_listMerchantAction.action?msg=${msg}
+			</result>
+			<!-- 角色 -->
+			<result name="addMerchantRoleUI">page/merchant/permissionManager/MerchantRoleAdd.jsp
+			</result>
+			<result name="editMerchantRoleUI">page/merchant/permissionManager/MerchantRoleEdit.jsp
+			</result>
+			<result name="listMerchantRole">page/merchant/permissionManager/MerchantRoleList.jsp
+			</result>
+			<result name="addMerchantRole">permission_listMerchantRole.action?msg=${msg}
+			</result>
+			<result name="editMerchantRole">permission_listMerchantRole.action?msg=${msg}
+			</result>
+			<result name="deleteMerchantRole">permission_listMerchantRole.action?msg=${msg}
+			</result>
+			<result name="editMerchantOperatorsRole">permission_listMerchantOperator.action?msg=${msg}
+			</result>
+			<!-- 操作员 -->
+			<result name="addMerchantOperatorUI">page/merchant/permissionManager/MerchantOperatorAdd.jsp
+			</result>
+			<result name="editMerchantOperatorUI">page/merchant/permissionManager/MerchantOperatorEdit.jsp
+			</result>
+			<result name="listMerchantOperator">page/merchant/permissionManager/MerchantOperatorList.jsp
+			</result>
+			<result name="addMerchantOperator">permission_listMerchantOperator.action?msg=${msg}
+			</result>
+			<result name="editMerchantOperator">permission_listMerchantOperator.action?msg=${msg}
+			</result>
+			<result name="deleteMerchantOperator">permission_listMerchantOperator.action?msg=${msg}
+			</result>
+			<result name="updateMerchantOperatorStatus">permission_listMerchantOperator.action?msg=${msg}
+			</result>
+
+			<!--重置密码 -->
+			<result name="resetMerchantOperatorLoginPwd">permission_listMerchantOperator.action?msg=${msg}
+			</result>
+			<!-- 操作日志 -->
+			<result name="listMerchantOperateLog">page/merchant/permissionManager/MerchantOperatorLogList.jsp
+			</result>
+			<!-- 操作日志 -->
+			<result name="viewMerchantOperateLog">page/merchant/permissionManager/MerchantOperatorLogView.jsp
+			</result>
+			
+		</action>
+		
+		<!-- 商户信息 -->
+		<action name="merchantinfo_*" class="wusc.edu.pay.web.portal.action.merchant.MerchantInfoAction" method="{1}">
+			<!-- 查看在线商户本信息页面 -->
+			<result name="MerchantView">page/merchant/merchantInfo/MerchantView.jsp
+			</result>
+			<!-- POS商户首页 -->
+			<result name="PosMerchantIndex">page/merchant/merchantInfo/PosMerchantIndex.jsp
+			</result>
+			<!-- 在线商户首页 -->
+			<result name="MerchantIndex">page/merchant/merchantInfo/MerchantIndex.jsp
+			</result>
+			<!-- 查看POS商户公告详情 -->
+			<result name="PosMerchantNoticeView">page/merchant/merchantInfo/PosMerchantNoticeView.jsp
+			</result>
+			<!--审核不通过时，修改在线商户信息页面 -->
+			<result name="editAllMerchantUI">page/merchant/merchantInfo/MerchantEditAll.jsp
+			</result>
+			<!--修改商户信息页面 -->
+			<result name="editMerchantUI">page/merchant/merchantInfo/MerchantEdit.jsp
+			</result>
+		</action>
+		<!--查看商户秘钥 -->
+		<action name="merchantKey_*" class="wusc.edu.pay.web.portal.action.merchant.MerchantKeyAction" method="{1}">
+			<result name="showMerchantKeyUI">page/merchant/merchantKey/MerchantKeyShow.jsp
+			</result>
+			
+			<result name="changeMerchantKeyTypeUI">page/merchant/merchantKey/MerchantKeyTypeChange.jsp
+			</result>
+			
+			<result name="showPlatPubUI">page/merchant/merchantKey/showPlatPubKey.jsp
+			</result>
+			
+		</action>
+		<!-- 修改商户信息(问候语) -->
+		<action name="merreservationInfo_*" class="wusc.edu.pay.web.portal.action.merchant.EditReservationInfoAction" method="{1}">
+			<!--去修改商户信息(问候语)页面 -->
+			<result name="editMerchantGreetingUI">page/merchant/greeting/MerchantGreetingEdit.jsp
+			</result>
+			<!--修改商户信息(问候语) -->
+			<result name="editMerchantGreeting">page/merchant/greeting/MerchantGreetingEditSuccess.jsp
+			</result>
+		</action>
+		<!-- 充值(收款) -->
+		<action name="merchantReceiveRecharge_*" class="wusc.edu.pay.web.portal.action.merchant.ReceiveRechargeAction" method="{1}">
+			<!-- 充值交易查询 -->
+			<result name="listReceiveRechargeRecord">page/merchant/receiveRecharge/RechargeRecordList.jsp</result>
+			<!-- 充值 -->
+			<result name="rechargePage">page/merchant/receiveRecharge/Recharge.jsp</result>
+      <!-- 充值异常页面 -->
+      <result name="RechargeException">page/merchant/receiveRecharge/Recharge_exception.jsp</result>      
+			<!-- 验证充值金额 -->
+			<result name="checkAddAmount">merchantReceiveRecharge_recharge.action</result>
+		</action>
+		<!-- 账务 -->
+		<action name="merchantaccount_*" class="wusc.edu.pay.web.portal.action.merchant.AccountAction" method="{1}">
+			<!-- 财务信息 -->
+			<result name="viewAccount">page/merchant/account/AccountView.jsp</result>
+			<!-- 财务明细列表 -->
+			<result name="listAccountHistory">page/merchant/account/AccountHistoryList.jsp
+			</result>
+		</action>
+
+		<!--转帐(收款) -->
+		<action name="merchantReceiveTransfer_*" class="wusc.edu.pay.web.portal.action.merchant.ReceiveTransferAction" method="{1}">
+			<!-- 转帐记录查询 -->
+			<result name="listRecieveTransfer">page/merchant/receiveTransfer/TransferList.jsp</result>
+			<!-- 转账 -->
+			<result name="ransferPage">page/merchant/receiveTransfer/TransferPage.jsp</result>
+			<!-- 转账成功页面 -->
+			<result name="editTransferSuccess">page/merchant/receiveTransfer/TransferSuccess.jsp
+			</result>
+			<!-- 转账失败页面 -->
+			<result name="editTransferFail">page/merchant/receiveTransfer/TransferFail.jsp</result>
+		</action>
+		
+		<!--在线商户的支付记录(收款) -->
+		<action name="merchantReceivePaymentOrder_*" class="wusc.edu.pay.web.portal.action.merchant.ReceivePaymentOrderAction" method="{1}">
+			<!-- 收款支付记录查询 -->
+			<result name="listReceivePaymentOrder">page/merchant/receivePayment/PaymentRecordList.jsp</result>
+			<!-- 收款支付记录详情 -->
+			<result name="viewReceivePaymentOrder">page/merchant/receivePayment/PaymentRecordDetail.jsp</result>
+		</action>
+		
+		<!--商户的付款 _支付-->
+		<action name="merchantPayPaymentOrder_*" class="wusc.edu.pay.web.portal.action.merchant.PayPaymentOrderAction" method="{1}">
+			<!-- 在线商户交易记录查询 -->
+			<result name="listPaymentOrder">page/merchant/payPayment/PaymentOrderList.jsp</result>
+			<!-- 交易记录详情 -->
+			<result name="viewPaymentOrder">page/merchant/payPayment/PaymentOrderDetail.jsp</result>
+		</action>
+		
+		<!--商户的付款_转账-->
+		<action name="merchantTransferRecord_*" class="wusc.edu.pay.web.portal.action.merchant.PayTransferAction" method="{1}">
+			<!-- 在线商户转账记录查询 -->
+			<result name="listTransfer">page/merchant/payPayment/TransferList.jsp</result>
+		</action>
+		
+		<!--安全中心 -->
+		<action name="merchantsecuritycenter_*" class="wusc.edu.pay.web.portal.action.merchant.SecurityCenterAction" method="{1}">
+			<result name="securityCenter">page/merchant/securityCenter/SecurityCenter.jsp
+			</result>
+		</action>
+		<!--修改密码 -->
+		<action name="merchantpwdedit_*" class="wusc.edu.pay.web.portal.action.merchant.PwdEditAction" method="{1}">
+			<!-- 去修改登录密码(首次) -->
+			<result name="firstEditLoginPwdUI">page/merchant/pwdEdit/LoginPwdEditFirst.jsp
+			</result>
+			<result name="editLoginPwdFirst">page/merchant/pwdEdit/LoginPwdEditFirstSuccess.jsp
+			</result>
+			<!-- 去修改登录密码 -->
+			<result name="editLoginPwdUI">page/merchant/pwdEdit/LoginPwdEdit.jsp
+			</result>
+			<!-- 修改登录密码 -->
+			<result name="editLoginPwd">page/merchant/pwdEdit/LoginPwdEditSuccess.jsp
+			</result>
+			<!-- 去修改支付密码 -->
+			<result name="editTradePwdUI">page/merchant/pwdEdit/TradePwdEdit.jsp
+			</result>
+			<!-- 去修改支付密码 -->
+			<result name="editTradePwd">page/merchant/pwdEdit/TradePwdEditSuccess.jsp
+			</result>
+			<!-- 去修改登录,支付密码(首次) -->
+			<result name="firstEditLoginTradePwdUI">page/merchant/pwdEdit/LoginTradePwdEditFirst.jsp
+			</result>
+			<!-- 修改登录,支付密码(首次) -->
+			<result name="firstEditLoginTradePwd">page/merchant/pwdEdit/LoginTradePwdEditFirstSuccess.jsp
+			</result>
+		</action>
+		<!-- 安全问题 -->
+		<action name="merchantsecurityiquestion_*" class="wusc.edu.pay.web.portal.action.merchant.SecurityiQuestionAction" method="{1}">
+			<result name="editSecurityiQuestionUI">page/merchant/securityQuestion/SecurityiQuestionEdit.jsp
+			</result>
+			<result name="editSecurityiQuestion">page/merchant/securityQuestion/SecurityiQuestionEditSuccess.jsp
+			</result>
+		</action>
+		<!-- 手机绑定，解绑 -->
+		<action name="merchantmobilebind_*" class="wusc.edu.pay.web.portal.action.merchant.MobileBindAction" method="{1}">
+			<result name="bindingMobileUI">page/merchant/mobileBind/BindingMobile.jsp
+			</result>
+			<result name="bindingMobile">page/merchant/mobileBind/BindingMobileSuccess.jsp
+			</result>
+			<result name="unbundlingMobileUI">page/merchant/mobileBind/UnbundlingMobileUI.jsp
+			</result>
+			<result name="unbundlingMobile">page/merchant/mobileBind/UnbundlingMobileSuccess.jsp
+			</result>
+		</action>
+
+		<!-- 邮箱绑定，解绑 -->
+		<action name="merchantemailbind_*" class="wusc.edu.pay.web.portal.action.merchant.EmailBindAction" method="{1}">
+			<!-- 绑定：去验证邮箱页面 -->
+			<result name="bindingEmailUI">page/merchant/emailBind/BindingEmail.jsp</result>
+			<!-- 绑定：验证邮箱，发送邮件 -->
+			<result name="bindingEmail">page/merchant/emailBind/BindingEmailSuccess.jsp
+			</result>
+			<!-- 绑定：更新状态 -->
+			<result name="bindingActivationEmail">page/merchant/emailBind/BindingActivationEmail.jsp
+			</result>
+
+			<!-- 解绑：去验证邮箱页面 -->
+			<result name="unbundlingEmailUI">page/merchant/emailBind/UnbundlingEmail.jsp
+			</result>
+			<!-- 解绑：验证邮箱，发送邮件 -->
+			<result name="unbundlingEmail">page/merchant/emailBind/UnbundlingEmailSuccess.jsp
+			</result>
+			<!-- 解绑：更新状态 -->
+			<result name="unbundlingActivationEmail">page/merchant/emailBind/UnbundlingActivationEmail.jsp
+			</result>
+		</action>
+		<!-- 找回支付密码 -->
+		<action name="merchantlookfortradepwd_*" class="wusc.edu.pay.web.portal.action.merchant.LookForTradePwdAction" method="{1}">
+			<!-- 选择方式 -->
+			<result name="tradePwdListWay">page/merchant/lookForTradePwd/TradePwdListWay.jsp
+			</result>
+			<!-- 手机：去验证手机页面 -->
+			<result name="tradePwdSendPhoneCodeCheckUI">page/merchant/lookForTradePwd/TradePwdSendPhoneCodeCheck.jsp
+			</result>
+			<!-- 手机：验证手机 ，修改支付密码 -->
+			<result name="tradePwdSendPhoneCodeCheck">page/merchant/lookForTradePwd/PhoneLookforSuccess.jsp
+			</result>
+			<!-- 安全问题+邮箱：去验证邮箱页面 -->
+			<result name="tradePwdSendMailCheckUI1">page/merchant/lookForTradePwd/TradePwdSendMailCheck1.jsp
+			</result>
+			<!-- 身份证号+邮箱：去验证邮箱页面 -->
+			<result name="tradePwdSendMailCheckUI">page/merchant/lookForTradePwd/TradePwdSendMailCheck.jsp
+			</result>
+			<!-- 邮箱：验证邮箱，发送邮件成功 -->
+			<result name="tradePwdSendMailCheck">page/merchant/lookForTradePwd/EmailSendSuccess.jsp
+			</result>
+			<!-- 邮箱：去修改支付密码页面 -->
+			<result name="editTradePwdUI">page/merchant/lookForTradePwd/TradePwdEdit.jsp
+			</result>
+			<!-- 邮箱：修改支付密码 -->
+			<result name="editTradePwd">page/merchant/lookForTradePwd/EmailLookforSuccess.jsp
+			</result>
+			<!-- 邮箱：错误页面 -->
+			<result name="editTradePwdError">page/merchant/lookForTradePwd/EditTradePwdError.jsp
+			</result>
+		</action>
+		<!--数字证书管理 -->
+		<action name="merchantca_*" class="wusc.edu.pay.web.portal.action.merchant.MerchantCAAction" method="{1}">
+			<!-- 数字证书列表 -->
+			<result name="listCA">page/merchant/ca/CAList.jsp
+			</result>
+			<!-- 申请数字证书_数字证书简介 -->
+			<result name="addCAIntro">page/merchant/ca/CAAddIntro.jsp
+			</result>
+			<!-- 申请数字证书_去输入信息页面 -->
+			<result name="addCAImInfoUI">page/merchant/ca/CAAddImInfo.jsp
+			</result>
+			<!--申请数字证书_保存输入信息 -->
+			<result name="addCAImInfo">page/merchant/ca/CAAddImInfoSuccess.jsp
+			</result>
+			<!--ca控件下载-->
+			<result name="downloadCAControl">page/merchant/ca/CAControlDownload.jsp
+			</result>
+		</action>
+		
+		<!-- 商户销户 -->
+		<action name="merchantcancelaccount_*"
+			class="wusc.edu.pay.web.portal.action.merchant.CancelAccountAction" method="{1}">
+			<!-- 去注销协议页面 -->
+			<result name="cancelAgreementUI">page/merchant/cancelAccount/CancelAgreement.jsp</result>
+			<!-- 去注销说明页面,验证注销信息 -->
+			<result name="cancelAgreement">page/merchant/cancelAccount/CancelDescription.jsp</result>
+			<!-- 注销成功页面 -->
+			<result name="authenticate">page/merchant/cancelAccount/CancelSuccess.jsp</result>
+		</action>
+	</package>
+</struts>

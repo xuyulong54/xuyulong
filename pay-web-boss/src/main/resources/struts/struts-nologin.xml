@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="nologin" extends="base">
+	
+		<default-interceptor-ref name="defaultStack" />
+		
+		<!-- 用户登录Action -->
+		<action name="login_*" class="wusc.edu.pay.web.permission.action.PmsLoginAction" method="{1}">
+			<result name="main">page/index.jsp</result>
+			<!-- 进入登录页面 -->
+			<result name="input">page/login.jsp</result>
+			<result name="login">page/login.jsp</result>
+			<!-- 退出登录前确认 -->
+			<result name="logoutConfirm">page/logoutConfirm.jsp</result>
+			<!-- 退出登录 -->
+			<result name="logout">page/login.jsp</result>
+			<!-- 登录超时确认 -->
+			<result name="timeoutConfirm">page/timeoutConfirm.jsp</result>
+			<result name="effectiveOperator">page/effectiveOperator.jsp</result>
+		</action>
+		
+		<!-- 文件下载 -->
+		<action name="download" class="wusc.edu.pay.web.boss.action.FileDownloadAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/octet-stream;charset=UTF-8</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>
+		 
+	</package>
+	
+</struts>

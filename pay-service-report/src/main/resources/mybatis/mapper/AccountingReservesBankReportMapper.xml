@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.AccountingReservesBankReportDaoImpl">
+
+  <sql id="table"> RP_ACCOUNTING_RESERVES </sql>
+
+  <resultMap id="beanMap" type="AccountingReservesBankReport">
+    <id column="ID" property="id" />
+    <result column="VERSION" property="version" />
+    <result column="CREATETIME" property="createTime" />
+    <result column="OPENBANKNAME" property="openBankName" />
+    <result column="ACCOUNTNATURE" property="accountNature" />
+    <result column="REGISTDETAILTYPE" property="registDetailType" />
+    <result column="JOURNALDATE" property="journalDate" />
+    <result column="LASTBALANCE" property="lastBalance" />
+    <result column="CHANGEAMOUNT" property="changeAmount" />
+    <result column="BALANCE" property="balance" />
+    <result column="ACOUNTDATE" property="acountDate" />
+    <result column="BANKJNREGISTID" property="bankjnRegistId" />
+
+  </resultMap>
+
+  <insert id="insert" parameterType="AccountingReservesBankReport" keyProperty="id" useGeneratedKeys="true">
+    insert into
+    <include refid="table" />
+    (VERSION, CREATETIME, OPENBANKNAME, ACCOUNTNATURE, REGISTDETAILTYPE, JOURNALDATE, LASTBALANCE, CHANGEAMOUNT, BALANCE, ACOUNTDATE, BANKJNREGISTID)
+    values (0, #{createTime}, #{openBankName}, #{accountNature}, #{registDetailType}, #{journalDate}, #{lastBalance}, #{changeAmount},
+    #{balance}, #{acountDate}, #{bankjnRegistId})
+  </insert>
+
+  <select id="getById" parameterType="long" resultMap="beanMap">
+    select * from
+    <include refid="table" />
+    where ID = #{id}
+  </select>
+
+  <sql id="condition_sql">
+    <if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+      and ACOUNTDATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+    </if>
+  </sql>
+
+  <select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+    select * from
+    <include refid="table" />
+    <where>
+      <include refid="condition_sql" />
+    </where>
+    <![CDATA[ order by ID desc]]>
+  </select>
+
+  <select id="listPageCount" parameterType="java.util.Map" resultType="long">
+    select count(1) from
+    <include refid="table" />
+    <where>
+      <include refid="condition_sql" />
+    </where>
+  </select>
+
+  <select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+    select * from
+    <include refid="table" />
+    <where>
+      <include refid="condition_sql" />
+    </where>
+  </select>
+
+ <select id="listByDate" parameterType="java.util.Map" resultMap="beanMap">
+    select 
+      openBankName, 
+      sum(changeAmount) as changeAmount
+    from <include refid="table" /> 
+    <where>
+      <include refid="condition_sql" />
+    </where>
+    group by openBankName
+  </select>
+  
+   <select id="listDetail" parameterType="java.util.Map" resultMap="beanMap">
+    select *
+    from <include refid="table" /> 
+    <where>
+      <include refid="condition_sql" />
+    </where>
+    order by journalDate asc
+  </select>
+
+</mapper>

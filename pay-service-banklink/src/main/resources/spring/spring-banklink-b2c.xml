@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<!-- 新浪微博支付 -->
+	<bean id="SINA_NET_B2C_BJ" class="wusc.edu.pay.core.banklink.netpay.biz.impl.SinaNetB2cImpl">
+		<property name="key"><value>THE89kwlok7G</value></property><!-- 测试key=THE89kwlok7G -->
+		<property name="merchantAcctId"><value>200100100120000373358401101</value></property>
+		<property name="merchantNo"><value>200003733584</value></property>
+		<property name="inputCharset"><value>1</value></property>
+		<property name="requestUrl"><value>https://testgate.pay.sina.com.cn/acquire-order-channel/gateway/receiveOrderLoading.htm</value></property>
+		<property name="notifyURL"><value>${notifyHost}/netPay_server_SINA_NET_B2C_BJ.action</value></property>
+		<!-- <property name="returnURL"><value>${notifyHost}/page_SINA_NET_B2C_PAY.action</value></property> -->
+		<property name="method"><value>get</value></property>
+		<property name="queryUrl"><value>https://testgate.pay.sina.com.cn/acquire-order-channel/gateway/receiveQuery.htm</value></property>
+		<!-- https://gate.pay.sina.com.cn/acquire-order-channel/gateway/receiveDrawback.htm -->
+		<property name="refundUrl"><value>https://testgate.pay.sina.com.cn/acquire-order-channel/gateway/receiveDrawback.htm</value></property>
+		<property name="publicCertPath"><value></value></property>
+		<property name="privateCertPath"><value></value></property>
+		<property name="signType"><value>1</value></property>
+		<property name="bankId"><value>TESTBANK</value></property>
+	</bean>
+	
+</beans>

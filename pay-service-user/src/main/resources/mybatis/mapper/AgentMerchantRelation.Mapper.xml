@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.agent.dao.impl.AgentMerchantRelationDaoImpl">
+
+	<sql id="table"> TBL_AGENT_MERCHANT_RELATION </sql>
+	
+	<sql id="merchant"> TBL_USER_MERCHANT_ONLINE </sql>
+
+	<resultMap id="beanMap" type="AgentMerchantRelation">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="merchantNo" column="MERCHANT_NO" />
+		<result property="firstAgentNo" column="FIRST_AGENT_NO" />
+		<result property="secondAgentNo" column="SECOND_AGENT_NO" />
+		<result property="thirdAgentNo" column="THIRD_AGENT_NO" />
+
+		<result property="applyRateType" column="APPLY_RATE_TYPE" />
+		<result property="applyRate" column="APPLY_RATE" />
+		<result property="upperAmount" column="UPPER_AMOUNT" />
+		<result property="mccType" column="MCC_TYPE" />
+		<result property="merchantSafeLevel" column="MERCHANT_SAFE_LEVEL" />
+
+		<result property="merchantName" column="MERCHANT_NAME" />
+		<result property="firstAgentName" column="FIRST_AGENT_NAME" />
+		<result property="secondAgentName" column="SECOND_AGENT_NAME" />
+		<result property="thirdAgentName" column="THIRD_AGENT_NAME" />
+	
+		<result property="salesNo" column="SALES_NO" />
+		<result property="salesName" column="SALES_NAME" />
+		<result property="openDate" column="OPEN_DATE" />
+		
+		<result property="remark" column="REMARK" />
+		<result property="settMode" column="SETT_MODE" />
+		
+		<result property="terminalNum" column="TERMINAL_NUM" jdbcType="SMALLINT" />
+		
+	</resultMap>
+
+	<insert id="insert" parameterType="AgentMerchantRelation" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME, MERCHANT_NO, FIRST_AGENT_NO , SECOND_AGENT_NO, THIRD_AGENT_NO,
+		APPLY_RATE_TYPE, APPLY_RATE, UPPER_AMOUNT, MCC_TYPE, MERCHANT_SAFE_LEVEL, MERCHANT_NAME, 
+		FIRST_AGENT_NAME, SECOND_AGENT_NAME, THIRD_AGENT_NAME, SALES_NO, SALES_NAME, 
+		OPEN_DATE, REMARK, SETT_MODE, TERMINAL_NUM)
+		values
+		(0, FUN_NOW(), #{merchantNo},
+		#{firstAgentNo}, #{secondAgentNo}, #{thirdAgentNo},
+		#{applyRateType}, #{applyRate}, #{upperAmount}, #{mccType}, #{merchantSafeLevel},
+		#{merchantName}, #{firstAgentName}, #{secondAgentName}, #{thirdAgentName}, 
+		#{salesNo}, #{salesName}, #{openDate}, #{remark}, #{settMode}, 0 )
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="AgentMerchantRelation">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			MERCHANT_NO = #{merchantNo},
+			FIRST_AGENT_NO = #{firstAgentNo},
+			SECOND_AGENT_NO = #{secondAgentNo},
+			THIRD_AGENT_NO = #{thirdAgentNo},
+			APPLY_RATE_TYPE = #{applyRateType},
+			APPLY_RATE = #{applyRate},
+			UPPER_AMOUNT = #{upperAmount},
+			MCC_TYPE = #{mccType},
+			MERCHANT_SAFE_LEVEL = #{merchantSafeLevel},
+			MERCHANT_NAME = #{merchantName},
+			FIRST_AGENT_NAME = #{firstAgentName},
+			SECOND_AGENT_NAME = #{secondAgentName},
+			THIRD_AGENT_NAME = #{thirdAgentName},
+			SALES_NO = #{salesNo}, 
+			SALES_NAME = #{salesName},
+			OPEN_DATE= #{openDate},
+			REMARK = #{remark},
+			SETT_MODE = #{settMode},
+			TERMINAL_NUM = #{terminalNum}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="beginDate != null and beginDate != null and endDate != '' and endDate != ''">
+			and B.CREATE_TIME between #{beginDate} and CONCAT(#{endDate}, ' 23:59:59')
+		</if>
+		<if test="firstAgentNo != null and firstAgentNo != ''"> and B.FIRST_AGENT_NO = #{firstAgentNo} 
+			<if test="isDirectly != null and isDirectly != ''"> 
+			  and B.SECOND_AGENT_NO = '' and B.THIRD_AGENT_NO = ''
+			</if>
+		</if>
+		<if test="secondAgentNo != null and secondAgentNo != ''"> and B.SECOND_AGENT_NO = #{secondAgentNo}
+			<if test="isDirectly != null and isDirectly != ''"> 
+			  and B.THIRD_AGENT_NO = ''
+			</if>
+		 </if>
+		<if test="thirdAgentNo != null and thirdAgentNo != ''"> and B.THIRD_AGENT_NO = #{thirdAgentNo} </if>
+		<if test="merchantSafeLevel != null and merchantSafeLevel != ''"> and B.MERCHANT_SAFE_LEVEL = #{merchantSafeLevel} </if>
+
+		<if test="merchantNo != null and merchantNo != ''"> and B.MERCHANT_NO = #{merchantNo}</if>
+		
+		<if test="merchantName != null and merchantName != ''"> and A.FULLNAME LIKE CONCAT('%' ,CONCAT(#{merchantName},'%'))</if>
+		
+		<if test="mccType != null and mccType != ''"> and B.MCC_TYPE = #{mccType} </if>
+		
+		<if test="mcc != null and mcc != ''"> and A.MCC = #{mcc} </if>
+		<if test="status != null and status != ''"> and A.STATUS = #{status} </if>
+		<if test="shortName != null and shortName != ''"> and A.SHORTNAME  LIKE CONCAT('%' ,CONCAT(#{shortName},'%')) </if>
+		<if test="inStatus != null and inStatus != ''">
+			and A.STATUS in
+			<foreach item="item" index="index" collection="inStatus" open="(" separator="," close=")">${item}</foreach>
+		</if>
+		<if test="salesNo != null and salesNo != ''"> and B.SALES_NO = #{salesNo} </if>
+		
+		<if test="beginOpenDate != null and beginOpenDate != null and endOpenDate != '' and endOpenDate != ''">
+			and B.OPEN_DATE between #{beginOpenDate} and CONCAT(#{endOpenDate}, ' 23:59:59')
+		</if>
+		
+		<if test="allAgentNo != null and allAgentNo != ''">
+			and (B.FIRST_AGENT_NO = #{allAgentNo} or B.SECOND_AGENT_NO = #{allAgentNo} or B.THIRD_AGENT_NO = #{allAgentNo})
+		</if>
+		<if test="allAgentName != null and allAgentName != ''">
+			and (B.FIRST_AGENT_NAME = #{allAgentName} or B.SECOND_AGENT_NAME = #{allAgentName} or B.THIRD_AGENT_NAME = #{allAgentName})
+		</if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.agent.vo.AgentMerchantRelationVo">
+		select
+		A.STATUS as "status", A.MCC as "mcc", A.MERCHANTTYPE as "merchantType",
+		B.ID as "id", A.CREATETIME as "createTime", B.MERCHANT_NO as "merchantNo", B.FIRST_AGENT_NO as "firstAgentNo",
+		B.SECOND_AGENT_NO as "secondAgentNo", B.THIRD_AGENT_NO as "thirdAgentNo",
+		B.APPLY_RATE_TYPE as "applyRateType", B.APPLY_RATE as "applyRate", B.UPPER_AMOUNT as "upperAmount",
+		B.MCC_TYPE as "mccType", B.MERCHANT_SAFE_LEVEL as "merchantSafeLevel",
+		A.FULLNAME as "merchantName",
+		B.FIRST_AGENT_NAME as "firstAgentName",
+		B.SECOND_AGENT_NAME as "secondAgentName",
+		B.THIRD_AGENT_NAME as "thirdAgentName",
+		B.OPEN_DATE as "openDate", B.TERMINAL_NUM as "terminalNum"
+		from
+		TBL_AGENT_MERCHANT_RELATION B
+		left join TBL_USER_MERCHANT_ONLINE as A on A.MERCHANTNO=B.MERCHANT_NO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by B.ID desc  ]]>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" /> as B
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<!-- 根据商户编号找代理商层级分润 -->
+	<select id="selectAgentSplitProfitVo" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.agent.vo.AgentSplidProfitVo">
+		select
+		A.MERCHANT_NO as "merchantNo", A.MERCHANT_NAME as "merchantName", 
+		A.FIRST_AGENT_NO as "firstAgentNo", A.SECOND_AGENT_NO as "secondAgentNo", A.THIRD_AGENT_NO as "thirdAgentNo",
+		A.FIRST_AGENT_NAME AS "firstAgentName", A.SECOND_AGENT_NAME AS "secondAgentName", A.THIRD_AGENT_NAME AS "thirdAgentName",
+		B.SPLIT_PROFIT as "firstSplidProfit",
+		C.SPLIT_PROFIT as "secondSplidProfit",
+		D.SPLIT_PROFIT as "thirdSplidProfit"
+		from TBL_AGENT_MERCHANT_RELATION as A
+		left join TBL_AGENT_RELATION as B on A.FIRST_AGENT_NO = B.AGENT_NO
+		left join TBL_AGENT_RELATION as C on A.SECOND_AGENT_NO = C.AGENT_NO
+		left join TBL_AGENT_RELATION as D on A.THIRD_AGENT_NO = D.AGENT_NO
+		where A.MERCHANT_NO = #{merchantNo}
+	</select>
+	
+	<!-- 统计当前代理商的商户状态 -->
+	<select id="summaryMerchStatusByAgentNo" parameterType="java.util.Map" resultType="hashmap">
+		SELECT 
+			SUM(CASE WHEN (A.STATUS =102) THEN 1 ELSE 0 END) AS  CREATED,
+			SUM(CASE WHEN (A.STATUS =106) THEN 1 ELSE 0 END) AS  FIRSTPASS,
+			SUM(CASE WHEN (A.STATUS =103) THEN 1 ELSE 0 END) AS  NOPASS,
+			SUM(CASE WHEN (A.STATUS =100) THEN 1 ELSE 0 END) AS  ACTIVE,
+			SUM(CASE WHEN (A.STATUS =101) THEN 1 ELSE 0 END) AS  INACTIVE,
+			SUM(CASE WHEN (A.STATUS =105) THEN 1 ELSE 0 END) AS  CLOSE
+		FROM 
+			<include refid="merchant" /> A, <include refid="table" /> B
+		WHERE  
+			A.MERCHANTNO = B.MERCHANT_NO 
+			<if test="firstAgentNo != null and firstAgentNo != ''"> 
+				and B.FIRST_AGENT_NO = #{firstAgentNo} 
+			</if>
+			<if test="secondAgentNo != null and secondAgentNo != ''"> 
+				and B.SECOND_AGENT_NO = #{secondAgentNo}
+			</if>
+			<if test="thirdAgentNo != null and thirdAgentNo != ''"> 
+				and B.THIRD_AGENT_NO = #{thirdAgentNo} 
+			</if>
+		<if test="firstAgentNo != null and firstAgentNo != ''"> GROUP BY  B.FIRST_AGENT_NO </if>
+		<if test="secondAgentNo != null and secondAgentNo != ''"> GROUP BY  B.SECOND_AGENT_NO </if>
+		<if test="thirdAgentNo != null and thirdAgentNo != ''"> GROUP BY  B.THIRD_AGENT_NO </if>
+	</select>
+	
+	<select id="selectMerchantAllInfo" parameterType="java.util.Map" resultType="hashmap">
+		SELECT
+			U.PROVINCE as "PROVINCE",
+			U.CITY as "CITY",
+			U.USERTYPE as "USERTYPE",
+			U.CARDNO as "CARDNO",
+			A.CREATETIME as "CREATETIME",
+			A.MERCHANTNO as "MERCHANTNO",
+			A.MCC as "MCC",
+			A.FULLNAME as "FULLNAME",
+			A.SHORTNAME as "SHORTNAME",
+			A.ADDRESS as "ADDRESS",
+			
+			A.LEGALPERSON as "LEGALPERSON",
+			A.SCOPE as "SCOPE",
+			A.MERCHANTTYPE as "MERCHANTTYPE",
+			A.LICENSENO as "LICENSENO",
+			U.BINDMOBILENO as "BINDMOBILENO",
+			C.BANKACCOUNTADDRESS as "BANKACCOUNTADDRESS",
+			C.BANKACCOUNTNAME as "BANKACCOUNTNAME",
+			C.BANKACCOUNTNO as "BANKACCOUNTNO",
+			B.OPEN_DATE as "OPEN_DATE",
+			B.UPPER_AMOUNT as "UPPER_AMOUNT",
+			A.ZIPCODE as "ZIPCODE",
+			A.TELEPHONENUM as "TELEPHONENUM",
+			A.BUSINESSAREA as "BUSINESSAREA",
+			A.EMPNUM as "EMPNUM"
+			FROM 
+		TBL_AGENT_MERCHANT_RELATION B 
+		LEFT JOIN	TBL_USER_INFO U ON B.MERCHANT_NO=U.USERNO
+		LEFT JOIN TBL_USER_MERCHANT_ONLINE A ON U.USERNO = A.MERCHANTNO
+		LEFT JOIN TBL_USER_BANK_ACCOUNT C ON U.USERNO = C.USERNO
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

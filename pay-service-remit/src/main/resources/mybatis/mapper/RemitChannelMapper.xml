@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitChannelDaoImpl">
+
+	<sql id="table"> TBL_REMIT_CHANNEL </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitChannel">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="CHANNEL_CODE" property="channelCode" jdbcType="VARCHAR" />
+		<result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_TYPE" property="accountType" jdbcType="SMALLINT" />
+		<result column="BANK_TYPE_CODE" property="bankTypeCode" jdbcType="VARCHAR" />
+		<result column="LIMIT_NUM" property="limitNum" jdbcType="BIGINT" />
+		<result column="MIN_AMOUNT" property="minAmount" jdbcType="DECIMAL" />
+		<result column="MAX_AMOUNT" property="maxAmount" jdbcType="DECIMAL" />
+		<result column="BATCH_MIN_AMOUNT" property="batchMinAmount" jdbcType="DECIMAL" />
+		<result column="BATCH_MAX_AMOUNT" property="batchMaxAmount" jdbcType="DECIMAL" />
+		<result column="IS_URGENT" property="isUrgent" jdbcType="SMALLINT" />
+		<result column="IS_CONFIRM" property="isConfirm" jdbcType="SMALLINT" />
+		<result column="IS_AUTO_REMIT" property="isAutoRemit" jdbcType="SMALLINT" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="SRC_BANK_CHANNEL_NO" property="srcBankChannelNo" jdbcType="VARCHAR" />
+		<result column="SRC_BANK_NAME" property="srcBankName" jdbcType="VARCHAR" />
+		<result column="SRC_ACCOUNT_NUM" property="srcAccountNum" jdbcType="VARCHAR" />
+		<result column="SRC_ACCOUNT_NAME" property="srcAccountName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CHANNEL_CODE, CHANNEL_NAME, ACCOUNT_TYPE, BANK_TYPE_CODE, LIMIT_NUM, MIN_AMOUNT,
+		MAX_AMOUNT, BATCH_MIN_AMOUNT, BATCH_MAX_AMOUNT, IS_URGENT, IS_CONFIRM, IS_AUTO_REMIT,
+		STATUS, SRC_BANK_CHANNEL_NO, SRC_BANK_NAME, SRC_ACCOUNT_NUM, SRC_ACCOUNT_NAME
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="channelCode != null and channelCode != ''"> and CHANNEL_CODE = #{channelCode}</if>
+		<if test="channelName != null and channelName != ''"> and CHANNEL_NAME like CONCAT('%', CONCAT(#{channelName}, '%')) </if>
+		<if test="bankTypeCode != null and bankTypeCode != ''"> and BANK_TYPE_CODE = #{bankTypeCode}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitChannel" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CHANNEL_CODE,
+		CHANNEL_NAME, ACCOUNT_TYPE, BANK_TYPE_CODE,
+		LIMIT_NUM, MIN_AMOUNT, MAX_AMOUNT,
+		BATCH_MIN_AMOUNT, BATCH_MAX_AMOUNT, IS_URGENT,
+		IS_CONFIRM, IS_AUTO_REMIT, STATUS,
+		SRC_BANK_CHANNEL_NO, SRC_BANK_NAME, SRC_ACCOUNT_NUM,
+		SRC_ACCOUNT_NAME)
+		values (0, #{channelCode},
+		#{channelName}, #{accountType}, #{bankTypeCode},
+		#{limitNum}, #{minAmount}, #{maxAmount},
+		#{batchMinAmount}, #{batchMaxAmount}, #{isUrgent},
+		#{isConfirm}, #{isAutoRemit}, #{status},
+		#{srcBankChannelNo}, #{srcBankName}, #{srcAccountNum},
+		#{srcAccountName})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitChannel">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=SMALLINT}+1,
+		CHANNEL_CODE = #{channelCode,jdbcType=VARCHAR},
+		CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+		ACCOUNT_TYPE = #{accountType,jdbcType=SMALLINT},
+		BANK_TYPE_CODE = #{bankTypeCode,jdbcType=VARCHAR},
+		LIMIT_NUM = #{limitNum,jdbcType=BIGINT},
+		MIN_AMOUNT = #{minAmount,jdbcType=DECIMAL},
+		MAX_AMOUNT = #{maxAmount,jdbcType=DECIMAL},
+		BATCH_MIN_AMOUNT = #{batchMinAmount,jdbcType=DECIMAL},
+		BATCH_MAX_AMOUNT = #{batchMaxAmount,jdbcType=DECIMAL},
+		IS_URGENT = #{isUrgent,jdbcType=SMALLINT},
+		IS_CONFIRM = #{isConfirm,jdbcType=SMALLINT},
+		IS_AUTO_REMIT = #{isAutoRemit,jdbcType=SMALLINT},
+		STATUS = #{status,jdbcType=SMALLINT},
+		SRC_BANK_CHANNEL_NO = #{srcBankChannelNo,jdbcType=VARCHAR},
+		SRC_BANK_NAME = #{srcBankName,jdbcType=VARCHAR},
+		SRC_ACCOUNT_NUM = #{srcAccountNum,jdbcType=VARCHAR},
+		SRC_ACCOUNT_NAME = #{srcAccountName,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

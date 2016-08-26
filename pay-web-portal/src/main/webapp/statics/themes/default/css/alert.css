@@ -1,0 +1,10 @@
+@charset "utf-8";
+/* CSS Document */
+body{margin:0px;padding:0px;}
+.ada-mask{width:100%;height:100%; background:black;filter:alpha(opacity=20);opacity:0.2;position:fixed;_position:absolute;_background:none;z-index:1000;top:0px; left:0px;}
+.ada-box{border:1px solid #333; position:absolute; background:#FFF;;z-index:1001;}
+.ada-text{font-size:12px;padding:0px 30px;color:#999;margin:30px auto;}
+.adaimg{float:right; margin:10px 10px 0px 0px; cursor:pointer;}
+.butwrap{float:right;}
+.ada-but1,.ada-but2{margin-right:10px;float:left;display:block;width:60px; cursor:pointer;}
+.ada-but2{ margin-right:30px;}

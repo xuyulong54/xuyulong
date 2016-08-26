@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="pay-service-remit"
+  id="myeclipse.1405996175774"
+  context-root="/pay-service-remit"
+  j2ee-spec="6.0"
+  archive="pay-service-remit.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

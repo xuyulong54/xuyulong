@@ -1,0 +1,662 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>wusc.edu.pay.common</groupId>
+	<artifactId>pay-common-parent</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>pay-common-parent</name>
+	<url>http://maven.apache.org</url>
+	<!-- 全局属性配置 -->
+	<profiles>
+
+		<!-- 开发环境 -->
+		<profile>
+			<id>main</id>
+			<properties>
+				<!-- 部署环境(对应配置文件版本) -->
+				<env>main</env>
+				<maven.test.skip>false</maven.test.skip>
+			</properties>
+			<!-- 设置默认环境 -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+
+		<!-- 测试环境 -->
+		<profile>
+			<id>test-mysql</id>
+			<properties>
+				<!-- 部署环境(对应配置文件版本) -->
+				<env>test-mysql</env>
+			</properties>
+		</profile>
+
+	</profiles>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Nexus Release Repository</name>
+			<url>http://192.168.4.221:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://192.168.4.221:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- ========================================================== -->
+
+		<!-- 在线支付： 项目的工程版本号 begin -->
+		<!-- api projects -->
+		<pay-api-merchant.version>1.0-SNAPSHOT</pay-api-merchant.version>
+
+		<!-- app projects -->
+		<pay-app-queue-notify.version>1.0-SNAPSHOT</pay-app-queue-notify.version>
+
+		<!-- common projects -->
+		<pay-common.version>1.0-SNAPSHOT</pay-common.version>
+		<pay-common-config.version>1.0-SNAPSHOT</pay-common-config.version>
+		<pay-common-core.version>1.0-SNAPSHOT</pay-common-core.version>
+		<pay-common-web.version>1.0-SNAPSHOT</pay-common-web.version>
+
+		<!-- facade projects -->
+		<pay-facade-account.version>1.0-SNAPSHOT</pay-facade-account.version>
+		<pay-facade-bank.version>1.0-SNAPSHOT</pay-facade-bank.version>
+		<pay-facade-banklink.version>1.0-SNAPSHOT</pay-facade-banklink.version>
+		<pay-facade-boss.version>1.0-SNAPSHOT</pay-facade-boss.version>
+		<pay-facade-cost.version>1.0-SNAPSHOT</pay-facade-cost.version>
+		<pay-facade-fee.version>1.0-SNAPSHOT</pay-facade-fee.version>
+		<pay-facade-limit.version>1.0-SNAPSHOT</pay-facade-limit.version>
+		<pay-facade-notify.version>1.0-SNAPSHOT</pay-facade-notify.version>
+		<pay-facade-payrule.version>1.0-SNAPSHOT</pay-facade-payrule.version>
+		<pay-facade-remit.version>1.0-SNAPSHOT</pay-facade-remit.version>
+		<pay-facade-report.version>1.0-SNAPSHOT</pay-facade-report.version>
+		<pay-facade-settlement.version>1.0-SNAPSHOT</pay-facade-settlement.version>
+		<pay-facade-trade.version>1.0-SNAPSHOT</pay-facade-trade.version>
+		<pay-facade-user.version>1.0-SNAPSHOT</pay-facade-user.version>
+
+		<!-- service projects -->
+		<pay-service-account.version>1.0-SNAPSHOT</pay-service-account.version>
+		<pay-service-bank.version>1.0-SNAPSHOT</pay-service-bank.version>
+		<pay-service-banklink.version>1.0-SNAPSHOT</pay-service-banklink.version>
+		<pay-service-boss.version>1.0-SNAPSHOT</pay-service-boss.version>
+		<pay-service-cost.version>1.0-SNAPSHOT</pay-service-cost.version>
+		<pay-service-fee.version>1.0-SNAPSHOT</pay-service-fee.version>
+		<pay-service-limit.version>1.0-SNAPSHOT</pay-service-limit.version>
+		<pay-service-notify.version>1.0-SNAPSHOT</pay-service-notify.version>
+		<pay-service-payrule.version>1.0-SNAPSHOT</pay-service-payrule.version>
+		<pay-service-remit.version>1.0-SNAPSHOT</pay-service-remit.version>
+		<pay-service-report.version>1.0-SNAPSHOT</pay-service-report.version>
+		<pay-service-settlement.version>1.0-SNAPSHOT</pay-service-settlement.version>
+		<pay-service-trade.version>1.0-SNAPSHOT</pay-service-trade.version>
+		<pay-service-user.version>1.0-SNAPSHOT</pay-service-user.version>
+
+		<!-- web projects -->
+		<pay-web-bank-receive.version>1.0-SNAPSHOT</pay-web-bank-receive.version>
+		<pay-web-boss.version>1.0-SNAPSHOT</pay-web-boss.version>
+		<pay-web-gateway.version>1.0-SNAPSHOT</pay-web-gateway.version>
+		<pay-web-notify-receive.version>1.0-SNAPSHOT</pay-web-notify-receive.version>
+		<pay-web-portal.version>1.0-SNAPSHOT</pay-web-portal.version>
+		<pay-web-report.version>1.0-SNAPSHOT</pay-web-report.version>
+		<pay-web-trade.version>1.0-SNAPSHOT</pay-web-trade.version>
+
+		<!-- timer task projects -->
+		<pay-timer-report.version>1.0-SNAPSHOT</pay-timer-report.version>
+		<!-- 在线支付： 项目的工程版本号 end -->
+
+		<!-- ========================================================== -->
+
+		<!-- frameworks -->
+		<org.springframework.version>4.1.4.RELEASE</org.springframework.version>
+		<org.apache.struts.version>2.3.15.1</org.apache.struts.version>
+
+	</properties>
+
+	<dependencies>
+		<!-- Test Dependency Begin -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+		<!-- Test Dependency End -->
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Common Dependency Begin -->
+			<dependency>
+				<groupId>antlr</groupId>
+				<artifactId>antlr</artifactId>
+				<version>2.7.6</version>
+			</dependency>
+			<dependency>
+				<groupId>aopalliance</groupId>
+				<artifactId>aopalliance</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>1.7.3</version>
+			</dependency>
+			<!-- <dependency> -->
+			<!-- <groupId>cglib</groupId> -->
+			<!-- <artifactId>cglib-nodep</artifactId> -->
+			<!-- <version>2.2.2</version> -->
+			<!-- </dependency> -->
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>2.2.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>asm</groupId>
+				<artifactId>asm</artifactId>
+				<version>3.3.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.json-lib</groupId>
+				<artifactId>json-lib</artifactId>
+				<version>2.3</version>
+				<classifier>jdk15</classifier>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-core-asl</artifactId>
+				<version>1.9.13</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+				<version>1.9.13</version>
+			</dependency>
+			<dependency>
+				<groupId>ognl</groupId>
+				<artifactId>ognl</artifactId>
+				<version>3.0.6</version>
+			</dependency>
+			<dependency>
+				<groupId>oro</groupId>
+				<artifactId>oro</artifactId>
+				<version>2.0.8</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-net</groupId>
+				<artifactId>commons-net</artifactId>
+				<version>3.2</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.8.0</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.8</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>3.2</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-digester</groupId>
+				<artifactId>commons-digester</artifactId>
+				<version>2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-fileupload</groupId>
+				<artifactId>commons-fileupload</artifactId>
+				<version>1.3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.0.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-validator</groupId>
+				<artifactId>commons-validator</artifactId>
+				<version>1.1.4</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-cli</groupId>
+				<artifactId>commons-cli</artifactId>
+				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>dom4j</groupId>
+				<artifactId>dom4j</artifactId>
+				<version>1.6.1</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.ezmorph</groupId>
+				<artifactId>ezmorph</artifactId>
+				<version>1.0.6</version>
+			</dependency>
+			<dependency>
+				<groupId>javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>3.12.1.GA</version>
+			</dependency>
+			<dependency>
+				<groupId>jstl</groupId>
+				<artifactId>jstl</artifactId>
+				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.transaction</groupId>
+				<artifactId>jta</artifactId>
+				<version>1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.17</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.7.5</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.jexcelapi</groupId>
+				<artifactId>jxl</artifactId>
+				<version>2.6.12</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba.external</groupId>
+				<artifactId>sourceforge.spring</artifactId>
+				<version>2.0.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba.external</groupId>
+				<artifactId>jakarta.commons.poolg</artifactId>
+				<version>1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jdom</groupId>
+				<artifactId>jdom</artifactId>
+				<version>1.1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<version>2.5.3</version>
+			</dependency>
+			<dependency>
+				<groupId>redis.clients</groupId>
+				<artifactId>jedis</artifactId>
+				<version>2.4.2</version>
+			</dependency>
+			<!-- Common Dependency End -->
+
+			<!-- Zookeeper 用于分布式服务管理 -->
+			<dependency>
+				<groupId>org.apache.zookeeper</groupId>
+				<artifactId>zookeeper</artifactId>
+				<version>3.4.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.101tec</groupId>
+				<artifactId>zkclient</artifactId>
+				<version>0.3</version>
+			</dependency>
+			<!-- Zookeeper 用于分布式服务管理 end -->
+
+
+			<!-- Spring Dependency Begin -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aspects</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-expression</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-instrument</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-instrument-tomcat</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jms</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-oxm</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-struts</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${org.springframework.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc-portlet</artifactId>
+				<version>${org.springframework.version}</version>
+			</dependency>
+			<!-- Spring Dependency End -->
+
+			<!-- MyBatis Dependency Begin -->
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>3.2.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis-spring</artifactId>
+				<version>1.2.0</version>
+			</dependency>
+			<!-- MyBatis Dependency End -->
+
+			<!-- Mysql Driver Begin -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>5.1.32</version>
+			</dependency>
+			<!-- Mysql Driver End -->
+
+			<!-- Struts2 Dependency Begin -->
+			<dependency>
+				<groupId>org.apache.struts</groupId>
+				<artifactId>struts2-json-plugin</artifactId>
+				<version>${org.apache.struts.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.struts</groupId>
+				<artifactId>struts2-convention-plugin</artifactId>
+				<version>${org.apache.struts.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.struts</groupId>
+				<artifactId>struts2-core</artifactId>
+				<version>${org.apache.struts.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.struts</groupId>
+				<artifactId>struts2-spring-plugin</artifactId>
+				<version>${org.apache.struts.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.struts.xwork</groupId>
+				<artifactId>xwork-core</artifactId>
+				<version>${org.apache.struts.version}</version>
+			</dependency>
+			<!-- Struts2 Dependency End -->
+
+			<!-- Others Begin -->
+			<dependency>
+				<groupId>com.google.code</groupId>
+				<artifactId>kaptcha</artifactId>
+				<version>2.3.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tomcat</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>6.0.37</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.tomcat</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>6.0.37</version>
+			</dependency>
+			<dependency>
+				<groupId>org.freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>2.3.19</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>0.2.23</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>1.1.41</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.3.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.netty</groupId>
+				<artifactId>netty</artifactId>
+				<version>3.2.5.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.activemq</groupId>
+				<artifactId>activemq-all</artifactId>
+				<version>5.8.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.activemq</groupId>
+				<artifactId>activemq-pool</artifactId>
+				<version>5.8.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>1.7.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.csource</groupId>
+				<artifactId>fastdfs_client</artifactId>
+				<version>1.24</version>
+			</dependency>
+			<dependency>
+				<groupId>quartz</groupId>
+				<artifactId>quartz</artifactId>
+				<version>1.5.2</version>
+			</dependency>
+			<!-- Others End -->
+
+			<!-- JPOS Begin -->
+			<dependency>
+				<groupId>org.jpos</groupId>
+				<artifactId>jpos</artifactId>
+				<version>1.9.8</version>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.core</artifactId>
+				<version>4.3.1</version>
+			</dependency>
+			<!-- JPOS End -->
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<uniqueVersion>false</uniqueVersion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<failOnError>true</failOnError>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<compilerArgument>-nowarn</compilerArgument>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<modules>
+		<module>pay-api-merchant</module>
+		<module>pay-app-queue-notify</module>
+		<module>pay-common</module>
+		<module>pay-common-config</module>
+		<module>pay-common-core</module>
+		<module>pay-common-web</module>
+		<module>pay-facade-account</module>
+		<module>pay-facade-bank</module>
+		<module>pay-facade-banklink</module>
+		<module>pay-facade-boss</module>
+		<module>pay-facade-cost</module>
+		<module>pay-facade-fee</module>
+		<module>pay-facade-limit</module>
+		<module>pay-facade-notify</module>
+		<module>pay-facade-payrule</module>
+		<module>pay-facade-remit</module>
+		<module>pay-facade-report</module>
+		<module>pay-facade-settlement</module>
+		<module>pay-facade-trade</module>
+		<module>pay-facade-user</module>
+		<module>pay-service-account</module>
+		<module>pay-service-bank</module>
+		<module>pay-service-banklink</module>
+		<module>pay-service-boss</module>
+		<module>pay-service-cost</module>
+		<module>pay-service-fee</module>
+		<module>pay-service-limit</module>
+		<module>pay-service-notify</module>
+		<module>pay-service-payrule</module>
+		<module>pay-service-remit</module>
+		<module>pay-service-report</module>
+		<module>pay-service-settlement</module>
+		<module>pay-service-trade</module>
+		<module>pay-service-user</module>
+		<module>pay-web-bank-receive</module>
+		<module>pay-web-boss</module>
+		<module>pay-web-gateway</module>
+		<module>pay-web-notify-receive</module>
+		<module>pay-web-portal</module>
+		<module>pay-web-trade</module>
+		<module>pay-timer-report</module>
+	</modules>
+</project>

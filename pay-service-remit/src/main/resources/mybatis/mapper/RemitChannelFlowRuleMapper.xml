@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.remit.dao.impl.RemitChannelFlowRuleDaoImpl">
+
+	<sql id="table"> TBL_REMIT_CHANNEL_FLOW_RULE </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.remit.entity.RemitChannelFlowRule">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="CHANNEL_CODE" property="channelCode" jdbcType="VARCHAR" />
+		<result column="CHANNEL_FLOW_NAME" property="channelFlowName" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_TYPE" property="accountType" jdbcType="SMALLINT" />
+		<result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+		<result column="INCLUDE_BANK_CODE" property="includeBankCode" jdbcType="VARCHAR" />
+		<result column="EXCLUDE_BANK_CODE" property="excludeBankCode" jdbcType="VARCHAR" />
+		<result column="MIN_AMOUNT" property="minAmount" jdbcType="DECIMAL" />
+		<result column="MAX_AMOUNT" property="maxAmount" jdbcType="DECIMAL" />
+		<result column="IS_URGENT" property="isUrgent" jdbcType="SMALLINT" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CHANNEL_FLOW_NAME , CHANNEL_CODE, ACCOUNT_TYPE, TRADE_TYPE, INCLUDE_BANK_CODE, EXCLUDE_BANK_CODE,
+		MIN_AMOUNT, MAX_AMOUNT, IS_URGENT, STATUS
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="channelCode != null and channelCode != ''"> and CHANNEL_CODE = #{channelCode}</if>
+		<if test="channelFlowName != null and channelFlowName != ''"> and CHANNEL_FLOW_NAME = #{channelFlowName}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.remit.entity.RemitChannelFlowRule" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION,CHANNEL_FLOW_NAME, CHANNEL_CODE,
+		ACCOUNT_TYPE, TRADE_TYPE, INCLUDE_BANK_CODE,
+		EXCLUDE_BANK_CODE, MIN_AMOUNT, MAX_AMOUNT,
+		IS_URGENT, STATUS)
+		values (0, #{channelFlowName,jdbcType=VARCHAR} , #{channelCode,jdbcType=VARCHAR},
+		#{accountType,jdbcType=SMALLINT}, #{tradeType,jdbcType=VARCHAR}, #{includeBankCode,jdbcType=VARCHAR},
+		#{excludeBankCode,jdbcType=VARCHAR}, #{minAmount,jdbcType=DECIMAL}, #{maxAmount,jdbcType=DECIMAL},
+		#{isUrgent,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.remit.entity.RemitChannelFlowRule">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=SMALLINT}+1,
+		CHANNEL_FLOW_NAME = #{channelFlowName,jdbcType=VARCHAR},
+		CHANNEL_CODE = #{channelCode,jdbcType=VARCHAR},
+		ACCOUNT_TYPE = #{accountType,jdbcType=SMALLINT},
+		TRADE_TYPE = #{tradeType,jdbcType=VARCHAR},
+		INCLUDE_BANK_CODE = #{includeBankCode,jdbcType=VARCHAR},
+		EXCLUDE_BANK_CODE = #{excludeBankCode,jdbcType=VARCHAR},
+		MIN_AMOUNT = #{minAmount,jdbcType=DECIMAL},
+		MAX_AMOUNT = #{maxAmount,jdbcType=DECIMAL},
+		IS_URGENT = #{isUrgent,jdbcType=SMALLINT},
+		STATUS = #{status,jdbcType=SMALLINT}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version}
+	</update>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listRoute" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select 
+			A.* 
+		from TBL_REMIT_CHANNEL_FLOW_RULE as A 
+		left join TBL_REMIT_CHANNEL as B on A.CHANNEL_CODE=B.CHANNEL_CODE
+		<where>
+			<![CDATA[ A.ACCOUNT_TYPE like CONCAT('%', CONCAT(#{accountType}, '%'))
+			and (A.INCLUDE_BANK_CODE like CONCAT('%', CONCAT(#{bankCode}, '%')) or A.INCLUDE_BANK_CODE is null)
+			and (A.EXCLUDE_BANK_CODE not like CONCAT('%', CONCAT(#{bankCode}, '%')) or A.EXCLUDE_BANK_CODE is null)
+			and A.TRADE_TYPE like CONCAT('%', CONCAT(#{tradeType}, '%'))
+			and #{amount} > A.MIN_AMOUNT and #{amount} <= A.MAX_AMOUNT
+			and A.STATUS = 100
+			and B.STATUS = 100 ]]>
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select 
+			R.ID,R.VERSION,R.CHANNEL_FLOW_NAME,concat(R.CHANNEL_CODE,concat('(',concat(C.CHANNEL_NAME,')'))) as CHANNEL_CODE,
+			R.ACCOUNT_TYPE,R.TRADE_TYPE,R.INCLUDE_BANK_CODE,R.EXCLUDE_BANK_CODE,R.MIN_AMOUNT,R.MAX_AMOUNT,R.IS_URGENT,R.STATUS
+		from 
+			TBL_REMIT_CHANNEL_FLOW_RULE R,TBL_REMIT_CHANNEL C
+		where 
+			R.CHANNEL_CODE=C.CHANNEL_CODE
+			<if test="channelCode != null and channelCode != ''"> 
+				and R.CHANNEL_CODE = #{channelCode}
+			</if>
+			<if test="channelFlowName != null and channelFlowName != ''"> 
+				and R.CHANNEL_FLOW_NAME = #{channelFlowName}
+			</if>
+		order by ID desc
+	</select>
+	
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select 
+			count(1) 
+		from
+			TBL_REMIT_CHANNEL_FLOW_RULE R,TBL_REMIT_CHANNEL C
+		where 
+			R.CHANNEL_CODE=C.CHANNEL_CODE
+			<if test="channelCode != null and channelCode != ''"> 
+				and R.CHANNEL_CODE = #{channelCode}
+			</if>
+			<if test="channelFlowName != null and channelFlowName != ''"> 
+				and R.CHANNEL_FLOW_NAME = #{channelFlowName}
+			</if>
+	</select>
+
+	<!--select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select-->
+	
+	<!--select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select-->
+
+	<select id="getByRemitRequest" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="table" />
+		WHERE
+		status='100'
+		AND LOCATE(#{accountType},ACCOUNT_TYPE)!=0
+		AND LOCATE(#{tradeType},TRADE_TYPE)!=0
+		AND LOCATE(#{bankTypeCode},INCLUDE_BANK_CODE)!=0
+		AND ( LOCATE(#{bankTypeCode},EXCLUDE_BANK_CODE)=0
+		OR EXCLUDE_BANK_CODE IS NULL )
+	<![CDATA[ AND MIN_AMOUNT<=#{amount} AND #{amount}<=MAX_AMOUNT ]]>
+		ORDER BY ID DESC
+	</select>
+
+</mapper>

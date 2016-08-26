@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="sett" extends="loginPackage">
+		<!-- 结算节假日管理Action -->
+		<action name="SettHoliday_*" class="wusc.edu.pay.web.boss.action.sett.SettHolidaySettingAction" method="{1}">
+			<result name="listSettHoliday">page/sett/settHolidayList.jsp</result>
+			<result name="addSettHolidayUI">page/sett/settHolidayAdd.jsp</result>
+		</action>
+		<!-- 结算日调整管理Action -->
+		<action name="SettDayAdjust_*" class="wusc.edu.pay.web.boss.action.sett.SettDayAdjustSettingAction" method="{1}">
+			<result name="listSettDayAdjustSetting">page/sett/settDayAdjustSettingList.jsp</result>
+			<result name="addSettDayAdjustSettingUI">page/sett/settDayAdjustSettingAdd.jsp</result>
+		</action>
+		<!-- 结算规则管理Action -->
+		<action name="SettRule_*" class="wusc.edu.pay.web.boss.action.sett.SettRuleAction" method="{1}">
+			<result name="listSettRule">page/sett/settRuleList.jsp</result>
+			<result name="settRuleDetail">page/sett/settRuleDetail.jsp</result>
+			<result name="editSettRule">page/sett/settRuleEdit.jsp</result>
+		</action>
+		<!-- 结算控制管理Action -->
+		<action name="SettControl_*" class="wusc.edu.pay.web.boss.action.sett.SettControlAction" method="{1}">
+			<result name="listSettControl">page/sett/settControlList.jsp</result>
+			<result name="addSettControlUI">page/sett/settControlAdd.jsp</result>
+			<result name="updateSettControlUI">page/sett/settControlEdit.jsp</result>
+		</action>
+		<!-- 结算记录管理Action -->
+		<action name="SettRecord_*" class="wusc.edu.pay.web.boss.action.sett.SettRecordAction" method="{1}">
+			<result name="listSettRecord">page/sett/settRecordList.jsp</result>
+			<result name="detailSettRecord">page/sett/settRecordDetail.jsp</result>
+			<result name="auditSettUI">page/sett/settRecordAudit.jsp</result>
+		</action>
+		
+	</package>
+</struts>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.notify.dao.impl.NotifyRecordLogDaoIpml">
+
+	<sql id="table"> TBL_TRADE_NOTIFY_RECORD_LOG </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.notify.entity.NotifyRecordLog">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="NOTIFY_ID" property="notifyId" jdbcType="BIGINT" />
+		<result column="REQUEST" property="request" jdbcType="VARCHAR" />
+		<result column="RESPONSE" property="response" jdbcType="VARCHAR" />
+		<result column="MERCHANT_NO" property="merchantNo" jdbcType="VARCHAR" />
+		<result column="MERCHANT_ORDER_NO" property="merchantOrderNo" jdbcType="VARCHAR" />
+		<result column="HTTP_STATUS" property="httpStatus" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, NOTIFY_ID, REQUEST, RESPONSE, MERCHANT_NO, MERCHANT_ORDER_NO,
+		HTTP_STATUS
+	</sql>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="notifyId != null and notifyId != ''"> and NOTIFY_ID = #{notifyId,jdbcType=BIGINT}</if>
+		<if test="request != null and request != ''"> and REQUEST = #{request,jdbcType=VARCHAR}</if>
+		<if test="response != null and response != ''"> and RESPONSE = #{response,jdbcType=VARCHAR}</if>
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANT_NO = #{merchantNo,jdbcType=VARCHAR}</if>
+		<if test="merchantOrderNo != null and merchantOrderNo != ''"> and MERCHANT_ORDER_NO = #{merchantOrderNo,jdbcType=VARCHAR}</if>
+		<if test="httpStatus != null and httpStatus != ''"> and HTTP_STATUS = #{httpStatus,jdbcType=SMALLINT}</if>
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="httpStatusList != null">
+			and HTTP_STATUS in
+			<foreach collection="httpStatusList" index="index" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.notify.entity.NotifyRecordLog">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		NOTIFY_ID, REQUEST, RESPONSE,
+		MERCHANT_NO, MERCHANT_ORDER_NO, HTTP_STATUS
+		)
+		values (0, #{createTime},
+		#{notifyId,jdbcType=BIGINT}, #{request,jdbcType=VARCHAR},
+		#{response,jdbcType=VARCHAR},
+		#{merchantNo,jdbcType=VARCHAR}, #{merchantOrderNo,jdbcType=VARCHAR}, #{httpStatus,jdbcType=SMALLINT}
+		)
+	</insert>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

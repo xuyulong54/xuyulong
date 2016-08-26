@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.account.dao.impl.AccountDaoImpl">
+
+	<sql id="table"> TBL_ACCOUNT </sql>
+
+	<resultMap id="beanMap" type="Account">
+		<id property="id" column="ID" />
+		<result property="version" column="VERSION" />
+		<result property="createTime" column="CREATETIME" />
+		<result property="balance" column="BALANCE" />
+		<result property="accountNo" column="ACCOUNTNO" />
+		<result property="unBalance" column="UNBALANCE" />
+		<result property="securityMoney" column="SECURITYMONEY" />
+		<result property="status" column="STATUS" />
+		<result property="userNo" column="USERNO" />
+		<result property="accountType" column="ACCOUNTTYPE" />
+		<result property="lastTime" column="LASTTIME" />
+		<result property="availableSettAmount" column="AVAILABLESETTAMOUNT" />
+		<result property="accountTitleNo" column="ACCOUNTTITLENO" />
+	</resultMap>
+
+	<insert id="insert" parameterType="Account" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, BALANCE, ACCOUNTNO, UNBALANCE, SECURITYMONEY, STATUS, USERNO,
+		ACCOUNTTYPE,LASTTIME,AVAILABLESETTAMOUNT, ACCOUNTTITLENO)
+		values (0, #{createTime}, #{balance}, #{accountNo},
+		#{unBalance}, #{securityMoney}, #{status}, #{userNo},
+		#{accountType}, #{lastTime}, #{availableSettAmount}, #{accountTitleNo})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="Account">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version}+1 ,
+			BALANCE = #{balance},
+			UNBALANCE = #{unBalance},
+			SECURITYMONEY = #{securityMoney},
+			STATUS = #{status},
+			ACCOUNTTYPE=#{accountType},
+			LASTTIME = #{lastTime},
+			AVAILABLESETTAMOUNT = #{availableSettAmount},
+			USERNO = #{userNo}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<sql id="condition_sql">
+		<!-- Equal query -->
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and CREATETIME between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="accountNo != null and accountNo !='' "> and ACCOUNTNO = #{accountNo}</if>
+		<if test="status != null and status !='' "> and STATUS = #{status}</if>
+		<if test="userNo != null and userNo !='' "> and USERNO = #{userNo}</if>
+		<if test="accountType != null and accountType !='' "> and ACCOUNTTYPE = #{accountType}</if>
+		<if test="accountTitleNo != null and accountTitleNo !='' "> and ACCOUNTTITLENO = #{accountTitleNo}</if>
+		<!-- 是否行锁，要放在查询条件最后 -->
+		<if test="isPessimist != null and isPessimist == true "> for update</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	
+</mapper>

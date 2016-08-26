@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="pay-service-report" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+
+	<dubbo:protocol name="dubbo" port="20815" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+
+	<!-- 当ProtocolConfig和ServiceConfig某属性没有配置时,采用此缺省值 -->
+	<dubbo:provider timeout="10000" threadpool="fixed" threads="100" accepts="1000" />
+
+	<!-- 对外公布接口 -->
+	<!-- 商户报表数据 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.CommonMerchanReportFacade" ref="commonMerchanReportFacade" />
+	<!-- POS机具统计 -->
+	<!-- 会员报表数据 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.MemberReportFacade" ref="memberReportFacade" />
+	<!-- 在线银行报表数据 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.OnlineBankReportFacade" ref="onlineBankReportFacade" />
+	<!-- 在线会员报表数据 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.OnlineMemberReportFacade" ref="onlineMemberReportFacade" />
+	<!-- 在线商户报表数据 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.OnlineMerchantReportFacade" ref="onlineMerchantReportFacade" />
+	<!-- POS银行报表数据 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.PosBankReportFacade" ref="posBankReportFacade" />
+	<!-- POS商户报表数据 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.PosMerchantReportFacade" ref="posMerchantReportFacade" />
+	<!-- 客户账户统计 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.AccountingUserReportFacade" ref="accountingUserReportFacade" />
+	<!-- 备付金银行帐户统计 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.AccountingReservesBankReportFacade" ref="accountingReservesBankReportFacade" />
+	<!-- 商户渠道汇总报表 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.ChannelTradeSummaryFacade" ref="channelTradeSummaryFacade" />
+	
+	
+	<!-- pos业务报表 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.report.service.PosReportFacade" ref="posReportFacade" />
+	
+</beans>  
+
+

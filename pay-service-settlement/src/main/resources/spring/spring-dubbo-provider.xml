@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="pay-service-settlement" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" />
+
+	<!-- 用dubbo协议在20893端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="20816" />
+	
+	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<dubbo:monitor protocol="registry"/>
+
+	<!-- 当ProtocolConfig和ServiceConfig某属性没有配置时,采用此缺省值 -->
+	<dubbo:provider timeout="10000" threadpool="fixed" threads="100" accepts="1000" />
+
+	<!-- 和本地bean一样实现服务 -->
+	<!-- 声明需要暴露的服务接口 -->
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.settlement.service.SettManagementFacade" ref="settManagementFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.settlement.service.SettQueryFacade" ref="settQueryFacade" />
+	<dubbo:service retries="0"  interface="wusc.edu.pay.facade.settlement.service.SettBusinessFacade" ref="settBusinessFacade" />
+
+</beans>  

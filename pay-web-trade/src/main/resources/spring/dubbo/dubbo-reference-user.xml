@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://code.alibabatech.com/schema/dubbo  
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 商户子系统对外服务接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantOnlineFacade" id="merchantOnlineFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantSecretFacade" id="merchantSecretFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.MemberInfoFacade" id="memberInfoFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserOperatorFacade" id="userOperatorFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserBankAccountFacade" id="userBankAccountFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserManagementFacade" id="userManagementFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserTradePwdFacade" id="userTradePwdFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserAuditFacade" id="userAuditFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserQueryFacade" id="userQueryFacade" />
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserVerificationCodeFacade" id="userVerificationCodeFacade" />
+
+</beans>  

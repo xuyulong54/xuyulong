@@ -1,0 +1,83 @@
+﻿body{ color:#535353;  font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height:150%;margin:0 auto; _width:980px; min-width:980px; width: expression((documentElement.clientWidth < 1024) ? "980px" : "auto" );}
+a:link, a:visited{ color:#666666; text-decoration:none;}
+a:hover,a:active{ color:#ce484d; text-decoration:none;}
+ul,li,dl,dt,dd,from{ margin:0; padding:0; list-style:none}
+
+/*-------最顶部导航菜单-----------*/
+
+
+#Menu_hover
+{
+    list-style: none;
+    line-height: 50px;
+}
+
+
+#Menu_hover li
+{
+    width: 100px;
+    line-height: 35px;
+    text-align: center;
+    float: left;
+    font-weight:bold; color:White;
+    
+}
+#Menu_hover li:hover, #Menu_hover li.sfhover
+{
+    background-color: #9E0E0D;
+     color: #FFFF00;
+}
+#Menu_hover li a
+{
+    text-decoration: none;
+    color:White;
+}
+.Menu
+{
+    width: 290px;
+    height: 70px;
+    float: left;
+    color: #4B4F52;
+    line-height: 35px;
+}
+/*-------最顶部导航菜单-----------*/
+
+/********** 菜单样式********************/
+
+.nva100{ width:100%; height:35px; background-color:#C20200;}
+.nva{ width:980px; margin:0 auto; }
+.banner{ width:980px; height:100px; margin:0 auto;}
+.banner div{ float:left; vertical-align:middle;}
+.logo{float: left;
+width: 290px;
+height: 53px;
+padding: 0 9px 10px 10px;}
+
+
+
+
+
+
+
+
+/*产品信息*/
+.content{width:1000px; height:410px; border:1px solid  #cacaca; margin-left:150px; }
+
+.content div { float:left; width:300px; height:390px; border:1px solid  #cacaca;margin:8px 0 8px 25px; }
+
+.content1{width:1000px; height:410px; margin:0 auto; margin-top:20px; margin-bottom:20px;  margin-left:150px; font-size:12px;}
+.content1 .goods{ float:left;width:300px; height:390px; border:1px solid  #F8BE8A; margin:8px 0 8px 25px; line-height:25px; text-indent:25px;}
+.goods .title{ font-size:20px; font-weight:bold; background-color:#C20200; color:White; height:40px; line-height:40px;}
+
+
+
+/*产品信息*/
+   
+
+/*页脚*/   
+.footer{width:100%;height:70px; background-image:url('../images/ft.jpg'); background-repeat:repeat-x; text-align:center; padding-top:20px; padding-left:400px;} 
+.footer ul{ list-style:none;}
+.footer ul li{ float:left; width:80px; height:30px; line-height:30px; font-family:微软雅黑; font-size:14px; border-right:1px solid #A3A2A2; text-align:center;}
+/*页脚*/ 
+
+

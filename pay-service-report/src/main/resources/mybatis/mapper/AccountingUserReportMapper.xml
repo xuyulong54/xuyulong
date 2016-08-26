@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.AccountingUserReportDaoImpl">
+
+	<sql id="table"> RP_ACCOUNTING_USER </sql>
+
+	<resultMap id="beanMap" type="AccountingUserReport">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="USERTYPE" property="userType" />
+		<result column="LOGINNAME" property="loginName" />
+		<result column="SHOWNAME" property="showName" />
+		<result column="ACCOUNTBALANCE" property="accountBalance" />
+		<result column="AVAILABLEAMOUNT" property="availableAmount" />
+		<result column="NOTAVAILABLEAMOUNT" property="notAvailableAmount" />
+		<result column="CANTRANSFERAMOUNT" property="canTransferAmount" />
+		<result column="OUTTOPLAYAMOUNT" property="outToPlayAmount" />
+		<result column="TRANSFERREDOUTAMOUNT" property="transferredOutAmount" />
+		<result column="ACOUNTDATE" property="acountDate" />
+	</resultMap>
+
+	<insert id="insert" parameterType="AccountingUserReport" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATETIME, USERTYPE, LOGINNAME, SHOWNAME, ACCOUNTBALANCE, AVAILABLEAMOUNT, NOTAVAILABLEAMOUNT, CANTRANSFERAMOUNT,
+		OUTTOPLAYAMOUNT, TRANSFERREDOUTAMOUNT, ACOUNTDATE)
+		values (0, #{createTime}, #{userType}, #{loginName}, #{showName}, #{accountBalance}, #{availableAmount}, #{notAvailableAmount},
+		#{canTransferAmount}, #{outToPlayAmount}, #{transferredOutAmount}, #{acountDate})
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and ACOUNTDATE between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="userType != null and userType != ''"> and USERTYPE = #{userType} </if>
+	</sql>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.trade.dao.impl.PaymentOrderDaoImpl">
+
+	<sql id="table"> TBL_TRADE_PAYMENT_ORDER </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.trade.entity.PaymentOrder">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="MERCHANT_ORDER_NO" property="merchantOrderNo" jdbcType="VARCHAR" />
+		<result column="MERCHANT_NO" property="merchantNo" jdbcType="VARCHAR" />
+		<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
+		<result column="PAYER_USER_NO" property="payerUserNo" jdbcType="VARCHAR" />
+		<result column="PAYER_USER_TYPE" property="payerUserType" jdbcType="SMALLINT" />
+		<result column="PAYER_NAME" property="payerName" jdbcType="VARCHAR" />
+		<result column="ORDER_TIME" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="ORDER_DATE" property="orderDate" jdbcType="DATE" />
+		<result column="ORDER_IP" property="orderIp" jdbcType="VARCHAR" />
+		<result column="ORDER_REFERER_URL" property="orderRefererUrl" jdbcType="VARCHAR" />
+		<result column="ORDER_OPERATOR_LOGIN_NAME" property="orderOperatorLoginName" jdbcType="VARCHAR" />
+		<result column="ORDER_OPERATOR_REAL_NAME" property="orderOperatorRealName" jdbcType="VARCHAR" />
+		<result column="ORDER_AMOUNT" property="orderAmount" jdbcType="DECIMAL" />
+		<result column="MERCHANT_DISCOUNT_AMOUNT" property="merchantDiscountAmount" jdbcType="DECIMAL" />
+		<result column="PLAT_DISCOUNT_AMOUNT" property="platDiscountAmount" jdbcType="DECIMAL" />
+		<result column="PAYER_FEE" property="payerFee" jdbcType="DECIMAL" />
+		<result column="PAYER_PAY_AMOUNT" property="payerPayAmount" jdbcType="DECIMAL" />
+		<result column="RECEIVER_FEE" property="receiverFee" jdbcType="DECIMAL" />
+		<result column="RECEIVER_POST_AMOUNT" property="receiverPostAmount" jdbcType="DECIMAL" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="PRODUCT_DESC" property="productDesc" jdbcType="VARCHAR" />
+		<result column="RETURN_URL" property="returnUrl" jdbcType="VARCHAR" />
+		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />
+		<result column="CANCEL_REASON" property="cancelReason" jdbcType="VARCHAR" />
+		<result column="ORDER_PERIOD" property="orderPeriod" jdbcType="SMALLINT" />
+		<result column="EXPIRE_TIME" property="expireTime" jdbcType="TIMESTAMP" />
+		<result column="ORDER_FROM" property="orderFrom" jdbcType="SMALLINT" />
+		<result column="ORDER_FLAG" property="orderFlag" jdbcType="SMALLINT" />
+		<result column="CUR" property="cur" jdbcType="SMALLINT" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+		<result column="ORDER_ENCRYPT_TYPE" property="orderEncryptType" jdbcType="SMALLINT" />
+		<result column="BIZ_TYPE" property="bizType" jdbcType="SMALLINT" />
+		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="SMALLINT" />
+		<result column="PAY_PRODUCT_CODE" property="payProductCode" jdbcType="VARCHAR" />
+		<result column="PAY_PRODUCT_NAME" property="payProductName" jdbcType="VARCHAR" />
+		<result column="PAY_WAY_CODE" property="payWayCode" jdbcType="VARCHAR" />
+		<result column="PAY_WAY_NAME" property="payWayName" jdbcType="VARCHAR" />
+		<result column="CONSIGNEE_NAME" property="consigneeName" jdbcType="VARCHAR" />
+		<result column="CONSIGNEE_ADDRESS" property="consigneeAddress" jdbcType="VARCHAR" />
+		<result column="CONSIGNEE_POST_CODE" property="consigneePostCode" jdbcType="VARCHAR" />
+		<result column="CONSIGNEE_MOBILE" property="consigneeMobile" jdbcType="VARCHAR" />
+		<result column="CONSIGNEE_PHONE" property="consigneePhone" jdbcType="VARCHAR" />
+		<result column="CONSIGNEE_EMAIL" property="consigneeEmail" jdbcType="VARCHAR" />
+		<result column="INVOICE_TITLE" property="invoiceTitle" jdbcType="VARCHAR" />
+		<result column="BUYERLEAVE_MESSAGE" property="buyerleaveMessage" jdbcType="VARCHAR" />
+		<result column="CALL_BACK_PARA" property="callbackPara" jdbcType="VARCHAR" />
+		<result column="PAY_SUCCESS_DATE" property="paySuccessDate" jdbcType="DATE" />
+		<result column="PAY_SUCCESS_TIME" property="paySuccessTime" jdbcType="TIMESTAMP" />
+		<result column="COMPLETE_DATE" property="completeDate" jdbcType="DATE" />
+		<result column="COMPLETE_TIME" property="completeTime" jdbcType="TIMESTAMP" />
+		<result column="CANCEL_DATE" property="cancelDate" jdbcType="DATE" />
+		<result column="CANCEL_TIME" property="cancelTime" jdbcType="TIMESTAMP" />
+		<result column="SUCCESS_TRX_NO" property="successTrxNo" jdbcType="VARCHAR" />
+		<result column="IS_REFUND" property="isRefund" jdbcType="SMALLINT" />
+		<result column="SUCCESS_REFUND_TIMES" property="successRefundTimes" jdbcType="SMALLINT" />
+		<result column="SUCCESS_REFUND_AMOUNT" property="successRefundAmount" jdbcType="DECIMAL" />
+		<result column="TRX_MODEL" property="trxModel" jdbcType="SMALLINT" />
+		<result column="SPLIT_DETAIL" property="splitDetail" jdbcType="VARCHAR" />
+		<result column="RISK_DAY" property="riskDay" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="beginDate != null and endDate != null and endDate !='' and beginDate != ''">
+			and CREATE_TIME between #{beginDate} AND CONCAT(#{endDate},' 23:59:59')
+		</if>
+		<if test="beginOrderTime != null and beginOrderTime != '' and endOrderTime != null and endOrderTime !=''">
+			and ORDER_TIME between #{beginOrderTime} AND CONCAT(#{endOrderTime},' 23:59:59')
+		</if>
+
+		<if test="merchantOrderNo != null and merchantOrderNo != ''"> and MERCHANT_ORDER_NO like CONCAT(CONCAT('%',#{merchantOrderNo,jdbcType=VARCHAR}), '%') </if>
+		<if test="merchantNo != null and merchantNo != ''"> and MERCHANT_NO = #{merchantNo,jdbcType=VARCHAR}</if>
+		<if test="merchantName != null and merchantName != ''"> and MERCHANT_NAME = #{merchantName,jdbcType=VARCHAR}</if>
+		<if test="payerUserNo != null and payerUserNo != ''"> and PAYER_USER_NO = #{payerUserNo,jdbcType=VARCHAR}</if>
+		<if test="payerName != null and payerName != ''"> and PAYER_NAME = #{payerName,jdbcType=VARCHAR}</if>
+		<if test="orderIp != null and orderIp != ''"> and ORDER_IP = #{orderIp,jdbcType=VARCHAR}</if>
+		<if test="orderOperatorLoginName != null and orderOperatorLoginName != ''"> and ORDER_OPERATOR_LOGIN_NAME = #{orderOperatorLoginName,jdbcType=VARCHAR}</if>
+
+		<if test="orderFrom != null and orderFrom != ''"> and ORDER_FROM = #{orderFrom,jdbcType=SMALLINT}</if>
+		<if test="orderFlag != null and orderFlag != ''"> and ORDER_FLAG = #{orderFlag,jdbcType=SMALLINT}</if>
+		<if test="cur != null and cur != ''"> and CUR = #{cur,jdbcType=SMALLINT}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status,jdbcType=SMALLINT}</if>
+		<if test="bizType != null and bizType != ''"> and BIZ_TYPE = #{bizType,jdbcType=SMALLINT}</if>
+		<if test="paymentType != null and paymentType != ''"> and PAYMENT_TYPE = #{paymentType,jdbcType=SMALLINT}</if>
+
+		<if test="payProductCode != null and payProductCode != ''"> and PAY_PRODUCT_CODE = #{payProductCode,jdbcType=VARCHAR}</if>
+		<if test="payWayCode != null and payWayCode != ''"> and PAY_WAY_CODE = #{payWayCode,jdbcType=VARCHAR}</if>
+
+		<if test="consigneeEmail != null and consigneeEmail != ''"> and CONSIGNEE_EMAIL = #{consigneeEmail,jdbcType=VARCHAR}</if>
+		
+		<!-- 此处foreach中的条件用于分页查询，要用${item},不用#{item} -->
+		<if test="paymentTypes != null and  paymentTypes !=''">
+			and PAYMENT_TYPE in
+			<foreach collection="paymentTypes" index="index" item="item" open="(" separator="," close=")">
+				${item}
+			</foreach>
+		</if>
+		<if test="successTrxNo != null and successTrxNo != ''"> and SUCCESS_TRX_NO = #{successTrxNo,jdbcType=VARCHAR}</if>
+		<if test="notBizType != null and notBizType != ''"> 
+			<![CDATA[ and BIZ_TYPE <> #{notBizType,jdbcType=SMALLINT}]]>
+		</if>
+		<if test="trxModel != null and trxModel != ''"> and TRX_MODEL = #{trxModel,jdbcType=SMALLINT}</if>
+	</sql>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.trade.entity.PaymentOrder" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_DATE,
+		CREATE_TIME, MODIFY_TIME, MERCHANT_ORDER_NO,
+		MERCHANT_NO, MERCHANT_NAME, PAYER_USER_NO,PAYER_USER_TYPE,
+		PAYER_NAME, ORDER_TIME, ORDER_DATE,
+		ORDER_IP, ORDER_REFERER_URL, ORDER_OPERATOR_LOGIN_NAME,
+		ORDER_OPERATOR_REAL_NAME, ORDER_AMOUNT, MERCHANT_DISCOUNT_AMOUNT,
+		PLAT_DISCOUNT_AMOUNT, PAYER_FEE, PAYER_PAY_AMOUNT,
+		RECEIVER_FEE, RECEIVER_POST_AMOUNT, PRODUCT_NAME,
+		PRODUCT_DESC, RETURN_URL,
+		NOTIFY_URL,
+		CANCEL_REASON, ORDER_PERIOD, EXPIRE_TIME,
+		ORDER_FROM, ORDER_FLAG, CUR,
+		STATUS, ORDER_ENCRYPT_TYPE, BIZ_TYPE,
+		PAYMENT_TYPE,
+		PAY_PRODUCT_CODE, PAY_PRODUCT_NAME, PAY_WAY_CODE,
+		PAY_WAY_NAME,
+		CONSIGNEE_NAME, CONSIGNEE_ADDRESS,
+		CONSIGNEE_POST_CODE, CONSIGNEE_MOBILE, CONSIGNEE_PHONE,
+		CONSIGNEE_EMAIL, INVOICE_TITLE, BUYERLEAVE_MESSAGE,CALL_BACK_PARA,
+		PAY_SUCCESS_DATE, PAY_SUCCESS_TIME,
+		COMPLETE_DATE,
+		COMPLETE_TIME, CANCEL_DATE, CANCEL_TIME,SUCCESS_TRX_NO,IS_REFUND,SUCCESS_REFUND_TIMES,SUCCESS_REFUND_AMOUNT,
+		TRX_MODEL, SPLIT_DETAIL, RISK_DAY
+		)
+		values (0, FUN_NOW(),
+		FUN_NOW(), #{modifyTime,jdbcType=TIMESTAMP},
+		#{merchantOrderNo,jdbcType=VARCHAR},
+		#{merchantNo,jdbcType=VARCHAR},
+		#{merchantName,jdbcType=VARCHAR}, #{payerUserNo,jdbcType=VARCHAR},#{payerUserType,jdbcType=VARCHAR},
+		#{payerName,jdbcType=VARCHAR}, #{orderTime,jdbcType=TIMESTAMP},
+		#{orderDate,jdbcType=DATE},
+		#{orderIp,jdbcType=VARCHAR}, #{orderRefererUrl,jdbcType=VARCHAR}, #{orderOperatorLoginName,jdbcType=VARCHAR},
+		#{orderOperatorRealName,jdbcType=VARCHAR},
+		#{orderAmount,jdbcType=DECIMAL}, #{merchantDiscountAmount,jdbcType=DECIMAL},
+		#{platDiscountAmount,jdbcType=DECIMAL}, #{payerFee,jdbcType=DECIMAL}, #{payerPayAmount,jdbcType=DECIMAL},
+		#{receiverFee,jdbcType=DECIMAL},
+		#{receiverPostAmount,jdbcType=DECIMAL},
+		#{productName,jdbcType=VARCHAR},
+		#{productDesc,jdbcType=VARCHAR}, #{returnUrl,jdbcType=VARCHAR}, #{notifyUrl,jdbcType=VARCHAR},
+		#{cancelReason,jdbcType=VARCHAR}, #{orderPeriod,jdbcType=SMALLINT}, #{expireTime,jdbcType=TIMESTAMP},
+		#{orderFrom,jdbcType=SMALLINT},
+		#{orderFlag,jdbcType=SMALLINT}, #{cur,jdbcType=SMALLINT},
+		#{status,jdbcType=SMALLINT}, #{orderEncryptType,jdbcType=SMALLINT}, #{bizType,jdbcType=SMALLINT},
+		#{paymentType,jdbcType=SMALLINT},
+		#{payProductCode,jdbcType=VARCHAR},
+		#{payProductName,jdbcType=VARCHAR},
+		#{payWayCode,jdbcType=VARCHAR},
+		#{payWayName,jdbcType=VARCHAR}, #{consigneeName,jdbcType=VARCHAR}, #{consigneeAddress,jdbcType=VARCHAR},
+		#{consigneePostCode,jdbcType=VARCHAR}, #{consigneeMobile,jdbcType=VARCHAR},
+		#{consigneePhone,jdbcType=VARCHAR},
+		#{consigneeEmail,jdbcType=VARCHAR}, #{invoiceTitle,jdbcType=VARCHAR},
+		#{buyerleaveMessage,jdbcType=VARCHAR},
+		#{callbackPara,jdbcType=VARCHAR},
+		#{paySuccessDate,jdbcType=DATE}, #{paySuccessTime,jdbcType=TIMESTAMP},
+		#{completeDate,jdbcType=DATE},
+		#{completeTime,jdbcType=TIMESTAMP}, #{cancelDate,jdbcType=DATE}, #{cancelTime,jdbcType=TIMESTAMP}, 
+		#{successTrxNo,jdbcType=VARCHAR}, #{isRefund,jdbcType=SMALLINT},
+		#{successRefundTimes,jdbcType=SMALLINT},
+		#{successRefundAmount,jdbcType=DECIMAL},
+		#{trxModel,jdbcType=SMALLINT},
+		#{splitDetail,jdbcType=VARCHAR},
+		#{riskDay,jdbcType=SMALLINT}
+		)
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.trade.entity.PaymentOrder">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=SMALLINT} + 1,
+		MODIFY_TIME = #{modifyTime,jdbcType=DATE},
+		PLAT_DISCOUNT_AMOUNT = #{platDiscountAmount,jdbcType=DECIMAL},
+		PAYER_USER_NO = #{payerUserNo, jdbcType=VARCHAR},
+		PAYER_NAME = #{payerName, jdbcType=VARCHAR},
+		PAYER_FEE = #{payerFee,jdbcType=DECIMAL},
+		PAYER_PAY_AMOUNT = #{payerPayAmount,jdbcType=DECIMAL},
+		RECEIVER_FEE = #{receiverFee,jdbcType=DECIMAL},
+		RECEIVER_POST_AMOUNT = #{receiverPostAmount,jdbcType=DECIMAL},
+		CANCEL_REASON = #{cancelReason,jdbcType=VARCHAR},
+		ORDER_PERIOD = #{orderPeriod,jdbcType=SMALLINT},
+		ORDER_FLAG = #{orderFlag,jdbcType=SMALLINT},
+		STATUS = #{status,jdbcType=SMALLINT},
+		PAYMENT_TYPE = #{paymentType,jdbcType=SMALLINT},
+		PAY_PRODUCT_CODE = #{payProductCode,jdbcType=VARCHAR},
+		PAY_PRODUCT_NAME = #{payProductName,jdbcType=VARCHAR},
+		PAY_WAY_CODE = #{payWayCode,jdbcType=VARCHAR},
+		PAY_WAY_NAME = #{payWayName,jdbcType=VARCHAR},
+		PAY_SUCCESS_DATE = #{paySuccessDate,jdbcType=DATE},
+		PAY_SUCCESS_TIME = #{paySuccessTime,jdbcType=TIMESTAMP},
+		COMPLETE_DATE = #{completeDate,jdbcType=DATE},
+		COMPLETE_TIME = #{completeTime,jdbcType=TIMESTAMP},
+		CANCEL_DATE = #{cancelDate,jdbcType=DATE},
+		CANCEL_TIME = #{cancelTime,jdbcType=TIMESTAMP},
+		SUCCESS_TRX_NO = #{successTrxNo,jdbcType=VARCHAR},
+		IS_REFUND = #{isRefund,jdbcType=SMALLINT},
+		SUCCESS_REFUND_TIMES = #{successRefundTimes,jdbcType=SMALLINT},
+		SUCCESS_REFUND_AMOUNT = #{successRefundAmount,jdbcType=DECIMAL},
+		TRX_MODEL = #{trxModel,jdbcType=SMALLINT},
+		SPLIT_DETAIL = #{splitDetail,jdbcType=VARCHAR},
+		RISK_DAY = #{riskDay,jdbcType=SMALLINT}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=SMALLINT}
+	</update>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="countByPageParam" parameterType="java.util.Map" resultType="hashmap">
+		select count(1) as "successAll",
+		sum(PAYER_PAY_AMOUNT) as "payerAmountSum",
+		sum(RECEIVER_FEE) as "receiverFeeSum",
+		sum(PAYER_FEE) as "payerFeeSum" ,
+		sum(ORDER_AMOUNT)as "orderSum"
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

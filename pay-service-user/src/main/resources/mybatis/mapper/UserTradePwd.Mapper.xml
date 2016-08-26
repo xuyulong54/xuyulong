@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.user.dao.impl.UserTradePwdDaoImpl">
+
+	<sql id="table"> TBL_USER_TRADE_PWD </sql>
+
+	<resultMap id="beanMap" type="UserTradePwd">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="USERNO" property="userNo" />
+		<result column="LOGINNAME" property="loginName" />
+		<result column="TRADEPWD" property="tradePwd" />
+		<result column="PWDERRORTIMES" property="pwdErrorTimes" />
+		<result column="PWDERRORLASTTIME" property="pwdErrorLastTime" />
+		<result column="ISINITIALPWD" property="isInitialPwd" />
+	</resultMap>
+
+	<insert id="insert" parameterType="UserTradePwd" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		(VERSION,USERNO,LOGINNAME,TRADEPWD,PWDERRORTIMES,PWDERRORLASTTIME,ISINITIALPWD)
+		values (0, #{userNo},#{loginName}, #{tradePwd},#{pwdErrorTimes},#{pwdErrorLastTime},#{isInitialPwd})
+	</insert>
+
+	<!-- 更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="UserTradePwd">
+		update
+		<include refid="table" />
+		<set>
+			VERSION = #{version,jdbcType=INTEGER}+1 ,
+			TRADEPWD = #{tradePwd,jdbcType=VARCHAR},
+			PWDERRORTIMES=#{pwdErrorTimes,jdbcType=INTEGER},
+			PWDERRORLASTTIME=#{pwdErrorLastTime},
+			ISINITIALPWD=#{isInitialPwd},
+			USERNO = #{userNo}
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+	<select id="getById" parameterType="long" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		where ID = #{id}
+	</select>
+
+	<sql id="condition_sql">
+		<if test="userNo != null and userNo !='' "> and USERNO = #{userNo}</if>
+		<if test="loginName != null and loginName !='' "> and LOGINNAME = #{loginName}</if>
+		<if test="tradePwd != null and tradePwd !='' "> and TRADEPWD = #{tradePwd}</if>
+		<if test="isInitialPwd != null and isInitialPwd !='' "> and ISINITIALPWD = #{isInitialPwd}</if>
+	</sql>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+</mapper>

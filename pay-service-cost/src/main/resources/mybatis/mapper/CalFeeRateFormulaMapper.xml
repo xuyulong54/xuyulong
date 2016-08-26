@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.cost.dao.impl.CalFeeRateFormulaDaoImpl">
+	<sql id="table"> TBL_CAL_FEE_RATE_FORMULA </sql>
+
+	<resultMap id="BaseResultMap" type="wusc.edu.pay.facade.cost.entity.CalFeeRateFormula">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="SMALLINT" />
+		<result column="FEE_WAY_ID" property="feeWayId" jdbcType="BIGINT" />
+		<result column="FIXED_FEE" property="fixedFee" jdbcType="DECIMAL" />
+		<result column="PERCENT_FEE" property="percentFee" jdbcType="DECIMAL" />
+		<result column="MIN_AMOUNT" property="minAmount" jdbcType="DECIMAL" />
+		<result column="MAX_AMOUNT" property="maxAmount" jdbcType="DECIMAL" />
+		<result column="MIN_LADDER_AMOUNT" property="minLadderAmount" jdbcType="DECIMAL" />
+		<result column="MAX_LADDER_AMOUNT" property="maxLadderAmount" jdbcType="DECIMAL" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="SINGLE_MIN_FEE" property="singleMinFee" jdbcType="DECIMAL" />
+		<result column="SINGLE_MAX_FEE" property="singleMaxFee" jdbcType="DECIMAL" />
+		<result column="MODEL" property="model" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="condition_sql">
+		<if test="feeWayId != null and feeWayId != ''"> and FEE_WAY_ID = #{feeWayId}</if>
+		<if test="model != null and model != ''"> and MODEL = #{model}</if>
+	</sql>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, FEE_WAY_ID, FIXED_FEE, PERCENT_FEE, MIN_AMOUNT, MAX_AMOUNT, MIN_LADDER_AMOUNT,
+		MAX_LADDER_AMOUNT, CREATE_DATE, SINGLE_MIN_FEE, SINGLE_MAX_FEE, MODEL
+	</sql>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from TBL_CAL_FEE_RATE_FORMULA
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from TBL_CAL_FEE_RATE_FORMULA
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insert" parameterType="wusc.edu.pay.facade.cost.entity.CalFeeRateFormula">
+		insert into TBL_CAL_FEE_RATE_FORMULA (VERSION, FEE_WAY_ID,
+		FIXED_FEE, PERCENT_FEE, MIN_AMOUNT,
+		MAX_AMOUNT, MIN_LADDER_AMOUNT, MAX_LADDER_AMOUNT,
+		CREATE_DATE, SINGLE_MIN_FEE, SINGLE_MAX_FEE,
+		MODEL)
+		values (0, #{feeWayId,jdbcType=BIGINT},
+		#{fixedFee,jdbcType=DECIMAL}, #{percentFee,jdbcType=DECIMAL}, #{minAmount,jdbcType=DECIMAL},
+		#{maxAmount,jdbcType=DECIMAL}, #{minLadderAmount,jdbcType=DECIMAL}, #{maxLadderAmount,jdbcType=DECIMAL},
+		FUN_NOW(), #{singleMinFee,jdbcType=DECIMAL}, #{singleMaxFee,jdbcType=DECIMAL},
+		#{model,jdbcType=SMALLINT})
+	</insert>
+
+	<update id="update" parameterType="wusc.edu.pay.facade.cost.entity.CalFeeRateFormula">
+		update TBL_CAL_FEE_RATE_FORMULA
+		<set>
+			VERSION = #{version}+1 ,
+			<if test="feeWayId != null">
+				FEE_WAY_ID = #{feeWayId,jdbcType=BIGINT},
+			</if>
+			<if test="fixedFee != null">
+				FIXED_FEE = #{fixedFee,jdbcType=DECIMAL},
+			</if>
+			<if test="percentFee != null">
+				PERCENT_FEE = #{percentFee,jdbcType=DECIMAL},
+			</if>
+			<if test="minAmount != null">
+				MIN_AMOUNT = #{minAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="maxAmount != null">
+				MAX_AMOUNT = #{maxAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="minLadderAmount != null">
+				MIN_LADDER_AMOUNT = #{minLadderAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="maxLadderAmount != null">
+				MAX_LADDER_AMOUNT = #{maxLadderAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="singleMinFee != null">
+				SINGLE_MIN_FEE = #{singleMinFee,jdbcType=DECIMAL},
+			</if>
+			<if test="singleMaxFee != null">
+				SINGLE_MAX_FEE = #{singleMaxFee,jdbcType=DECIMAL},
+			</if>
+			<if test="model != null">
+				MODEL = #{model,jdbcType=SMALLINT},
+			</if>
+		</set>
+		<where>
+			ID = #{id} and VERSION = #{version}
+		</where>
+	</update>
+
+
+	<select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(1) FROM
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		order by id desc
+	</select>
+
+</mapper>

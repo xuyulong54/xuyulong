@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://code.alibabatech.com/schema/dubbo  
+            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 账户服务接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountTransactionFacade" id="accountTransactionFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountSettFacade" id="accountSettFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.account.service.AccountQueryFacade" id="accountQueryFacade" check="false" />
+
+	<!-- 计费服务接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.fee.service.CalculateFeeFacade" id="calculateFeeFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.fee.service.FeeManagerFacade" id="feeManagerFacade" check="false" />
+
+	<!-- 打款服务接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitRequestFacade" id="remitRequestFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitProcessFacade" id="remitProcessFacade" check="false" />
+	<dubbo:reference interface="wusc.edu.pay.facade.remit.service.RemitChannelFacade" id="remitChannelFacade" check="false"/>
+	
+	<!-- 银行卡服务接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.user.service.UserBankAccountFacade" id="userBankAccountFacade" check="false" />
+	<!-- 限制包服务接口 -->
+	<dubbo:reference interface="wusc.edu.pay.facade.limit.service.TradeLimitFacade" id="tradeLimitFacade" check="false" />
+	 <!-- 银行成本计费服务 -->
+    <dubbo:reference interface="wusc.edu.pay.facade.cost.service.CalCostOrderFacade" id="calCostOrderFacade" check="false"/>
+     <!-- 商户服务 -->
+     <dubbo:reference interface="wusc.edu.pay.facade.user.service.MerchantOnlineFacade" id="merchantOnlineFacade" check="false"/>
+</beans>  

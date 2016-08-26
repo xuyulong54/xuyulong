@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="wusc.edu.pay.core.payrule.dao.impl.PayProductSwitchDaoImpl">
+	<sql id="table"> TBL_RULE_PAY_PRODUCT_SWITCH </sql>
+	<resultMap id="BaseResultMap" type="PayProductSwitch">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="PAY_PRODUCT_CODE" property="payProductCode" jdbcType="VARCHAR" />
+		<result column="PAY_RULE_ID" property="payRuleId" jdbcType="BIGINT" />
+		<result column="STATUS" property="status" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, VERSION, CREATE_TIME, MODIFY_TIME, PAY_PRODUCT_CODE, PAY_RULE_ID, STATUS
+	</sql>
+
+	<sql id="condition_sql">
+		<if test="payProductCode != null and payProductCode != ''"> and PAY_PRODUCT_CODE = #{payProductCode}</if>
+		<if test="payRuleId != null and payRuleId != ''"> and PAY_RULE_ID = #{payRuleId}</if>
+		<if test="status != null and status != ''"> and STATUS = #{status}</if>
+	</sql>
+
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="PayProductSwitch">
+		insert into
+		<include refid="table" />
+		(VERSION, CREATE_TIME,
+		MODIFY_TIME, PAY_PRODUCT_CODE, PAY_RULE_ID,
+		STATUS)
+		values (0, #{createTime},
+		#{modifyTime,jdbcType=TIMESTAMP}, #{payProductCode,jdbcType=VARCHAR}, #{payRuleId,jdbcType=BIGINT},
+		#{status,jdbcType=SMALLINT})
+	</insert>
+
+	<update id="update" parameterType="PayProductSwitch">
+		update
+		<include refid="table" />
+		set VERSION = #{version,jdbcType=INTEGER} + 1,
+		MODIFY_TIME = FUN_NOW(),
+		PAY_PRODUCT_CODE = #{payProductCode,jdbcType=VARCHAR},
+		PAY_RULE_ID = #{payRuleId,jdbcType=BIGINT},
+		STATUS =
+		#{status,jdbcType=SMALLINT}
+		where ID = #{id,jdbcType=BIGINT} and VERSION = #{version,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		DELETE FROM
+		<include refid="table" />
+		WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="listBy" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+	<select id="listPage" parameterType="java.util.Map" resultType="wusc.edu.pay.facade.payrule.entity.vo.PayProductSwitchVo">
+		select
+		A.id as "id",A.CREATE_TIME as "createTime",
+		A.PAY_PRODUCT_CODE AS "payProductCode",P.PAY_PRODUCT_NAME as "payProductName",A.STATUS as "status"
+		from
+		<include refid="table" />
+		as A left join TBL_RULE_PAY_PRODUCT as P on A.PAY_PRODUCT_CODE = P.PAY_PRODUCT_CODE
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+
+</mapper>

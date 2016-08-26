@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wusc.edu.pay.core.report.dao.impl.TerminalSummaryByFactoryDaoImpl">
+
+	<sql id="table"> TBL_REPORT_DAY </sql>
+
+	<resultMap id="beanMap" type="TerminalSummaryByFactory">
+		<id column="ID" property="id" />
+		<result column="VERSION" property="version" />
+		<result column="CREATETIME" property="createTime" />
+		<result column="STAT_DATE" property="statDate" />
+		<result column="REPORT_TYPE" property="reportType" />
+		<result column="TRX_DATE" property="trxDate" />
+		<result column="VAR_1" property="factoryName" />
+		<result column="VAR_2" property="terminalType" />
+		<result column="INT_1" property="newMachineNum" />
+		<result column="INT_2" property="ownedMachineNum" />
+		<result column="INT_3" property="machineNum" />
+		<result column="INT_4" property="assignNum" />
+		<result column="INT_5" property="bindingNum" />
+	</resultMap>
+	<sql id="condition_sql">
+		<if test="reportType != null and reportType !=''"> AND REPORT_TYPE = #{reportType} </if>
+		<if test="startDate != null and startDate != '' and endDate != '' and endDate != null">
+			AND TRX_DATE between #{startDate} and #{endDate}
+		</if>
+	</sql>
+	<select id="listPage" parameterType="java.util.Map" resultMap="beanMap">
+		select * from 
+		(
+			select 
+				ID,
+				VAR_1,
+				VAR_2,
+				sum(INT_1) AS INT_1,
+				sum(INT_2) AS INT_2,
+				sum(INT_3) AS INT_3,
+				sum(INT_4) AS INT_4,
+				sum(INT_5) AS INT_5,
+				TRX_DATE
+			 from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+		group by VAR_1,VAR_2 )  AS  temp
+		<![CDATA[ order by ID desc]]>
+	</select>
+
+	<select id="listPageCount" parameterType="java.util.Map" resultType="long">
+		select count(1) from
+		<include refid="table" />
+		<where>
+			<include refid="condition_sql" />
+		</where>
+	</select>
+	<!--  
+		根据商户来统计机具库存情况
+	-->
+	<insert 
+		id="createTermSummaryByVendor" 
+		parameterType="java.util.Map">
+		insert into 
+			<include refid="table" /> (
+				VERSION,CREATE_TIME,REPORT_TYPE,STAT_DATE,TRX_DATE,VAR_1,VAR_2,INT_1,INT_2,INT_3,INT_4,INT_5) 
+		select 
+			0,#{dateTime},#{reportType},#{statDate},#{transDate},C.b,C.c,sum(C.d),sum(C.e),sum(C.f),sum(C.g),sum(C.h) from(
+		(select 
+			substr(createtime,1,10) as 'a',
+			factoryname as 'b',
+			terminal_model as 'c',
+			sum(2 - source_type) as 'd',
+			sum(source_type - 1) as 'e',
+			count(source_type) as 'f',0 as 'g',0 as 'h'
+		from
+			POS_PB_TERMINAL
+		where
+			createtime like CONCAT(#{fieldDate}, '%')
+		group by 
+			substr(createtime,1,10),factoryname,terminal_model) union all
+		(select 
+			substr(a.create_time,1,10) as 'a',
+			t.factoryname as 'b',
+			t.terminal_model as 'c',0 as 'd',0 as 'e',0 as 'f',
+			count(a.id) as 'g',0 as 'h'
+		from
+			POS_PP_TERMINAL_ASSIGN a, POS_PB_TERMINAL t
+		where 
+			a.terminal_no = t.terminalno
+			and a.assign_agent_no is null
+			and a.create_time like CONCAT(#{fieldDate}, '%')
+		group by 
+			substr(a.create_time,1,10),t.factoryname,t.terminal_model)  union all
+		(select 
+			substr(b.create_time,1,10) as 'a',
+			t.factoryname as 'b',
+			t.terminal_model as 'c',0 as 'd',0 as 'e',0 as 'f',0 as 'g',
+			count(b.id) as 'h'
+		from
+			POS_PP_TERMINAL_BINDING b, POS_PB_TERMINAL t
+		where 
+			b.terminal_no = t.terminalno
+			and b.create_time like CONCAT(#{fieldDate}, '%')
+		group by 
+			substr(b.create_time,1,10),t.factoryname,t.terminal_model) 
+		)as C
+		group by C.a,C.b,C.c
+	</insert>
+</mapper>
